@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, X, Plus, UserPlus } from "lucide-react";
+import { ChevronDown, ChevronUp, X, Plus, UserPlus, Save, Calendar } from "lucide-react";
 
 // Mock data structure
 const yearsData = [
@@ -39,6 +39,8 @@ const activitiesData = [
     team_id: "rumah_tangga",
     year: "2024",
     month: "februari",
+    date: "15",
+    honor: 5000000,
     participants: [
       "A816.M.Dahlan_Praya",
       "A815.M.Dahlan_Praya",
@@ -49,19 +51,23 @@ const activitiesData = [
   },
   {
     id: 2,
-    title: "Pemutakhiran Sakeenas Februari",
+    title: "Survei Upahan",
     team_id: "rumah_tangga",
     year: "2024",
     month: "februari",
+    date: "20",
+    honor: 3500000,
     participants: [],
     color: "bg-gray-200",
   },
   {
     id: 3,
-    title: "Pemutakhiran Sakeenas Februari",
+    title: "Pendataan Harga Konsumen",
     team_id: "rumah_tangga",
     year: "2024",
     month: "maret",
+    date: "10",
+    honor: 4200000,
     participants: [],
     color: "bg-gray-200",
   },
@@ -163,6 +169,14 @@ export default function HonorBulanan() {
     [key: number]: boolean;
   }>({});
   const [showMitraTable, setShowMitraTable] = useState(false);
+  const [showNewActivityModal, setShowNewActivityModal] = useState(false);
+  const [newActivityForm, setNewActivityForm] = useState({
+    title: "",
+    date: "",
+    month: "januari",
+    year: "2024",
+    honor: "",
+  });
 
   // AJAX-like filter effect
   useEffect(() => {
@@ -229,6 +243,38 @@ export default function HonorBulanan() {
   };
 
   const selectedYearData = yearsData.find((y) => y.id === selectedYear);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const handleCreateActivity = () => {
+    const newActivity = {
+      id: Math.max(...activitiesData.map(a => a.id)) + 1,
+      title: newActivityForm.title,
+      team_id: selectedTeam,
+      year: newActivityForm.year,
+      month: newActivityForm.month,
+      date: newActivityForm.date,
+      honor: parseInt(newActivityForm.honor),
+      participants: [],
+      color: "bg-gray-200",
+    };
+
+    setActivities(prev => [...prev, newActivity]);
+    setNewActivityForm({
+      title: "",
+      date: "",
+      month: "januari",
+      year: "2024",
+      honor: "",
+    });
+    setShowNewActivityModal(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -384,7 +430,7 @@ export default function HonorBulanan() {
                   className="p-3 cursor-pointer"
                   onClick={() => toggleCardExpanded(activity.id)}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-2">
                     <h3 className="font-medium text-gray-800 text-sm leading-tight">
                       {activity.title}
                     </h3>
@@ -395,6 +441,16 @@ export default function HonorBulanan() {
                         <ChevronDown className="h-4 w-4" />
                       )}
                     </button>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center text-xs text-gray-600">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <span className="capitalize">{activity.month} {activity.year}</span>
+                      {activity.date && <span className="ml-1">- Tanggal {activity.date}</span>}
+                    </div>
+                    <div className="text-xs font-semibold text-green-600">
+                      Honor: {formatCurrency(activity.honor || 0)}
+                    </div>
                   </div>
                 </div>
 
@@ -469,7 +525,10 @@ export default function HonorBulanan() {
             ))}
 
             {/* Add New Activity Card */}
-            <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center min-h-[150px] hover:border-gray-400 transition-colors cursor-pointer">
+            <div
+              onClick={() => setShowNewActivityModal(true)}
+              className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center min-h-[150px] hover:border-gray-400 transition-colors cursor-pointer"
+            >
               <div className="text-center">
                 <Plus className="h-6 w-6 text-gray-400 mx-auto mb-2" />
                 <span className="text-gray-500 text-xs">
@@ -614,6 +673,129 @@ export default function HonorBulanan() {
                 <Plus className="h-4 w-4 mr-2" />
                 Tambah Kegiatan Pertama
               </button>
+            </div>
+          )}
+
+          {/* New Activity Modal */}
+          {showNewActivityModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg max-w-md w-full">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Tambah Kegiatan Baru
+                    </h2>
+                    <button
+                      onClick={() => setShowNewActivityModal(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Kegiatan
+                      </label>
+                      <input
+                        type="text"
+                        value={newActivityForm.title}
+                        onChange={(e) => setNewActivityForm({ ...newActivityForm, title: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan nama kegiatan"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tanggal
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="31"
+                          value={newActivityForm.date}
+                          onChange={(e) => setNewActivityForm({ ...newActivityForm, date: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="1-31"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Bulan
+                        </label>
+                        <select
+                          value={newActivityForm.month}
+                          onChange={(e) => setNewActivityForm({ ...newActivityForm, month: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        >
+                          {monthsData.filter(m => m.id !== "semua").map((month) => (
+                            <option key={month.id} value={month.id}>
+                              {month.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tahun
+                        </label>
+                        <select
+                          value={newActivityForm.year}
+                          onChange={(e) => setNewActivityForm({ ...newActivityForm, year: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        >
+                          <option value="2024">2024</option>
+                          <option value="2025">2025</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Honor Mitra (Rupiah)
+                      </label>
+                      <input
+                        type="number"
+                        value={newActivityForm.honor}
+                        onChange={(e) => setNewActivityForm({ ...newActivityForm, honor: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan jumlah honor"
+                        required
+                      />
+                      {newActivityForm.honor && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatCurrency(parseInt(newActivityForm.honor) || 0)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t">
+                    <button
+                      onClick={() => setShowNewActivityModal(false)}
+                      className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      onClick={handleCreateActivity}
+                      className="flex items-center px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                      disabled={!newActivityForm.title || !newActivityForm.honor}
+                    >
+                      <Save className="h-4 w-4 mr-1" />
+                      Simpan Kegiatan
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
