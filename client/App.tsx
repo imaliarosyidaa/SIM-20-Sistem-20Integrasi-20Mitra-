@@ -8,7 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import MatriksKegiatan from "./pages/MatriksKegiatan";
+import MatriksKegiatanOverview from "./pages/MatriksKegiatanOverview";
+import MatriksKegiatanCalendar from "./pages/MatriksKegiatanCalendar";
 import RekapHonor from "./pages/RekapHonor";
 import HonorBulanan from "./pages/HonorBulanan";
 import DatabaseMitra from "./pages/DatabaseMitra";
@@ -26,7 +27,9 @@ const App = () => (
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/matriks" element={<MatriksKegiatan />} />
+            <Route path="/matriks" element={<MatriksKegiatanOverview />} />
+            <Route path="/matriks/calendar" element={<MatriksKegiatanCalendar />} />
+            <Route path="/matriks/calendar/:month" element={<MatriksKegiatanCalendar />} />
             <Route path="/rekap-honor" element={<RekapHonor />} />
             <Route path="/honor-bulanan" element={<HonorBulanan />} />
             <Route path="/database" element={<DatabaseMitra />} />
