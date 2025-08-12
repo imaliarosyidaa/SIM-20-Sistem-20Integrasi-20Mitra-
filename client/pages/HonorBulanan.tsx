@@ -7,7 +7,7 @@ import {
   UserPlus,
 } from "lucide-react";
 
-// Mock data structure matching the image
+// Mock data structure
 const yearsData = [
   { id: "2025", label: "2025", count: 12 },
   { id: "2024", label: "2024", count: 156 },
@@ -43,7 +43,7 @@ const activitiesData = [
     month: "februari",
     participants: [
       "A816.M.Dahlan_Praya",
-      "A815.M.Dahlan_Praya",
+      "A815.M.Dahlan_Praya", 
       "A816.M.Dahlan_Praya",
       "A815.M.Dahlan_Praya"
     ],
@@ -52,7 +52,7 @@ const activitiesData = [
   {
     id: 2,
     title: "Pemutakhiran Sakeenas Februari",
-    team_id: "rumah_tangga",
+    team_id: "rumah_tangga", 
     year: "2024",
     month: "februari",
     participants: [],
@@ -63,7 +63,7 @@ const activitiesData = [
     title: "Pemutakhiran Sakeenas Februari",
     team_id: "rumah_tangga",
     year: "2024",
-    month: "maret",
+    month: "maret", 
     participants: [],
     color: "bg-gray-200"
   },
@@ -78,7 +78,7 @@ const activitiesData = [
   },
   {
     id: 5,
-    title: "Pemutakhiran Sakeenas Februari",
+    title: "Pemutakhiran Sakeenas Februari", 
     team_id: "pertanian",
     year: "2024",
     month: "maret",
@@ -106,7 +106,7 @@ const activitiesData = [
   {
     id: 8,
     title: "Pemutakhiran Sakeenas Februari",
-    team_id: "pertanian",
+    team_id: "pertanian", 
     year: "2025",
     month: "januari",
     participants: [],
@@ -134,11 +134,9 @@ export default function HonorBulanan() {
   const [expandedCards, setExpandedCards] = useState<{[key: number]: boolean}>({});
   const [showMitraTable, setShowMitraTable] = useState(false);
 
-  // AJAX-like filter effect - updates immediately when filters change
+  // AJAX-like filter effect
   useEffect(() => {
-    // Simulate real-time filtering
     const timer = setTimeout(() => {
-      // Filter activities based on selected year, month, and team
       const filtered = activitiesData.filter(activity => {
         const matchesYear = activity.year === selectedYear;
         const matchesTeam = activity.team_id === selectedTeam;
@@ -179,6 +177,10 @@ export default function HonorBulanan() {
     }));
   };
 
+  const handleAssignMitra = (mitraName: string, activityId: number) => {
+    handleAddParticipant(activityId, mitraName);
+  };
+
   const toggleCardExpanded = (cardId: number) => {
     setExpandedCards(prev => ({
       ...prev,
@@ -187,80 +189,124 @@ export default function HonorBulanan() {
   };
 
   const selectedYearData = yearsData.find(y => y.id === selectedYear);
-  const selectedTeamData = teamsData.find(t => t.id === selectedTeam);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Filters Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex">
+        {/* Left Sidebar Filters */}
+        <div className="w-80 bg-white border-r border-gray-200 p-4 space-y-4 overflow-y-auto h-screen">
           {/* Year Filter */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="bg-gray-100 rounded-lg p-4 mb-4">
-              <h3 className="font-semibold text-gray-800 text-center">Tahun</h3>
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="bg-gray-100 rounded-lg p-3 mb-3">
+              <h3 className="font-medium text-gray-800 text-center text-sm">Tahun</h3>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-2">
               {yearsData.slice(0, showMoreYears ? yearsData.length : 2).map((year) => (
-                <label key={year.id} className="flex items-center space-x-3 cursor-pointer">
+                <label key={year.id} className="flex items-center space-x-2 cursor-pointer">
                   <input
                     type="radio"
                     name="year"
                     value={year.id}
                     checked={selectedYear === year.id}
                     onChange={(e) => setSelectedYear(e.target.value)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <span className="text-gray-700">{year.label}</span>
+                  <span className="text-gray-700 text-xs">{year.label}</span>
                   {selectedYear === year.id && (
-                    <span className="text-sm text-gray-500">({year.count})</span>
+                    <span className="text-xs text-gray-500">({year.count})</span>
                   )}
                 </label>
               ))}
               
               <button
                 onClick={() => setShowMoreYears(!showMoreYears)}
-                className="text-blue-600 text-sm hover:text-blue-800 transition-colors"
+                className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
               >
                 {showMoreYears ? "Lihat Lebih Sedikit" : "Lihat Lebih Banyak"}
               </button>
             </div>
           </div>
 
-          {/* Team Filter */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="bg-gray-100 rounded-lg p-4 mb-4">
-              <h3 className="font-semibold text-gray-800 text-center">Tim</h3>
+          {/* Month Filter */}
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="bg-gray-100 rounded-lg p-3 mb-3">
+              <h3 className="font-medium text-gray-800 text-center text-sm">Bulan</h3>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-2">
+              {monthsData.slice(0, showMoreMonths ? monthsData.length : 4).map((month) => (
+                <label key={month.id} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="month"
+                    value={month.id}
+                    checked={selectedMonth === month.id}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-gray-700 text-xs">{month.label}</span>
+                </label>
+              ))}
+              
+              <button
+                onClick={() => setShowMoreMonths(!showMoreMonths)}
+                className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
+              >
+                {showMoreMonths ? "Lihat Lebih Sedikit" : "Lihat Lebih Banyak"}
+              </button>
+            </div>
+          </div>
+
+          {/* Team Filter */}
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="bg-gray-100 rounded-lg p-3 mb-3">
+              <h3 className="font-medium text-gray-800 text-center text-sm">Tim</h3>
+            </div>
+            
+            <div className="space-y-2">
               {teamsData.slice(0, showMoreTeams ? teamsData.length : 2).map((team) => (
-                <label key={team.id} className="flex items-center space-x-3 cursor-pointer">
+                <label key={team.id} className="flex items-center space-x-2 cursor-pointer">
                   <input
                     type="radio"
                     name="team"
                     value={team.id}
                     checked={selectedTeam === team.id}
                     onChange={(e) => setSelectedTeam(e.target.value)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <span className="text-gray-700 text-sm">{team.label}</span>
+                  <span className="text-gray-700 text-xs">{team.label}</span>
                   {selectedTeam === team.id && (
-                    <span className="text-sm text-gray-500">({team.count})</span>
+                    <span className="text-xs text-gray-500">({team.count})</span>
                   )}
                 </label>
               ))}
               
               <button
                 onClick={() => setShowMoreTeams(!showMoreTeams)}
-                className="text-blue-600 text-sm hover:text-blue-800 transition-colors"
+                className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
               >
                 {showMoreTeams ? "Lihat Lebih Sedikit" : "Lihat Lebih Banyak"}
               </button>
             </div>
           </div>
+
+          {/* Tambah Mitra Button */}
+          <button
+            onClick={() => setShowMitraTable(!showMitraTable)}
+            className={`w-full flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+              showMitraTable 
+                ? 'bg-red-600 text-white hover:bg-red-700' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            <UserPlus className="h-4 w-4 mr-2" />
+            {showMitraTable ? 'Tutup Tabel Mitra' : 'Tambah Mitra'}
+          </button>
         </div>
 
+        {/* Main Content */}
+        <div className="flex-1 p-6 space-y-6">
           {/* Activities Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activities.map((activity) => (
@@ -305,7 +351,7 @@ export default function HonorBulanan() {
                         </button>
                       </div>
                     ))}
-
+                    
                     {activity.participants.length === 0 && (
                       <div className="text-center py-3">
                         <span className="text-xs text-gray-500">Belum ada mitra</span>
@@ -313,7 +359,7 @@ export default function HonorBulanan() {
                     )}
                   </div>
 
-                  {/* Expanded Content - Add Participant */}
+                  {/* Expanded Content */}
                   {expandedCards[activity.id] && (
                     <div className="mt-3 pt-3 border-t border-gray-300">
                       <div className="space-y-2">
@@ -408,7 +454,7 @@ export default function HonorBulanan() {
                                 e.target.value = "";
                               }
                             }}
-                            className="px-3 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2"
+                            className="px-3 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                             <option value="">Assign ke...</option>
                             {activities.map((activity) => (
@@ -426,52 +472,53 @@ export default function HonorBulanan() {
             </div>
           )}
 
-        {/* Summary Stats */}
-        {activities.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {activities.length}
+          {/* Summary Stats */}
+          {activities.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border p-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-xl font-bold text-blue-600">
+                    {activities.length}
+                  </div>
+                  <div className="text-xs text-gray-600">Total Kegiatan</div>
                 </div>
-                <div className="text-sm text-gray-600">Total Kegiatan</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">
-                  {activities.reduce((sum, activity) => sum + activity.participants.length, 0)}
+                <div>
+                  <div className="text-xl font-bold text-green-600">
+                    {activities.reduce((sum, activity) => sum + activity.participants.length, 0)}
+                  </div>
+                  <div className="text-xs text-gray-600">Total Mitra Terlibat</div>
                 </div>
-                <div className="text-sm text-gray-600">Total Mitra Terlibat</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-600">
-                  {selectedYearData?.count || 0}
-                </div>
-                <div className="text-sm text-gray-600">
-                  Kegiatan Tahun {selectedYear}
+                <div>
+                  <div className="text-xl font-bold text-purple-600">
+                    {selectedYearData?.count || 0}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Kegiatan Tahun {selectedYear}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Empty State */}
-        {activities.length === 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-            <div className="text-gray-400 mb-4">
-              <Plus className="h-16 w-16 mx-auto" />
+          {/* Empty State */}
+          {activities.length === 0 && (
+            <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
+              <div className="text-gray-400 mb-4">
+                <Plus className="h-12 w-12 mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Belum ada kegiatan
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Tidak ada kegiatan yang ditemukan untuk filter yang dipilih.
+              </p>
+              <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <Plus className="h-4 w-4 mr-2" />
+                Tambah Kegiatan Pertama
+              </button>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Belum ada kegiatan
-            </h3>
-            <p className="text-gray-500 mb-6">
-              Tidak ada kegiatan yang ditemukan untuk filter yang dipilih.
-            </p>
-            <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              <Plus className="h-4 w-4 mr-2" />
-              Tambah Kegiatan Pertama
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
