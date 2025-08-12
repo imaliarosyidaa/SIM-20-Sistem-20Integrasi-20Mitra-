@@ -54,6 +54,11 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --stats-bg: 244 50% 58%;
+    --stats-card: 0 0% 100%;
+    --stats-primary: 217 91% 60%;
+    --stats-secondary: 142 76% 36%;
   }
 
   .dark {
