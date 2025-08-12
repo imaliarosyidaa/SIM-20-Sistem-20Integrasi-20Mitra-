@@ -1,5 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, SortAsc, SortDesc, Download, Eye, Edit, Trash2 } from 'lucide-react';
+import React, { useState, useMemo } from "react";
+import {
+  Search,
+  Filter,
+  SortAsc,
+  SortDesc,
+  Download,
+  Eye,
+  Edit,
+  Trash2,
+} from "lucide-react";
 
 interface Column {
   key: string;
@@ -29,21 +38,26 @@ export default function DataTable({
   onView,
   onEdit,
   onDelete,
-  className = ''
+  className = "",
 }: DataTableProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   // Filter data based on search query
   const filteredData = useMemo(() => {
     if (!searchQuery) return data;
-    
-    return data.filter(row =>
-      columns.some(column =>
-        String(row[column.key] || '').toLowerCase().includes(searchQuery.toLowerCase())
-      )
+
+    return data.filter((row) =>
+      columns.some((column) =>
+        String(row[column.key] || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+      ),
     );
   }, [data, searchQuery, columns]);
 
@@ -56,10 +70,10 @@ export default function DataTable({
       const bValue = b[sortConfig.key];
 
       if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
+        return sortConfig.direction === "asc" ? -1 : 1;
       }
       if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+        return sortConfig.direction === "asc" ? 1 : -1;
       }
       return 0;
     });
@@ -74,28 +88,26 @@ export default function DataTable({
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
   const handleSort = (key: string) => {
-    setSortConfig(prev => {
+    setSortConfig((prev) => {
       if (prev?.key === key) {
-        return prev.direction === 'asc' 
-          ? { key, direction: 'desc' }
-          : null;
+        return prev.direction === "asc" ? { key, direction: "desc" } : null;
       }
-      return { key, direction: 'asc' };
+      return { key, direction: "asc" };
     });
   };
 
   const exportToCSV = () => {
-    const headers = columns.map(col => col.title).join(',');
-    const rows = sortedData.map(row =>
-      columns.map(col => `"${row[col.key] || ''}"`).join(',')
-    ).join('\n');
-    
+    const headers = columns.map((col) => col.title).join(",");
+    const rows = sortedData
+      .map((row) => columns.map((col) => `"${row[col.key] || ""}"`).join(","))
+      .join("\n");
+
     const csv = `${headers}\n${rows}`;
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const blob = new Blob([csv], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'data-export.csv';
+    a.download = "data-export.csv";
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -127,7 +139,7 @@ export default function DataTable({
               )}
             </div>
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={exportToCSV}
                 className="flex items-center px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
               >
@@ -156,7 +168,7 @@ export default function DataTable({
                     >
                       <span>{column.title}</span>
                       {sortConfig?.key === column.key ? (
-                        sortConfig.direction === 'asc' ? (
+                        sortConfig.direction === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -181,8 +193,13 @@ export default function DataTable({
             {paginatedData.map((row, index) => (
               <tr key={index} className="hover:bg-gray-50">
                 {columns.map((column) => (
-                  <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {column.render ? column.render(row[column.key], row) : row[column.key]}
+                  <td
+                    key={column.key}
+                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                  >
+                    {column.render
+                      ? column.render(row[column.key], row)
+                      : row[column.key]}
                   </td>
                 ))}
                 {actions && (
@@ -230,7 +247,9 @@ export default function DataTable({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-700">
-                Menampilkan {((currentPage - 1) * pageSize) + 1} sampai {Math.min(currentPage * pageSize, sortedData.length)} dari {sortedData.length} data
+                Menampilkan {(currentPage - 1) * pageSize + 1} sampai{" "}
+                {Math.min(currentPage * pageSize, sortedData.length)} dari{" "}
+                {sortedData.length} data
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -248,7 +267,7 @@ export default function DataTable({
                 <option value={50}>50</option>
               </select>
               <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-1 text-sm border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
               >
@@ -258,7 +277,9 @@ export default function DataTable({
                 {currentPage} dari {totalPages}
               </span>
               <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className="px-3 py-1 text-sm border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
               >

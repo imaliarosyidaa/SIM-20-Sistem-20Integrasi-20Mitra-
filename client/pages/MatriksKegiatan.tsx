@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
   Calendar,
   Plus,
   Filter,
@@ -9,61 +9,71 @@ import {
   MoreHorizontal,
   Clock,
   Users,
-  MapPin
-} from 'lucide-react';
+  MapPin,
+} from "lucide-react";
 
 // Mock data for activities
 const activities = [
   {
     id: 1,
-    title: 'Sensus Penduduk',
-    category: 'Data Mining',
-    date: '2025-07-01',
-    time: '09:00',
-    duration: '4 jam',
-    participants: ['ACHMAD SYAHRUL CHOIR'],
-    location: 'Desa Praya',
-    color: 'bg-blue-500',
-    status: 'confirmed'
+    title: "Sensus Penduduk",
+    category: "Data Mining",
+    date: "2025-07-01",
+    time: "09:00",
+    duration: "4 jam",
+    participants: ["ACHMAD SYAHRUL CHOIR"],
+    location: "Desa Praya",
+    color: "bg-blue-500",
+    status: "confirmed",
   },
   {
     id: 2,
-    title: 'Survei Ekonomi',
-    category: 'Interaksi Manusia dan Komputer',
-    date: '2025-07-08',
-    time: '08:00',
-    duration: '6 jam',
-    participants: ['Tim Survei A'],
-    location: 'Kecamatan Praya',
-    color: 'bg-green-500',
-    status: 'pending'
+    title: "Survei Ekonomi",
+    category: "Interaksi Manusia dan Komputer",
+    date: "2025-07-08",
+    time: "08:00",
+    duration: "6 jam",
+    participants: ["Tim Survei A"],
+    location: "Kecamatan Praya",
+    color: "bg-green-500",
+    status: "pending",
   },
   {
     id: 3,
-    title: 'Pendataan Harga',
-    category: 'K203504',
-    date: '2025-07-15',
-    time: '10:00',
-    duration: '3 jam',
-    participants: ['Tim Harga'],
-    location: 'Pasar Praya',
-    color: 'bg-purple-500',
-    status: 'confirmed'
-  }
+    title: "Pendataan Harga",
+    category: "K203504",
+    date: "2025-07-15",
+    time: "10:00",
+    duration: "3 jam",
+    participants: ["Tim Harga"],
+    location: "Pasar Praya",
+    color: "bg-purple-500",
+    status: "confirmed",
+  },
 ];
 
 const months = [
-  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
 ];
 
-const dayNames = ['SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'];
-const dayNamesShort = ['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'];
+const dayNames = ["SEN", "SEL", "RAB", "KAM", "JUM", "SAB", "MIN"];
+const dayNamesShort = ["Sn", "Sl", "Rb", "Km", "Jm", "Sb", "Mg"];
 
 export default function MatriksKegiatan() {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 1)); // July 2025
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
+  const [viewMode, setViewMode] = useState<"month" | "week" | "day">("month");
   const [showSidebar, setShowSidebar] = useState(true);
 
   const year = currentDate.getFullYear();
@@ -73,11 +83,12 @@ export default function MatriksKegiatan() {
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const daysInMonth = lastDayOfMonth.getDate();
-  const startingDayOfWeek = firstDayOfMonth.getDay() === 0 ? 6 : firstDayOfMonth.getDay() - 1;
+  const startingDayOfWeek =
+    firstDayOfMonth.getDay() === 0 ? 6 : firstDayOfMonth.getDay() - 1;
 
   // Generate calendar days
   const calendarDays = [];
-  
+
   // Previous month's trailing days
   const prevMonth = new Date(year, month - 1, 0);
   for (let i = startingDayOfWeek - 1; i >= 0; i--) {
@@ -85,7 +96,7 @@ export default function MatriksKegiatan() {
       day: prevMonth.getDate() - i,
       isCurrentMonth: false,
       isPreviousMonth: true,
-      date: new Date(year, month - 1, prevMonth.getDate() - i)
+      date: new Date(year, month - 1, prevMonth.getDate() - i),
     });
   }
 
@@ -95,7 +106,7 @@ export default function MatriksKegiatan() {
       day,
       isCurrentMonth: true,
       isPreviousMonth: false,
-      date: new Date(year, month, day)
+      date: new Date(year, month, day),
     });
   }
 
@@ -107,14 +118,14 @@ export default function MatriksKegiatan() {
       day,
       isCurrentMonth: false,
       isPreviousMonth: false,
-      date: new Date(year, month + 1, day)
+      date: new Date(year, month + 1, day),
     });
   }
 
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(prev => {
+  const navigateMonth = (direction: "prev" | "next") => {
+    setCurrentDate((prev) => {
       const newDate = new Date(prev);
-      if (direction === 'prev') {
+      if (direction === "prev") {
         newDate.setMonth(newDate.getMonth() - 1);
       } else {
         newDate.setMonth(newDate.getMonth() + 1);
@@ -124,7 +135,7 @@ export default function MatriksKegiatan() {
   };
 
   const getActivitiesForDate = (date: Date) => {
-    return activities.filter(activity => {
+    return activities.filter((activity) => {
       const activityDate = new Date(activity.date);
       return activityDate.toDateString() === date.toDateString();
     });
@@ -144,12 +155,12 @@ export default function MatriksKegiatan() {
               <Plus className="h-4 w-4 mr-2" />
               Tambah Kegiatan
             </button>
-            
+
             {/* Mini Calendar */}
             <div className="bg-gray-50 rounded-lg p-3">
               <div className="flex items-center justify-between mb-3">
-                <button 
-                  onClick={() => navigateMonth('prev')}
+                <button
+                  onClick={() => navigateMonth("prev")}
                   className="p-1 hover:bg-gray-200 rounded"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -157,22 +168,25 @@ export default function MatriksKegiatan() {
                 <span className="text-sm font-medium">
                   {months[month]} {year}
                 </span>
-                <button 
-                  onClick={() => navigateMonth('next')}
+                <button
+                  onClick={() => navigateMonth("next")}
                   className="p-1 hover:bg-gray-200 rounded"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-7 gap-1 mb-2">
-                {dayNamesShort.map(day => (
-                  <div key={day} className="text-xs text-gray-500 text-center p-1">
+                {dayNamesShort.map((day) => (
+                  <div
+                    key={day}
+                    className="text-xs text-gray-500 text-center p-1"
+                  >
                     {day}
                   </div>
                 ))}
               </div>
-              
+
               <div className="grid grid-cols-7 gap-1">
                 {calendarDays.slice(0, 42).map((dayData, index) => (
                   <button
@@ -180,9 +194,9 @@ export default function MatriksKegiatan() {
                     onClick={() => setSelectedDate(dayData.date)}
                     className={`
                       text-xs p-1 rounded hover:bg-blue-100 transition-colors
-                      ${!dayData.isCurrentMonth ? 'text-gray-300' : 'text-gray-900'}
-                      ${isToday(dayData.date) ? 'bg-brand-600 text-white hover:bg-brand-700' : ''}
-                      ${selectedDate?.toDateString() === dayData.date.toDateString() ? 'bg-blue-100' : ''}
+                      ${!dayData.isCurrentMonth ? "text-gray-300" : "text-gray-900"}
+                      ${isToday(dayData.date) ? "bg-brand-600 text-white hover:bg-brand-700" : ""}
+                      ${selectedDate?.toDateString() === dayData.date.toDateString() ? "bg-blue-100" : ""}
                     `}
                   >
                     {dayData.day}
@@ -194,7 +208,9 @@ export default function MatriksKegiatan() {
 
           {/* Activity Categories */}
           <div className="flex-1 p-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Kategori Kegiatan</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Kategori Kegiatan
+            </h3>
             <div className="space-y-2">
               <div className="flex items-center">
                 <input type="checkbox" className="mr-2" defaultChecked />
@@ -215,12 +231,16 @@ export default function MatriksKegiatan() {
 
             {/* Upcoming Activities */}
             <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">Kegiatan Mendatang</h3>
+              <h3 className="text-sm font-medium text-gray-900 mb-3">
+                Kegiatan Mendatang
+              </h3>
               <div className="space-y-3">
-                {activities.slice(0, 3).map(activity => (
+                {activities.slice(0, 3).map((activity) => (
                   <div key={activity.id} className="p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-start justify-between mb-1">
-                      <h4 className="text-sm font-medium text-gray-900">{activity.title}</h4>
+                      <h4 className="text-sm font-medium text-gray-900">
+                        {activity.title}
+                      </h4>
                       <button className="text-gray-400 hover:text-gray-600">
                         <MoreHorizontal className="h-4 w-4" />
                       </button>
@@ -255,8 +275,8 @@ export default function MatriksKegiatan() {
               <Calendar className="h-5 w-5" />
             </button>
             <div className="flex items-center space-x-2">
-              <button 
-                onClick={() => navigateMonth('prev')}
+              <button
+                onClick={() => navigateMonth("prev")}
                 className="p-2 hover:bg-gray-100 rounded"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -264,8 +284,8 @@ export default function MatriksKegiatan() {
               <h1 className="text-xl font-semibold">
                 {months[month]} {year}
               </h1>
-              <button 
-                onClick={() => navigateMonth('next')}
+              <button
+                onClick={() => navigateMonth("next")}
                 className="p-2 hover:bg-gray-100 rounded"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -278,26 +298,26 @@ export default function MatriksKegiatan() {
 
           <div className="flex items-center space-x-2">
             <div className="flex bg-gray-100 rounded-lg p-1">
-              <button 
-                onClick={() => setViewMode('month')}
-                className={`px-3 py-1 text-sm rounded ${viewMode === 'month' ? 'bg-white shadow' : ''}`}
+              <button
+                onClick={() => setViewMode("month")}
+                className={`px-3 py-1 text-sm rounded ${viewMode === "month" ? "bg-white shadow" : ""}`}
               >
                 Bulan
               </button>
-              <button 
-                onClick={() => setViewMode('week')}
-                className={`px-3 py-1 text-sm rounded ${viewMode === 'week' ? 'bg-white shadow' : ''}`}
+              <button
+                onClick={() => setViewMode("week")}
+                className={`px-3 py-1 text-sm rounded ${viewMode === "week" ? "bg-white shadow" : ""}`}
               >
                 Minggu
               </button>
-              <button 
-                onClick={() => setViewMode('day')}
-                className={`px-3 py-1 text-sm rounded ${viewMode === 'day' ? 'bg-white shadow' : ''}`}
+              <button
+                onClick={() => setViewMode("day")}
+                className={`px-3 py-1 text-sm rounded ${viewMode === "day" ? "bg-white shadow" : ""}`}
               >
                 Hari
               </button>
             </div>
-            
+
             <button className="p-2 hover:bg-gray-100 rounded">
               <Search className="h-5 w-5" />
             </button>
@@ -311,8 +331,11 @@ export default function MatriksKegiatan() {
         <div className="flex-1 overflow-auto">
           {/* Day Headers */}
           <div className="grid grid-cols-7 border-b">
-            {dayNames.map(day => (
-              <div key={day} className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50">
+            {dayNames.map((day) => (
+              <div
+                key={day}
+                className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50"
+              >
                 {day}
               </div>
             ))}
@@ -322,28 +345,30 @@ export default function MatriksKegiatan() {
           <div className="grid grid-cols-7 flex-1">
             {calendarDays.map((dayData, index) => {
               const dayActivities = getActivitiesForDate(dayData.date);
-              
+
               return (
                 <div
                   key={index}
                   className={`
                     min-h-[120px] border-r border-b p-2 hover:bg-gray-50 cursor-pointer
-                    ${!dayData.isCurrentMonth ? 'bg-gray-50/50' : 'bg-white'}
+                    ${!dayData.isCurrentMonth ? "bg-gray-50/50" : "bg-white"}
                   `}
                   onClick={() => setSelectedDate(dayData.date)}
                 >
-                  <div className={`
+                  <div
+                    className={`
                     flex items-center justify-center w-6 h-6 rounded-full text-sm mb-2
-                    ${!dayData.isCurrentMonth ? 'text-gray-300' : 'text-gray-900'}
-                    ${isToday(dayData.date) ? 'bg-brand-600 text-white' : ''}
-                    ${selectedDate?.toDateString() === dayData.date.toDateString() ? 'bg-blue-100' : ''}
-                  `}>
+                    ${!dayData.isCurrentMonth ? "text-gray-300" : "text-gray-900"}
+                    ${isToday(dayData.date) ? "bg-brand-600 text-white" : ""}
+                    ${selectedDate?.toDateString() === dayData.date.toDateString() ? "bg-blue-100" : ""}
+                  `}
+                  >
                     {dayData.day}
                   </div>
 
                   {/* Activities */}
                   <div className="space-y-1">
-                    {dayActivities.map(activity => (
+                    {dayActivities.map((activity) => (
                       <div
                         key={activity.id}
                         className={`

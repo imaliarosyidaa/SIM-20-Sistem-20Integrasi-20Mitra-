@@ -1,52 +1,52 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  BarChart3, 
-  Database, 
-  FileSpreadsheet, 
-  Home, 
-  Menu, 
-  Star, 
-  Users, 
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  BarChart3,
+  Database,
+  FileSpreadsheet,
+  Home,
+  Menu,
+  Star,
+  Users,
   X,
-  TrendingUp
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+  TrendingUp,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const menuItems = [
-  { 
-    icon: Home, 
-    label: 'Dashboard', 
-    href: '/' 
+  {
+    icon: Home,
+    label: "Dashboard",
+    href: "/",
   },
-  { 
-    icon: BarChart3, 
-    label: 'Matriks Kegiatan', 
-    href: '/matriks' 
+  {
+    icon: BarChart3,
+    label: "Matriks Kegiatan",
+    href: "/matriks",
   },
-  { 
-    icon: FileSpreadsheet, 
-    label: 'Rekap Honor Mitra', 
-    href: '/rekap-honor' 
+  {
+    icon: FileSpreadsheet,
+    label: "Rekap Honor Mitra",
+    href: "/rekap-honor",
   },
-  { 
-    icon: TrendingUp, 
-    label: 'Honor Mitra Bulanan', 
-    href: '/honor-bulanan' 
+  {
+    icon: TrendingUp,
+    label: "Honor Mitra Bulanan",
+    href: "/honor-bulanan",
   },
-  { 
-    icon: Database, 
-    label: 'Database Mitra', 
-    href: '/database' 
+  {
+    icon: Database,
+    label: "Database Mitra",
+    href: "/database",
   },
-  { 
-    icon: Star, 
-    label: 'Evaluasi Mitra', 
-    href: '/evaluasi' 
+  {
+    icon: Star,
+    label: "Evaluasi Mitra",
+    href: "/evaluasi",
   },
 ];
 
@@ -58,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         >
@@ -67,10 +67,12 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       {/* Sidebar */}
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform bg-gradient-to-b from-brand-600 to-brand-800 transition-transform duration-300 lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-64 transform bg-gradient-to-b from-brand-600 to-brand-800 transition-transform duration-300 lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center justify-between px-6">
@@ -83,7 +85,7 @@ export default function Layout({ children }: LayoutProps) {
                 <p className="text-xs text-blue-100">Sistem Integrasi Mitra</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-white"
             >
@@ -96,7 +98,7 @@ export default function Layout({ children }: LayoutProps) {
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.href;
-              
+
               return (
                 <Link
                   key={item.href}
@@ -105,7 +107,7 @@ export default function Layout({ children }: LayoutProps) {
                     "group flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-colors",
                     isActive
                       ? "bg-white/20 text-white shadow-lg"
-                      : "text-blue-100 hover:bg-white/10 hover:text-white"
+                      : "text-blue-100 hover:bg-white/10 hover:text-white",
                   )}
                   onClick={() => setSidebarOpen(false)}
                 >
@@ -124,8 +126,12 @@ export default function Layout({ children }: LayoutProps) {
                   <Users className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">BPS Statistics</p>
-                  <p className="text-xs text-blue-100">Kabupaten Lombok Tengah</p>
+                  <p className="text-sm font-medium text-white">
+                    BPS Statistics
+                  </p>
+                  <p className="text-xs text-blue-100">
+                    Kabupaten Lombok Tengah
+                  </p>
                 </div>
               </div>
             </div>
@@ -146,13 +152,19 @@ export default function Layout({ children }: LayoutProps) {
                 <Menu className="h-6 w-6" />
               </button>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-                <p className="text-sm text-gray-500">Sistem Informasi Manajemen Statistik</p>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Dashboard
+                </h1>
+                <p className="text-sm text-gray-500">
+                  Sistem Informasi Manajemen Statistik
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">Administrator</p>
+                <p className="text-sm font-medium text-gray-900">
+                  Administrator
+                </p>
                 <p className="text-xs text-gray-500">BPS Lombok Tengah</p>
               </div>
               <div className="h-8 w-8 rounded-full bg-brand-600 flex items-center justify-center">
@@ -163,9 +175,7 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="p-6">
-          {children}
-        </main>
+        <main className="p-6">{children}</main>
       </div>
     </div>
   );
