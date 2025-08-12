@@ -92,6 +92,11 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --stats-bg: 244 50% 58%;
+    --stats-card: 222.2 84% 4.9%;
+    --stats-primary: 217 91% 60%;
+    --stats-secondary: 142 76% 36%;
   }
 }
 
