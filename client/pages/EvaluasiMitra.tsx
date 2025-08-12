@@ -139,16 +139,38 @@ const evaluasiData = [
 ];
 
 const ratingCriteria = [
-  { label: "Sangat Baik", value: 5, color: "text-green-600", bgColor: "bg-green-100" },
+  {
+    label: "Sangat Baik",
+    value: 5,
+    color: "text-green-600",
+    bgColor: "bg-green-100",
+  },
   { label: "Baik", value: 4, color: "text-blue-600", bgColor: "bg-blue-100" },
-  { label: "Cukup Baik", value: 3, color: "text-yellow-600", bgColor: "bg-yellow-100" },
-  { label: "Kurang Baik", value: 2, color: "text-orange-600", bgColor: "bg-orange-100" },
-  { label: "Sangat Tidak Baik", value: 1, color: "text-red-600", bgColor: "bg-red-100" },
+  {
+    label: "Cukup Baik",
+    value: 3,
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-100",
+  },
+  {
+    label: "Kurang Baik",
+    value: 2,
+    color: "text-orange-600",
+    bgColor: "bg-orange-100",
+  },
+  {
+    label: "Sangat Tidak Baik",
+    value: 1,
+    color: "text-red-600",
+    bgColor: "bg-red-100",
+  },
 ];
 
 export default function EvaluasiMitra() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"highest" | "lowest" | "name" | "date">("highest");
+  const [sortBy, setSortBy] = useState<"highest" | "lowest" | "name" | "date">(
+    "highest",
+  );
   const [showEvaluationForm, setShowEvaluationForm] = useState(false);
   const [selectedMitra, setSelectedMitra] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -166,10 +188,11 @@ export default function EvaluasiMitra() {
 
   // Filter dan sorting data
   const filteredData = evaluasiData
-    .filter((mitra) =>
-      mitra.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mitra.kecamatan.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mitra.desa.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(
+      (mitra) =>
+        mitra.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mitra.kecamatan.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mitra.desa.toLowerCase().includes(searchQuery.toLowerCase()),
     )
     .sort((a, b) => {
       switch (sortBy) {
@@ -180,7 +203,10 @@ export default function EvaluasiMitra() {
         case "name":
           return a.nama.localeCompare(b.nama);
         case "date":
-          return new Date(b.tanggal_evaluasi).getTime() - new Date(a.tanggal_evaluasi).getTime();
+          return (
+            new Date(b.tanggal_evaluasi).getTime() -
+            new Date(a.tanggal_evaluasi).getTime()
+          );
         default:
           return 0;
       }
@@ -192,10 +218,17 @@ export default function EvaluasiMitra() {
   const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   // Statistics
-  const avgRating = (filteredData.reduce((sum, item) => sum + item.rating, 0) / filteredData.length).toFixed(1);
+  const avgRating = (
+    filteredData.reduce((sum, item) => sum + item.rating, 0) /
+    filteredData.length
+  ).toFixed(1);
   const excellentCount = filteredData.filter((m) => m.rating >= 4.5).length;
-  const goodCount = filteredData.filter((m) => m.rating >= 4.0 && m.rating < 4.5).length;
-  const needsImprovementCount = filteredData.filter((m) => m.rating < 4.0).length;
+  const goodCount = filteredData.filter(
+    (m) => m.rating >= 4.0 && m.rating < 4.5,
+  ).length;
+  const needsImprovementCount = filteredData.filter(
+    (m) => m.rating < 4.0,
+  ).length;
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return "text-green-600";
@@ -233,7 +266,15 @@ export default function EvaluasiMitra() {
     setSelectedMitra(null);
   };
 
-  const StarRating = ({ rating, onRatingChange, readonly = false }: { rating: number; onRatingChange?: (rating: number) => void; readonly?: boolean }) => {
+  const StarRating = ({
+    rating,
+    onRatingChange,
+    readonly = false,
+  }: {
+    rating: number;
+    onRatingChange?: (rating: number) => void;
+    readonly?: boolean;
+  }) => {
     return (
       <div className="flex items-center space-x-1">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -316,7 +357,9 @@ export default function EvaluasiMitra() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Sangat Baik</p>
-              <p className="text-2xl font-bold text-green-600">{excellentCount}</p>
+              <p className="text-2xl font-bold text-green-600">
+                {excellentCount}
+              </p>
             </div>
             <TrendingUp className="h-8 w-8 text-green-500" />
           </div>
@@ -338,7 +381,9 @@ export default function EvaluasiMitra() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Perlu Perbaikan</p>
-              <p className="text-2xl font-bold text-orange-600">{needsImprovementCount}</p>
+              <p className="text-2xl font-bold text-orange-600">
+                {needsImprovementCount}
+              </p>
             </div>
             <TrendingDown className="h-8 w-8 text-orange-500" />
           </div>
@@ -429,11 +474,15 @@ export default function EvaluasiMitra() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{mitra.kecamatan}</div>
+                    <div className="text-sm text-gray-900">
+                      {mitra.kecamatan}
+                    </div>
                     <div className="text-sm text-gray-500">{mitra.desa}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{mitra.kegiatan_terakhir}</div>
+                    <div className="text-sm text-gray-900">
+                      {mitra.kegiatan_terakhir}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -451,7 +500,9 @@ export default function EvaluasiMitra() {
                           </div>
                         ))}
                       </div>
-                      <span className={`ml-2 text-sm font-medium ${getRatingColor(mitra.rating)}`}>
+                      <span
+                        className={`ml-2 text-sm font-medium ${getRatingColor(mitra.rating)}`}
+                      >
                         {mitra.rating}
                       </span>
                     </div>
@@ -461,11 +512,15 @@ export default function EvaluasiMitra() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {new Date(mitra.tanggal_evaluasi).toLocaleDateString("id-ID")}
+                      {new Date(mitra.tanggal_evaluasi).toLocaleDateString(
+                        "id-ID",
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{mitra.evaluator}</div>
+                    <div className="text-sm text-gray-900">
+                      {mitra.evaluator}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center space-x-2">
@@ -531,7 +586,9 @@ export default function EvaluasiMitra() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
-                  {selectedMitra ? `Evaluasi ${selectedMitra.nama}` : "Evaluasi Baru"}
+                  {selectedMitra
+                    ? `Evaluasi ${selectedMitra.nama}`
+                    : "Evaluasi Baru"}
                 </h2>
                 <button
                   onClick={() => setShowEvaluationForm(false)}
@@ -547,7 +604,7 @@ export default function EvaluasiMitra() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">
                     Kriteria Penilaian
                   </h3>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -556,7 +613,10 @@ export default function EvaluasiMitra() {
                       <StarRating
                         rating={evaluationForm.kualitas_data}
                         onRatingChange={(rating) =>
-                          setEvaluationForm({ ...evaluationForm, kualitas_data: rating })
+                          setEvaluationForm({
+                            ...evaluationForm,
+                            kualitas_data: rating,
+                          })
                         }
                       />
                     </div>
@@ -568,7 +628,10 @@ export default function EvaluasiMitra() {
                       <StarRating
                         rating={evaluationForm.ketepatan_waktu}
                         onRatingChange={(rating) =>
-                          setEvaluationForm({ ...evaluationForm, ketepatan_waktu: rating })
+                          setEvaluationForm({
+                            ...evaluationForm,
+                            ketepatan_waktu: rating,
+                          })
                         }
                       />
                     </div>
@@ -580,7 +643,10 @@ export default function EvaluasiMitra() {
                       <StarRating
                         rating={evaluationForm.komunikasi}
                         onRatingChange={(rating) =>
-                          setEvaluationForm({ ...evaluationForm, komunikasi: rating })
+                          setEvaluationForm({
+                            ...evaluationForm,
+                            komunikasi: rating,
+                          })
                         }
                       />
                     </div>
@@ -592,7 +658,10 @@ export default function EvaluasiMitra() {
                       <StarRating
                         rating={evaluationForm.profesionalisme}
                         onRatingChange={(rating) =>
-                          setEvaluationForm({ ...evaluationForm, profesionalisme: rating })
+                          setEvaluationForm({
+                            ...evaluationForm,
+                            profesionalisme: rating,
+                          })
                         }
                       />
                     </div>
@@ -607,7 +676,10 @@ export default function EvaluasiMitra() {
                   <textarea
                     value={evaluationForm.keterangan}
                     onChange={(e) =>
-                      setEvaluationForm({ ...evaluationForm, keterangan: e.target.value })
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        keterangan: e.target.value,
+                      })
                     }
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
@@ -624,7 +696,10 @@ export default function EvaluasiMitra() {
                     type="text"
                     value={evaluationForm.evaluator}
                     onChange={(e) =>
-                      setEvaluationForm({ ...evaluationForm, evaluator: e.target.value })
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        evaluator: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                     placeholder="Masukkan nama evaluator"
@@ -637,7 +712,9 @@ export default function EvaluasiMitra() {
                     Ringkasan Penilaian
                   </h4>
                   <div className="flex items-center space-x-4">
-                    <span className="text-sm text-gray-600">Rating Rata-rata:</span>
+                    <span className="text-sm text-gray-600">
+                      Rating Rata-rata:
+                    </span>
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 mr-1" />
                       <span className="text-lg font-bold text-gray-900">

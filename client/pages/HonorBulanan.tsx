@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  ChevronDown,
-  ChevronUp,
-  X,
-  Plus,
-  UserPlus,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, X, Plus, UserPlus } from "lucide-react";
 
 // Mock data structure
 const yearsData = [
@@ -31,7 +25,11 @@ const monthsData = [
 
 const teamsData = [
   { id: "rumah_tangga", label: "Statistik Rumah Tangga", count: 85 },
-  { id: "pertanian", label: "Statistik Pertanian, Industri, dan PEK", count: 71 },
+  {
+    id: "pertanian",
+    label: "Statistik Pertanian, Industri, dan PEK",
+    count: 71,
+  },
 ];
 
 const activitiesData = [
@@ -43,29 +41,29 @@ const activitiesData = [
     month: "februari",
     participants: [
       "A816.M.Dahlan_Praya",
-      "A815.M.Dahlan_Praya", 
+      "A815.M.Dahlan_Praya",
       "A816.M.Dahlan_Praya",
-      "A815.M.Dahlan_Praya"
+      "A815.M.Dahlan_Praya",
     ],
-    color: "bg-red-200"
+    color: "bg-red-200",
   },
   {
     id: 2,
     title: "Pemutakhiran Sakeenas Februari",
-    team_id: "rumah_tangga", 
+    team_id: "rumah_tangga",
     year: "2024",
     month: "februari",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 3,
     title: "Pemutakhiran Sakeenas Februari",
     team_id: "rumah_tangga",
     year: "2024",
-    month: "maret", 
+    month: "maret",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 4,
@@ -74,16 +72,16 @@ const activitiesData = [
     year: "2024",
     month: "februari",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 5,
-    title: "Pemutakhiran Sakeenas Februari", 
+    title: "Pemutakhiran Sakeenas Februari",
     team_id: "pertanian",
     year: "2024",
     month: "maret",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 6,
@@ -92,7 +90,7 @@ const activitiesData = [
     year: "2024",
     month: "april",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 7,
@@ -101,26 +99,56 @@ const activitiesData = [
     year: "2025",
     month: "januari",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
   {
     id: 8,
     title: "Pemutakhiran Sakeenas Februari",
-    team_id: "pertanian", 
+    team_id: "pertanian",
     year: "2025",
     month: "januari",
     participants: [],
-    color: "bg-gray-200"
+    color: "bg-gray-200",
   },
 ];
 
 const availableMitra = [
-  { id: 1, name: "A816.M.Dahlan_Praya", team: "Statistik Rumah Tangga", status: "Tersedia" },
-  { id: 2, name: "A815.M.Dahlan_Praya", team: "Statistik Rumah Tangga", status: "Tersedia" },
-  { id: 3, name: "A720.Siti Aminah_Praya", team: "Statistik Rumah Tangga", status: "Tersedia" },
-  { id: 4, name: "A632.Ahmad Fauzi_Jonggat", team: "Statistik Pertanian", status: "Tersedia" },
-  { id: 5, name: "B201.Dewi Sartika_Pujut", team: "Statistik Pertanian", status: "Tersedia" },
-  { id: 6, name: "B301.Bayu Santoso_Kelayu", team: "Statistik Pertanian", status: "Tersedia" },
+  {
+    id: 1,
+    name: "A816.M.Dahlan_Praya",
+    team: "Statistik Rumah Tangga",
+    status: "Tersedia",
+  },
+  {
+    id: 2,
+    name: "A815.M.Dahlan_Praya",
+    team: "Statistik Rumah Tangga",
+    status: "Tersedia",
+  },
+  {
+    id: 3,
+    name: "A720.Siti Aminah_Praya",
+    team: "Statistik Rumah Tangga",
+    status: "Tersedia",
+  },
+  {
+    id: 4,
+    name: "A632.Ahmad Fauzi_Jonggat",
+    team: "Statistik Pertanian",
+    status: "Tersedia",
+  },
+  {
+    id: 5,
+    name: "B201.Dewi Sartika_Pujut",
+    team: "Statistik Pertanian",
+    status: "Tersedia",
+  },
+  {
+    id: 6,
+    name: "B301.Bayu Santoso_Kelayu",
+    team: "Statistik Pertanian",
+    status: "Tersedia",
+  },
 ];
 
 export default function HonorBulanan() {
@@ -131,16 +159,19 @@ export default function HonorBulanan() {
   const [showMoreMonths, setShowMoreMonths] = useState(false);
   const [showMoreTeams, setShowMoreTeams] = useState(false);
   const [activities, setActivities] = useState(activitiesData);
-  const [expandedCards, setExpandedCards] = useState<{[key: number]: boolean}>({});
+  const [expandedCards, setExpandedCards] = useState<{
+    [key: number]: boolean;
+  }>({});
   const [showMitraTable, setShowMitraTable] = useState(false);
 
   // AJAX-like filter effect
   useEffect(() => {
     const timer = setTimeout(() => {
-      const filtered = activitiesData.filter(activity => {
+      const filtered = activitiesData.filter((activity) => {
         const matchesYear = activity.year === selectedYear;
         const matchesTeam = activity.team_id === selectedTeam;
-        const matchesMonth = selectedMonth === "semua" || activity.month === selectedMonth;
+        const matchesMonth =
+          selectedMonth === "semua" || activity.month === selectedMonth;
         return matchesYear && matchesTeam && matchesMonth;
       });
       setActivities(filtered);
@@ -149,32 +180,41 @@ export default function HonorBulanan() {
     return () => clearTimeout(timer);
   }, [selectedYear, selectedMonth, selectedTeam]);
 
-  const handleRemoveParticipant = (activityId: number, participantIndex: number) => {
-    setActivities(prev => prev.map(activity => {
-      if (activity.id === activityId) {
-        const newParticipants = activity.participants.filter((_, index) => index !== participantIndex);
-        return {
-          ...activity,
-          participants: newParticipants,
-          color: newParticipants.length > 0 ? "bg-red-200" : "bg-gray-200"
-        };
-      }
-      return activity;
-    }));
+  const handleRemoveParticipant = (
+    activityId: number,
+    participantIndex: number,
+  ) => {
+    setActivities((prev) =>
+      prev.map((activity) => {
+        if (activity.id === activityId) {
+          const newParticipants = activity.participants.filter(
+            (_, index) => index !== participantIndex,
+          );
+          return {
+            ...activity,
+            participants: newParticipants,
+            color: newParticipants.length > 0 ? "bg-red-200" : "bg-gray-200",
+          };
+        }
+        return activity;
+      }),
+    );
   };
 
   const handleAddParticipant = (activityId: number, participant: string) => {
-    setActivities(prev => prev.map(activity => {
-      if (activity.id === activityId) {
-        const newParticipants = [...activity.participants, participant];
-        return {
-          ...activity,
-          participants: newParticipants,
-          color: newParticipants.length > 0 ? "bg-red-200" : "bg-gray-200"
-        };
-      }
-      return activity;
-    }));
+    setActivities((prev) =>
+      prev.map((activity) => {
+        if (activity.id === activityId) {
+          const newParticipants = [...activity.participants, participant];
+          return {
+            ...activity,
+            participants: newParticipants,
+            color: newParticipants.length > 0 ? "bg-red-200" : "bg-gray-200",
+          };
+        }
+        return activity;
+      }),
+    );
   };
 
   const handleAssignMitra = (mitraName: string, activityId: number) => {
@@ -182,13 +222,13 @@ export default function HonorBulanan() {
   };
 
   const toggleCardExpanded = (cardId: number) => {
-    setExpandedCards(prev => ({
+    setExpandedCards((prev) => ({
       ...prev,
-      [cardId]: !prev[cardId]
+      [cardId]: !prev[cardId],
     }));
   };
 
-  const selectedYearData = yearsData.find(y => y.id === selectedYear);
+  const selectedYearData = yearsData.find((y) => y.id === selectedYear);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -198,27 +238,36 @@ export default function HonorBulanan() {
           {/* Year Filter */}
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="bg-gray-100 rounded-lg p-3 mb-3">
-              <h3 className="font-medium text-gray-800 text-center text-sm">Tahun</h3>
+              <h3 className="font-medium text-gray-800 text-center text-sm">
+                Tahun
+              </h3>
             </div>
-            
+
             <div className="space-y-2">
-              {yearsData.slice(0, showMoreYears ? yearsData.length : 2).map((year) => (
-                <label key={year.id} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="year"
-                    value={year.id}
-                    checked={selectedYear === year.id}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-gray-700 text-xs">{year.label}</span>
-                  {selectedYear === year.id && (
-                    <span className="text-xs text-gray-500">({year.count})</span>
-                  )}
-                </label>
-              ))}
-              
+              {yearsData
+                .slice(0, showMoreYears ? yearsData.length : 2)
+                .map((year) => (
+                  <label
+                    key={year.id}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="year"
+                      value={year.id}
+                      checked={selectedYear === year.id}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-gray-700 text-xs">{year.label}</span>
+                    {selectedYear === year.id && (
+                      <span className="text-xs text-gray-500">
+                        ({year.count})
+                      </span>
+                    )}
+                  </label>
+                ))}
+
               <button
                 onClick={() => setShowMoreYears(!showMoreYears)}
                 className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
@@ -231,24 +280,31 @@ export default function HonorBulanan() {
           {/* Month Filter */}
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="bg-gray-100 rounded-lg p-3 mb-3">
-              <h3 className="font-medium text-gray-800 text-center text-sm">Bulan</h3>
+              <h3 className="font-medium text-gray-800 text-center text-sm">
+                Bulan
+              </h3>
             </div>
-            
+
             <div className="space-y-2">
-              {monthsData.slice(0, showMoreMonths ? monthsData.length : 4).map((month) => (
-                <label key={month.id} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="month"
-                    value={month.id}
-                    checked={selectedMonth === month.id}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-gray-700 text-xs">{month.label}</span>
-                </label>
-              ))}
-              
+              {monthsData
+                .slice(0, showMoreMonths ? monthsData.length : 4)
+                .map((month) => (
+                  <label
+                    key={month.id}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="month"
+                      value={month.id}
+                      checked={selectedMonth === month.id}
+                      onChange={(e) => setSelectedMonth(e.target.value)}
+                      className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-gray-700 text-xs">{month.label}</span>
+                  </label>
+                ))}
+
               <button
                 onClick={() => setShowMoreMonths(!showMoreMonths)}
                 className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
@@ -261,27 +317,36 @@ export default function HonorBulanan() {
           {/* Team Filter */}
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="bg-gray-100 rounded-lg p-3 mb-3">
-              <h3 className="font-medium text-gray-800 text-center text-sm">Tim</h3>
+              <h3 className="font-medium text-gray-800 text-center text-sm">
+                Tim
+              </h3>
             </div>
-            
+
             <div className="space-y-2">
-              {teamsData.slice(0, showMoreTeams ? teamsData.length : 2).map((team) => (
-                <label key={team.id} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="team"
-                    value={team.id}
-                    checked={selectedTeam === team.id}
-                    onChange={(e) => setSelectedTeam(e.target.value)}
-                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-gray-700 text-xs">{team.label}</span>
-                  {selectedTeam === team.id && (
-                    <span className="text-xs text-gray-500">({team.count})</span>
-                  )}
-                </label>
-              ))}
-              
+              {teamsData
+                .slice(0, showMoreTeams ? teamsData.length : 2)
+                .map((team) => (
+                  <label
+                    key={team.id}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="team"
+                      value={team.id}
+                      checked={selectedTeam === team.id}
+                      onChange={(e) => setSelectedTeam(e.target.value)}
+                      className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-gray-700 text-xs">{team.label}</span>
+                    {selectedTeam === team.id && (
+                      <span className="text-xs text-gray-500">
+                        ({team.count})
+                      </span>
+                    )}
+                  </label>
+                ))}
+
               <button
                 onClick={() => setShowMoreTeams(!showMoreTeams)}
                 className="text-blue-600 text-xs hover:text-blue-800 transition-colors"
@@ -295,13 +360,13 @@ export default function HonorBulanan() {
           <button
             onClick={() => setShowMitraTable(!showMitraTable)}
             className={`w-full flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-              showMitraTable 
-                ? 'bg-red-600 text-white hover:bg-red-700' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+              showMitraTable
+                ? "bg-red-600 text-white hover:bg-red-700"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           >
             <UserPlus className="h-4 w-4 mr-2" />
-            {showMitraTable ? 'Tutup Tabel Mitra' : 'Tambah Mitra'}
+            {showMitraTable ? "Tutup Tabel Mitra" : "Tambah Mitra"}
           </button>
         </div>
 
@@ -341,9 +406,13 @@ export default function HonorBulanan() {
                         key={index}
                         className="flex items-center justify-between bg-white/50 rounded px-2 py-1"
                       >
-                        <span className="text-xs text-gray-700">{participant}</span>
+                        <span className="text-xs text-gray-700">
+                          {participant}
+                        </span>
                         <button
-                          onClick={() => handleRemoveParticipant(activity.id, index)}
+                          onClick={() =>
+                            handleRemoveParticipant(activity.id, index)
+                          }
                           className="text-red-500 hover:text-red-700 transition-colors"
                           title="Hapus mitra"
                         >
@@ -351,10 +420,12 @@ export default function HonorBulanan() {
                         </button>
                       </div>
                     ))}
-                    
+
                     {activity.participants.length === 0 && (
                       <div className="text-center py-3">
-                        <span className="text-xs text-gray-500">Belum ada mitra</span>
+                        <span className="text-xs text-gray-500">
+                          Belum ada mitra
+                        </span>
                       </div>
                     )}
                   </div>
@@ -368,7 +439,10 @@ export default function HonorBulanan() {
                         </label>
                         <select
                           onChange={(e) => {
-                            if (e.target.value && !activity.participants.includes(e.target.value)) {
+                            if (
+                              e.target.value &&
+                              !activity.participants.includes(e.target.value)
+                            ) {
                               handleAddParticipant(activity.id, e.target.value);
                               e.target.value = "";
                             }
@@ -377,7 +451,10 @@ export default function HonorBulanan() {
                         >
                           <option value="">Pilih mitra...</option>
                           {availableMitra
-                            .filter(mitra => !activity.participants.includes(mitra.name))
+                            .filter(
+                              (mitra) =>
+                                !activity.participants.includes(mitra.name),
+                            )
                             .map((mitra) => (
                               <option key={mitra.id} value={mitra.name}>
                                 {mitra.name}
@@ -395,7 +472,9 @@ export default function HonorBulanan() {
             <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center min-h-[150px] hover:border-gray-400 transition-colors cursor-pointer">
               <div className="text-center">
                 <Plus className="h-6 w-6 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-500 text-xs">Tambah Kegiatan Baru</span>
+                <span className="text-gray-500 text-xs">
+                  Tambah Kegiatan Baru
+                </span>
               </div>
             </div>
           </div>
@@ -404,8 +483,12 @@ export default function HonorBulanan() {
           {showMitraTable && (
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">Daftar Mitra Tersedia</h3>
-                <p className="text-sm text-gray-600">Pilih mitra untuk ditugaskan ke kegiatan</p>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Daftar Mitra Tersedia
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Pilih mitra untuk ditugaskan ke kegiatan
+                </p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -434,12 +517,16 @@ export default function HonorBulanan() {
                               {mitra.name.split(".")[0] || mitra.name.charAt(0)}
                             </div>
                             <div>
-                              <div className="text-sm font-medium text-gray-900">{mitra.name}</div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {mitra.name}
+                              </div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{mitra.team}</div>
+                          <div className="text-sm text-gray-900">
+                            {mitra.team}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
@@ -450,7 +537,10 @@ export default function HonorBulanan() {
                           <select
                             onChange={(e) => {
                               if (e.target.value) {
-                                handleAssignMitra(mitra.name, parseInt(e.target.value));
+                                handleAssignMitra(
+                                  mitra.name,
+                                  parseInt(e.target.value),
+                                );
                                 e.target.value = "";
                               }
                             }}
@@ -458,7 +548,10 @@ export default function HonorBulanan() {
                           >
                             <option value="">Assign ke...</option>
                             {activities.map((activity) => (
-                              <option key={activity.id} value={activity.id.toString()}>
+                              <option
+                                key={activity.id}
+                                value={activity.id.toString()}
+                              >
                                 {activity.title}
                               </option>
                             ))}
@@ -484,9 +577,14 @@ export default function HonorBulanan() {
                 </div>
                 <div>
                   <div className="text-xl font-bold text-green-600">
-                    {activities.reduce((sum, activity) => sum + activity.participants.length, 0)}
+                    {activities.reduce(
+                      (sum, activity) => sum + activity.participants.length,
+                      0,
+                    )}
                   </div>
-                  <div className="text-xs text-gray-600">Total Mitra Terlibat</div>
+                  <div className="text-xs text-gray-600">
+                    Total Mitra Terlibat
+                  </div>
                 </div>
                 <div>
                   <div className="text-xl font-bold text-purple-600">

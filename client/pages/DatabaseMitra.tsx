@@ -176,9 +176,13 @@ export default function DatabaseMitra() {
       ? mitra.tahun_bergabung.toString() === selectedTahun
       : true;
 
-    const matchesStatus = selectedStatus ? mitra.status === selectedStatus : true;
+    const matchesStatus = selectedStatus
+      ? mitra.status === selectedStatus
+      : true;
 
-    const matchesGender = selectedGender ? mitra.gender === selectedGender : true;
+    const matchesGender = selectedGender
+      ? mitra.gender === selectedGender
+      : true;
 
     return (
       matchesSearch &&
@@ -267,7 +271,9 @@ export default function DatabaseMitra() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Total Mitra</p>
-                  <p className="text-2xl font-bold text-gray-900">{totalMitra}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {totalMitra}
+                  </p>
                 </div>
                 <Users className="h-8 w-8 text-blue-500" />
               </div>
@@ -277,7 +283,9 @@ export default function DatabaseMitra() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Mitra Aktif</p>
-                  <p className="text-2xl font-bold text-green-600">{mitraAktif}</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {mitraAktif}
+                  </p>
                 </div>
                 <User className="h-8 w-8 text-green-500" />
               </div>
@@ -299,7 +307,9 @@ export default function DatabaseMitra() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Perempuan</p>
-                  <p className="text-2xl font-bold text-pink-600">{perempuan}</p>
+                  <p className="text-2xl font-bold text-pink-600">
+                    {perempuan}
+                  </p>
                 </div>
                 <div className="h-8 w-8 bg-pink-100 rounded-full flex items-center justify-center">
                   <span className="text-pink-600 font-bold">♀</span>
@@ -359,11 +369,17 @@ export default function DatabaseMitra() {
                         <div className="text-sm text-gray-900">
                           {mitra.kecamatan}
                         </div>
-                        <div className="text-sm text-gray-500">{mitra.desa}</div>
+                        <div className="text-sm text-gray-500">
+                          {mitra.desa}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{mitra.telpon}</div>
-                        <div className="text-sm text-gray-500">{mitra.email}</div>
+                        <div className="text-sm text-gray-900">
+                          {mitra.telpon}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {mitra.email}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
@@ -424,8 +440,8 @@ export default function DatabaseMitra() {
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-700">
                   Menampilkan {startIndex + 1} sampai{" "}
-                  {Math.min(startIndex + itemsPerPage, filteredData.length)} dari{" "}
-                  {filteredData.length} data
+                  {Math.min(startIndex + itemsPerPage, filteredData.length)}{" "}
+                  dari {filteredData.length} data
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
