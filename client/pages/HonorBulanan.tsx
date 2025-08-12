@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, X, Plus, UserPlus, Save, Calendar } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  X,
+  Plus,
+  UserPlus,
+  Save,
+  Calendar,
+} from "lucide-react";
 
 // Mock data structure
 const yearsData = [
@@ -254,7 +262,7 @@ export default function HonorBulanan() {
 
   const handleCreateActivity = () => {
     const newActivity = {
-      id: Math.max(...activitiesData.map(a => a.id)) + 1,
+      id: Math.max(...activitiesData.map((a) => a.id)) + 1,
       title: newActivityForm.title,
       team_id: selectedTeam,
       year: newActivityForm.year,
@@ -265,7 +273,7 @@ export default function HonorBulanan() {
       color: "bg-gray-200",
     };
 
-    setActivities(prev => [...prev, newActivity]);
+    setActivities((prev) => [...prev, newActivity]);
     setNewActivityForm({
       title: "",
       date: "",
@@ -445,8 +453,12 @@ export default function HonorBulanan() {
                   <div className="space-y-1">
                     <div className="flex items-center text-xs text-gray-600">
                       <Calendar className="h-3 w-3 mr-1" />
-                      <span className="capitalize">{activity.month} {activity.year}</span>
-                      {activity.date && <span className="ml-1">- Tanggal {activity.date}</span>}
+                      <span className="capitalize">
+                        {activity.month} {activity.year}
+                      </span>
+                      {activity.date && (
+                        <span className="ml-1">- Tanggal {activity.date}</span>
+                      )}
                     </div>
                     <div className="text-xs font-semibold text-green-600">
                       Honor: {formatCurrency(activity.honor || 0)}
@@ -701,7 +713,12 @@ export default function HonorBulanan() {
                       <input
                         type="text"
                         value={newActivityForm.title}
-                        onChange={(e) => setNewActivityForm({ ...newActivityForm, title: e.target.value })}
+                        onChange={(e) =>
+                          setNewActivityForm({
+                            ...newActivityForm,
+                            title: e.target.value,
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Masukkan nama kegiatan"
                         required
@@ -718,7 +735,12 @@ export default function HonorBulanan() {
                           min="1"
                           max="31"
                           value={newActivityForm.date}
-                          onChange={(e) => setNewActivityForm({ ...newActivityForm, date: e.target.value })}
+                          onChange={(e) =>
+                            setNewActivityForm({
+                              ...newActivityForm,
+                              date: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="1-31"
                         />
@@ -730,15 +752,22 @@ export default function HonorBulanan() {
                         </label>
                         <select
                           value={newActivityForm.month}
-                          onChange={(e) => setNewActivityForm({ ...newActivityForm, month: e.target.value })}
+                          onChange={(e) =>
+                            setNewActivityForm({
+                              ...newActivityForm,
+                              month: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required
                         >
-                          {monthsData.filter(m => m.id !== "semua").map((month) => (
-                            <option key={month.id} value={month.id}>
-                              {month.label}
-                            </option>
-                          ))}
+                          {monthsData
+                            .filter((m) => m.id !== "semua")
+                            .map((month) => (
+                              <option key={month.id} value={month.id}>
+                                {month.label}
+                              </option>
+                            ))}
                         </select>
                       </div>
 
@@ -748,7 +777,12 @@ export default function HonorBulanan() {
                         </label>
                         <select
                           value={newActivityForm.year}
-                          onChange={(e) => setNewActivityForm({ ...newActivityForm, year: e.target.value })}
+                          onChange={(e) =>
+                            setNewActivityForm({
+                              ...newActivityForm,
+                              year: e.target.value,
+                            })
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required
                         >
@@ -765,7 +799,12 @@ export default function HonorBulanan() {
                       <input
                         type="number"
                         value={newActivityForm.honor}
-                        onChange={(e) => setNewActivityForm({ ...newActivityForm, honor: e.target.value })}
+                        onChange={(e) =>
+                          setNewActivityForm({
+                            ...newActivityForm,
+                            honor: e.target.value,
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Masukkan jumlah honor"
                         required
@@ -788,7 +827,9 @@ export default function HonorBulanan() {
                     <button
                       onClick={handleCreateActivity}
                       className="flex items-center px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                      disabled={!newActivityForm.title || !newActivityForm.honor}
+                      disabled={
+                        !newActivityForm.title || !newActivityForm.honor
+                      }
                     >
                       <Save className="h-4 w-4 mr-1" />
                       Simpan Kegiatan
