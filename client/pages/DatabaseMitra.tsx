@@ -18,8 +18,8 @@ import {
   X,
 } from "lucide-react";
 
-import ExampleComponent from '@components/ExampleComponent';
-import Hottable from '@components/ui/Hottable';
+import ExampleComponent from "@components/ExampleComponent";
+import Hottable from "@components/ui/Hottable";
 
 // Mock data untuk mitra
 const mitraData = [
@@ -165,7 +165,7 @@ export default function DatabaseMitra() {
   const [selectedGender, setSelectedGender] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  
+
   // Dropdown states
   const [showKecamatanDropdown, setShowKecamatanDropdown] = useState(false);
   const [showTahunDropdown, setShowTahunDropdown] = useState(false);
@@ -265,7 +265,9 @@ export default function DatabaseMitra() {
                       setShowGenderDropdown(false);
                     }}
                     className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedKecamatan ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      selectedKecamatan
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                     title="Filter Kecamatan"
                   >
@@ -273,7 +275,7 @@ export default function DatabaseMitra() {
                     {selectedKecamatan || "Kecamatan"}
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </button>
-                  
+
                   {showKecamatanDropdown && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px]">
                       <div className="py-1">
@@ -313,7 +315,9 @@ export default function DatabaseMitra() {
                       setShowGenderDropdown(false);
                     }}
                     className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedTahun ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      selectedTahun
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                     title="Filter Tahun"
                   >
@@ -321,7 +325,7 @@ export default function DatabaseMitra() {
                     {selectedTahun || "Tahun"}
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </button>
-                  
+
                   {showTahunDropdown && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
                       <div className="py-1">
@@ -334,7 +338,15 @@ export default function DatabaseMitra() {
                         >
                           Semua Tahun
                         </button>
-                        {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
+                        {[
+                          "2024",
+                          "2023",
+                          "2022",
+                          "2021",
+                          "2020",
+                          "2019",
+                          "2018",
+                        ].map((tahun) => (
                           <button
                             key={tahun}
                             onClick={() => {
@@ -361,7 +373,9 @@ export default function DatabaseMitra() {
                       setShowGenderDropdown(false);
                     }}
                     className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedStatus ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      selectedStatus
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                     title="Filter Status"
                   >
@@ -369,7 +383,7 @@ export default function DatabaseMitra() {
                     {selectedStatus || "Status"}
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </button>
-                  
+
                   {showStatusDropdown && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
                       <div className="py-1">
@@ -415,7 +429,9 @@ export default function DatabaseMitra() {
                       setShowStatusDropdown(false);
                     }}
                     className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedGender ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      selectedGender
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                     title="Filter Jenis Kelamin"
                   >
@@ -423,7 +439,7 @@ export default function DatabaseMitra() {
                     {selectedGender || "Gender"}
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </button>
-                  
+
                   {showGenderDropdown && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
                       <div className="py-1">
@@ -488,7 +504,7 @@ export default function DatabaseMitra() {
               <Users className="h-8 w-8 text-brand-600" />
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -498,7 +514,7 @@ export default function DatabaseMitra() {
               <User className="h-8 w-8 text-blue-600" />
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -508,12 +524,14 @@ export default function DatabaseMitra() {
               <User className="h-8 w-8 text-pink-600" />
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Aktif</p>
-                <p className="text-2xl font-bold text-green-600">{mitraAktif}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {mitraAktif}
+                </p>
               </div>
               <Users className="h-8 w-8 text-green-600" />
             </div>
@@ -524,7 +542,7 @@ export default function DatabaseMitra() {
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
           <div className="p-4">
             <Hottable
-              data={currentData.map(mitra => [
+              data={currentData.map((mitra) => [
                 mitra.nama,
                 mitra.nik,
                 mitra.gender,
@@ -536,21 +554,21 @@ export default function DatabaseMitra() {
                 mitra.tahun_bergabung,
                 mitra.status,
                 mitra.kegiatan_terakhir,
-                mitra.rating
+                mitra.rating,
               ])}
               colHeaders={[
-                'Nama',
-                'NIK',
-                'Gender',
-                'Kecamatan',
-                'Desa',
-                'Alamat',
-                'Telepon',
-                'Email',
-                'Tahun Bergabung',
-                'Status',
-                'Kegiatan Terakhir',
-                'Rating'
+                "Nama",
+                "NIK",
+                "Gender",
+                "Kecamatan",
+                "Desa",
+                "Alamat",
+                "Telepon",
+                "Email",
+                "Tahun Bergabung",
+                "Status",
+                "Kegiatan Terakhir",
+                "Rating",
               ]}
               columns={[
                 { data: 0, readOnly: true },
@@ -564,7 +582,7 @@ export default function DatabaseMitra() {
                 { data: 8, readOnly: true },
                 { data: 9, readOnly: true },
                 { data: 10, readOnly: true },
-                { data: 11, readOnly: true }
+                { data: 11, readOnly: true },
               ]}
               width="100%"
               height={400}

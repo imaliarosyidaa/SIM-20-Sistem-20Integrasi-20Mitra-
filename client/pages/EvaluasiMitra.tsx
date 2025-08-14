@@ -13,7 +13,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
-import Hottable from '@components/ui/Hottable';
+import Hottable from "@components/ui/Hottable";
 
 // Mock data untuk evaluasi mitra
 const evaluasiData = [
@@ -298,7 +298,6 @@ export default function EvaluasiMitra() {
 
   return (
     <div className="space-y-6">
-
       {/* Rating Criteria */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -413,7 +412,7 @@ export default function EvaluasiMitra() {
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         <div className="p-4">
           <Hottable
-            data={currentData.map(mitra => [
+            data={currentData.map((mitra) => [
               mitra.nama,
               `${mitra.kecamatan}, ${mitra.desa}`,
               mitra.kegiatan_terakhir,
@@ -425,21 +424,21 @@ export default function EvaluasiMitra() {
               mitra.ketepatan_waktu,
               mitra.komunikasi,
               mitra.profesionalisme,
-              mitra.keterangan
+              mitra.keterangan,
             ])}
             colHeaders={[
-              'Nama Mitra',
-              'Lokasi',
-              'Kegiatan Terakhir',
-              'Rating',
-              'Kategori Rating',
-              'Tanggal Evaluasi',
-              'Evaluator',
-              'Kualitas Data',
-              'Ketepatan Waktu',
-              'Komunikasi',
-              'Profesionalisme',
-              'Keterangan'
+              "Nama Mitra",
+              "Lokasi",
+              "Kegiatan Terakhir",
+              "Rating",
+              "Kategori Rating",
+              "Tanggal Evaluasi",
+              "Evaluator",
+              "Kualitas Data",
+              "Ketepatan Waktu",
+              "Komunikasi",
+              "Profesionalisme",
+              "Keterangan",
             ]}
             columns={[
               { data: 0, readOnly: true },
@@ -453,7 +452,7 @@ export default function EvaluasiMitra() {
               { data: 8, readOnly: true },
               { data: 9, readOnly: true },
               { data: 10, readOnly: true },
-              { data: 11, readOnly: true }
+              { data: 11, readOnly: true },
             ]}
             width="100%"
             height={400}

@@ -8,7 +8,7 @@ import {
   Save,
   Calendar,
 } from "lucide-react";
-import Hottable from '@components/ui/Hottable';
+import Hottable from "@components/ui/Hottable";
 
 // Mock data structure
 const yearsData = [
@@ -564,23 +564,18 @@ export default function HonorBulanan() {
               </div>
               <div className="overflow-x-auto">
                 <Hottable
-                  data={availableMitra.map(mitra => [
+                  data={availableMitra.map((mitra) => [
                     mitra.name,
                     mitra.team,
                     mitra.status,
-                    'Assign'
+                    "Assign",
                   ])}
-                  colHeaders={[
-                    'Nama Mitra',
-                    'Tim',
-                    'Status',
-                    'Aksi'
-                  ]}
+                  colHeaders={["Nama Mitra", "Tim", "Status", "Aksi"]}
                   columns={[
                     { data: 0, readOnly: true },
                     { data: 1, readOnly: true },
                     { data: 2, readOnly: true },
-                    { data: 3, readOnly: true }
+                    { data: 3, readOnly: true },
                   ]}
                   width="100%"
                   height={300}
@@ -591,7 +586,7 @@ export default function HonorBulanan() {
               </div>
             </div>
           )}
-          
+
           {/* Empty State */}
           {activities.length === 0 && (
             <div className="bg-white rounded-lg shadow-sm border p-8 text-center">

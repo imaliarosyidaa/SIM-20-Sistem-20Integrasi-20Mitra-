@@ -101,11 +101,13 @@ export default function Layout({ children, submenu }: LayoutProps) {
               {!sidebarCollapsed && (
                 <div className="overflow-hidden">
                   <h1 className="text-base font-bold text-white">SIM</h1>
-                  <p className="text-xs text-blue-100 leading-tight">Sistem Integrasi Mitra</p>
+                  <p className="text-xs text-blue-100 leading-tight">
+                    Sistem Integrasi Mitra
+                  </p>
                 </div>
               )}
             </div>
-            
+
             {/* Mobile close button */}
             <button
               onClick={() => setSidebarOpen(false)}
@@ -113,7 +115,7 @@ export default function Layout({ children, submenu }: LayoutProps) {
             >
               <X className="h-5 w-5" />
             </button>
-            
+
             {/* Desktop collapse toggle */}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -142,16 +144,21 @@ export default function Layout({ children, submenu }: LayoutProps) {
                     isActive
                       ? "bg-white/20 text-white shadow-sm"
                       : "text-blue-100 hover:bg-white/10 hover:text-white",
-                    sidebarCollapsed ? "justify-center" : ""
+                    sidebarCollapsed ? "justify-center" : "",
                   )}
                   onClick={() => setSidebarOpen(false)}
                   title={sidebarCollapsed ? item.label : undefined}
                 >
-                  <Icon className={cn("h-4 w-4 flex-shrink-0", !sidebarCollapsed && "mr-3")} />
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 flex-shrink-0",
+                      !sidebarCollapsed && "mr-3",
+                    )}
+                  />
                   {!sidebarCollapsed && (
                     <span className="truncate">{item.label}</span>
                   )}
-                  
+
                   {/* Tooltip for collapsed state */}
                   {sidebarCollapsed && (
                     <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -177,7 +184,7 @@ export default function Layout({ children, submenu }: LayoutProps) {
               >
                 <Menu className="h-5 w-5" />
               </button>
-              
+
               <div>
                 {/* Breadcrumb */}
                 <Breadcrumb>
@@ -206,9 +213,11 @@ export default function Layout({ children, submenu }: LayoutProps) {
                     <BreadcrumbItem>
                       <BreadcrumbPage className="text-sm font-medium">
                         {(() => {
-                          const currentItem = menuItems.find(item => item.href === location.pathname);
-                          const label = currentItem?.label || 'Dashboard';
-                          return label !== 'Dashboard' ? label : 'Dashboard';
+                          const currentItem = menuItems.find(
+                            (item) => item.href === location.pathname,
+                          );
+                          const label = currentItem?.label || "Dashboard";
+                          return label !== "Dashboard" ? label : "Dashboard";
                         })()}
                       </BreadcrumbPage>
                     </BreadcrumbItem>
@@ -216,7 +225,7 @@ export default function Layout({ children, submenu }: LayoutProps) {
                 </Breadcrumb>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900">
@@ -240,9 +249,7 @@ export default function Layout({ children, submenu }: LayoutProps) {
 
         {/* Page content */}
         <main className="p-4 lg:p-6">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+          <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
     </div>

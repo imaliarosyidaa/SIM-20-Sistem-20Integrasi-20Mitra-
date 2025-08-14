@@ -1,5 +1,5 @@
-import React from 'react';
-import { HotTable } from '@handsontable/react';
+import React from "react";
+import { HotTable } from "@handsontable/react";
 
 interface HottableProps {
   data: any[];
@@ -8,7 +8,7 @@ interface HottableProps {
   rowHeaders?: boolean;
   width?: string | number;
   height?: string | number;
-  stretchH?: 'none' | 'last' | 'all';
+  stretchH?: "none" | "last" | "all";
   className?: string;
   readOnly?: boolean;
   manualRowResize?: boolean;
@@ -24,10 +24,10 @@ const Hottable: React.FC<HottableProps> = ({
   columns,
   colHeaders = true,
   rowHeaders = true,
-  width = '100%',
-  height = 'auto',
-  stretchH = 'all',
-  className = '',
+  width = "100%",
+  height = "auto",
+  stretchH = "all",
+  className = "",
   readOnly = false,
   manualRowResize = false,
   manualColumnResize = false,

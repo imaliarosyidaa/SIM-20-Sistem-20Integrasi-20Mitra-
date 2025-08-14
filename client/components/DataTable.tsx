@@ -1,16 +1,12 @@
 import React, { useState, useMemo } from "react";
-import {
-  Search,
-  Filter,
-  Download,
-} from "lucide-react";
-import Hottable from '@components/ui/Hottable';
+import { Search, Filter, Download } from "lucide-react";
+import Hottable from "@components/ui/Hottable";
 
 interface Column {
   key: string;
   title: string;
   sortable?: boolean;
-  type?: 'text' | 'numeric' | 'dropdown' | 'checkbox';
+  type?: "text" | "numeric" | "dropdown" | "checkbox";
   numericFormat?: { pattern: string };
   render?: (value: any, row: any) => React.ReactNode;
 }
@@ -57,9 +53,7 @@ export default function DataTable({
 
   // Transform data for Handsontable
   const tableData = useMemo(() => {
-    return filteredData.map(row => 
-      columns.map(column => row[column.key])
-    );
+    return filteredData.map((row) => columns.map((column) => row[column.key]));
   }, [filteredData, columns]);
 
   // Create column definitions for Handsontable
@@ -129,7 +123,7 @@ export default function DataTable({
       <div className="p-4">
         <Hottable
           data={tableData}
-          colHeaders={columns.map(col => col.title)}
+          colHeaders={columns.map((col) => col.title)}
           columns={tableColumns}
           width="100%"
           height={height}
