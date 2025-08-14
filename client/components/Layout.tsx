@@ -45,7 +45,7 @@ const menuItems = [
   },
   {
     icon: TrendingUp,
-    label: "Honor Mitra Bulanan",
+    label: "Tim Kegiatan",
     href: "/honor-bulanan",
   },
   {
