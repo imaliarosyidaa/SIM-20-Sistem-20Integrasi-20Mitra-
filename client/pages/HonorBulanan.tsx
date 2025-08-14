@@ -577,10 +577,10 @@ export default function HonorBulanan() {
                     'Aksi'
                   ]}
                   columns={[
-                    { data: 0, type: 'text', readOnly: true },
-                    { data: 1, type: 'text', readOnly: true },
-                    { data: 2, type: 'text', readOnly: true },
-                    { data: 3, type: 'text', readOnly: true }
+                    { data: 0, readOnly: true },
+                    { data: 1, readOnly: true },
+                    { data: 2, readOnly: true },
+                    { data: 3, readOnly: true }
                   ]}
                   width="100%"
                   height={300}
