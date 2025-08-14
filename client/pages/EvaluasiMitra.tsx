@@ -442,18 +442,18 @@ export default function EvaluasiMitra() {
               'Keterangan'
             ]}
             columns={[
-              { data: 0, type: 'text', readOnly: true },
-              { data: 1, type: 'text', readOnly: true },
-              { data: 2, type: 'text', readOnly: true },
-              { data: 3, type: 'numeric', readOnly: true, numericFormat: { pattern: '0.0' } },
-              { data: 4, type: 'text', readOnly: true },
-              { data: 5, type: 'text', readOnly: true },
-              { data: 6, type: 'text', readOnly: true },
-              { data: 7, type: 'numeric', readOnly: true },
-              { data: 8, type: 'numeric', readOnly: true },
-              { data: 9, type: 'numeric', readOnly: true },
-              { data: 10, type: 'numeric', readOnly: true },
-              { data: 11, type: 'text', readOnly: true }
+              { data: 0, readOnly: true },
+              { data: 1, readOnly: true },
+              { data: 2, readOnly: true },
+              { data: 3, readOnly: true },
+              { data: 4, readOnly: true },
+              { data: 5, readOnly: true },
+              { data: 6, readOnly: true },
+              { data: 7, readOnly: true },
+              { data: 8, readOnly: true },
+              { data: 9, readOnly: true },
+              { data: 10, readOnly: true },
+              { data: 11, readOnly: true }
             ]}
             width="100%"
             height={400}
