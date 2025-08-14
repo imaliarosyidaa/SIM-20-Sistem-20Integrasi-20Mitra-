@@ -336,21 +336,21 @@ export default function RekapHonor() {
                   'Total'
                 ]}
                 columns={[
-                  { data: 0, type: 'numeric', readOnly: true },
-                  { data: 1, type: 'text', readOnly: true, width: 250 },
-                  { data: 2, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 3, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 4, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 5, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 6, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true, className: 'bg-red-100' },
-                  { data: 7, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 8, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 9, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 10, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 11, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 12, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 13, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
-                  { data: 14, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true, className: 'font-bold bg-green-50' }
+                  { data: 0, readOnly: true },
+                  { data: 1, readOnly: true, width: 250 },
+                  { data: 2, readOnly: true },
+                  { data: 3, readOnly: true },
+                  { data: 4, readOnly: true },
+                  { data: 5, readOnly: true },
+                  { data: 6, readOnly: true },
+                  { data: 7, readOnly: true },
+                  { data: 8, readOnly: true },
+                  { data: 9, readOnly: true },
+                  { data: 10, readOnly: true },
+                  { data: 11, readOnly: true },
+                  { data: 12, readOnly: true },
+                  { data: 13, readOnly: true },
+                  { data: 14, readOnly: true }
                 ]}
                 width="100%"
                 height={400}
