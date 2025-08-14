@@ -172,6 +172,14 @@ export default function DatabaseMitra() {
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
 
+  // Close all dropdowns
+  const closeAllDropdowns = () => {
+    setShowKecamatanDropdown(false);
+    setShowTahunDropdown(false);
+    setShowStatusDropdown(false);
+    setShowGenderDropdown(false);
+  };
+
   // Filter data berdasarkan kriteria
   const filteredData = mitraData.filter((mitra) => {
     const matchesSearch =
