@@ -409,124 +409,61 @@ export default function EvaluasiMitra() {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table with Handsontable */}
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Mitra
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lokasi
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Kegiatan Terakhir
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Rating
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tanggal Evaluasi
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Evaluator
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentData.map((mitra) => (
-                <tr key={mitra.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full bg-brand-600 flex items-center justify-center text-white font-medium">
-                        {mitra.nama
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {mitra.nama}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {mitra.kecamatan}
-                    </div>
-                    <div className="text-sm text-gray-500">{mitra.desa}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {mitra.kegiatan_terakhir}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(mitra.rating)
-                                ? "text-yellow-400"
-                                : "text-gray-200"
-                            }`}
-                          >
-                            ★
-                          </div>
-                        ))}
-                      </div>
-                      <span
-                        className={`ml-2 text-sm font-medium ${getRatingColor(mitra.rating)}`}
-                      >
-                        {mitra.rating}
-                      </span>
-                    </div>
-                    <div className={`text-xs ${getRatingColor(mitra.rating)}`}>
-                      {getRatingLabel(mitra.rating)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {new Date(mitra.tanggal_evaluasi).toLocaleDateString(
-                        "id-ID",
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {mitra.evaluator}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => handleEvaluate(mitra)}
-                        className="text-blue-600 hover:text-blue-800"
-                        title="Lihat Detail"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleEvaluate(mitra)}
-                        className="text-green-600 hover:text-green-800"
-                        title="Edit Evaluasi"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="p-4">
+          <Hottable
+            data={currentData.map(mitra => [
+              mitra.nama,
+              `${mitra.kecamatan}, ${mitra.desa}`,
+              mitra.kegiatan_terakhir,
+              mitra.rating,
+              getRatingLabel(mitra.rating),
+              new Date(mitra.tanggal_evaluasi).toLocaleDateString("id-ID"),
+              mitra.evaluator,
+              mitra.kualitas_data,
+              mitra.ketepatan_waktu,
+              mitra.komunikasi,
+              mitra.profesionalisme,
+              mitra.keterangan
+            ])}
+            colHeaders={[
+              'Nama Mitra',
+              'Lokasi',
+              'Kegiatan Terakhir',
+              'Rating',
+              'Kategori Rating',
+              'Tanggal Evaluasi',
+              'Evaluator',
+              'Kualitas Data',
+              'Ketepatan Waktu',
+              'Komunikasi',
+              'Profesionalisme',
+              'Keterangan'
+            ]}
+            columns={[
+              { data: 0, type: 'text', readOnly: true },
+              { data: 1, type: 'text', readOnly: true },
+              { data: 2, type: 'text', readOnly: true },
+              { data: 3, type: 'numeric', readOnly: true, numericFormat: { pattern: '0.0' } },
+              { data: 4, type: 'text', readOnly: true },
+              { data: 5, type: 'text', readOnly: true },
+              { data: 6, type: 'text', readOnly: true },
+              { data: 7, type: 'numeric', readOnly: true },
+              { data: 8, type: 'numeric', readOnly: true },
+              { data: 9, type: 'numeric', readOnly: true },
+              { data: 10, type: 'numeric', readOnly: true },
+              { data: 11, type: 'text', readOnly: true }
+            ]}
+            width="100%"
+            height={400}
+            manualRowResize={true}
+            manualColumnResize={true}
+            contextMenu={true}
+            filters={true}
+            dropdownMenu={true}
+            className="evaluasi-mitra-table"
+          />
         </div>
 
         {/* Pagination */}
