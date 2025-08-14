@@ -253,71 +253,61 @@ export default function DatabaseMitra() {
             </div>
           </div>
 
-          {/* Data Table */}
+          {/* Data Table with Handsontable */}
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Mitra
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Lokasi
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Kontak
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Aksi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {currentData.map((mitra) => (
-                    <tr key={mitra.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-brand-600 flex items-center justify-center text-white font-medium">
-                            {mitra.nama
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {mitra.nama}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {mitra.kecamatan}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {mitra.email}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex items-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-800">
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button className="text-green-600 hover:text-green-800">
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button className="text-red-600 hover:text-red-800">
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="p-4">
+              <Hottable
+                data={currentData.map(mitra => [
+                  mitra.nama,
+                  mitra.nik,
+                  mitra.gender,
+                  mitra.kecamatan,
+                  mitra.desa,
+                  mitra.alamat,
+                  mitra.telpon,
+                  mitra.email,
+                  mitra.tahun_bergabung,
+                  mitra.status,
+                  mitra.kegiatan_terakhir,
+                  mitra.rating
+                ])}
+                colHeaders={[
+                  'Nama',
+                  'NIK',
+                  'Gender',
+                  'Kecamatan',
+                  'Desa',
+                  'Alamat',
+                  'Telepon',
+                  'Email',
+                  'Tahun Bergabung',
+                  'Status',
+                  'Kegiatan Terakhir',
+                  'Rating'
+                ]}
+                columns={[
+                  { data: 0, type: 'text', readOnly: true },
+                  { data: 1, type: 'text', readOnly: true },
+                  { data: 2, type: 'text', readOnly: true },
+                  { data: 3, type: 'text', readOnly: true },
+                  { data: 4, type: 'text', readOnly: true },
+                  { data: 5, type: 'text', readOnly: true },
+                  { data: 6, type: 'text', readOnly: true },
+                  { data: 7, type: 'text', readOnly: true },
+                  { data: 8, type: 'numeric', readOnly: true },
+                  { data: 9, type: 'text', readOnly: true },
+                  { data: 10, type: 'text', readOnly: true },
+                  { data: 11, type: 'numeric', readOnly: true, numericFormat: { pattern: '0.0' } }
+                ]}
+                width="100%"
+                height={400}
+                manualRowResize={true}
+                manualColumnResize={true}
+                contextMenu={true}
+                filters={true}
+                dropdownMenu={true}
+                className="database-mitra-table"
+              />
             </div>
 
             {/* Pagination */}
