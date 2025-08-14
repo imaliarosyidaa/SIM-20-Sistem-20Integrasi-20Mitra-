@@ -8,6 +8,7 @@ import {
   Save,
   Calendar,
 } from "lucide-react";
+import Hottable from '@components/ui/Hottable';
 
 // Mock data structure
 const yearsData = [
