@@ -352,77 +352,147 @@ export default function DatabaseMitra() {
               <h3 className="text-lg font-semibold text-gray-900">Filter</h3>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Kecamatan Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Kecamatan
                 </label>
-                <select
-                  value={selectedKecamatan}
-                  onChange={(e) => setSelectedKecamatan(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
-                >
-                  <option value="">Semua Kecamatan</option>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setSelectedKecamatan("")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedKecamatan === ""
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Semua Kecamatan
+                  </button>
                   {kecamatanList.map((kecamatan) => (
-                    <option key={kecamatan} value={kecamatan}>
+                    <button
+                      key={kecamatan}
+                      onClick={() => setSelectedKecamatan(kecamatan)}
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedKecamatan === kecamatan
+                          ? "bg-brand-600 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
                       {kecamatan}
-                    </option>
+                    </button>
                   ))}
-                </select>
+                </div>
               </div>
 
               {/* Tahun Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Tahun Bergabung
                 </label>
-                <select
-                  value={selectedTahun}
-                  onChange={(e) => setSelectedTahun(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
-                >
-                  <option value="">Semua Tahun</option>
-                  <option value="2024">2024</option>
-                  <option value="2023">2023</option>
-                  <option value="2022">2022</option>
-                  <option value="2021">2021</option>
-                  <option value="2020">2020</option>
-                  <option value="2019">2019</option>
-                  <option value="2018">2018</option>
-                </select>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setSelectedTahun("")}
+                    className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedTahun === ""
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Semua
+                  </button>
+                  {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
+                    <button
+                      key={tahun}
+                      onClick={() => setSelectedTahun(tahun)}
+                      className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedTahun === tahun
+                          ? "bg-brand-600 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      {tahun}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Status Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Status
                 </label>
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
-                >
-                  <option value="">Semua Status</option>
-                  <option value="Aktif">Aktif</option>
-                  <option value="Non-Aktif">Non-Aktif</option>
-                </select>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setSelectedStatus("")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedStatus === ""
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Semua Status
+                  </button>
+                  <button
+                    onClick={() => setSelectedStatus("Aktif")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedStatus === "Aktif"
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Aktif
+                  </button>
+                  <button
+                    onClick={() => setSelectedStatus("Non-Aktif")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedStatus === "Non-Aktif"
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Non-Aktif
+                  </button>
+                </div>
               </div>
 
               {/* Gender Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Jenis Kelamin
                 </label>
-                <select
-                  value={selectedGender}
-                  onChange={(e) => setSelectedGender(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
-                >
-                  <option value="">Semua</option>
-                  <option value="Laki-laki">Laki-laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </select>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setSelectedGender("")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedGender === ""
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Semua
+                  </button>
+                  <button
+                    onClick={() => setSelectedGender("Laki-laki")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedGender === "Laki-laki"
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Laki-laki
+                  </button>
+                  <button
+                    onClick={() => setSelectedGender("Perempuan")}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedGender === "Perempuan"
+                        ? "bg-brand-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    Perempuan
+                  </button>
+                </div>
               </div>
             </div>
           </div>
