@@ -9,7 +9,6 @@ import {
   Users
 } from 'lucide-react';
 
-// Mock data untuk aktivitas per bulan
 const monthlyActivities = {
   'Januari': [
     'SPKK',
@@ -152,13 +151,7 @@ export default function MatriksKegiatanOverview() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center bg-white rounded-lg shadow-sm border p-6">
-        <h1 className="text-2xl font-bold text-gray-900">Matriks Kegiatan</h1>
-        <p className="text-gray-600 mt-1">BPS Kabupaten Lombok Tengah</p>
-      </div>
-
+    <div className="space-y-6 p-6">
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -259,85 +252,11 @@ export default function MatriksKegiatanOverview() {
                       )}
                     </div>
                   ))}
-                  {activities.length > 6 && (
-                    <div className="text-xs text-gray-500 text-center py-1">
-                      +{activities.length - 6} kegiatan lainnya
-                    </div>
-                  )}
-                </div>
-
-                {/* Progress Footer */}
-                <div className="border-t pt-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Users className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">
-                        {progress.completed} - {progress.total}/{progress.total}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-16 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${cardColor}`}
-                          style={{ 
-                            width: `${(progress.completed / progress.total) * 100}%` 
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {Math.round((progress.completed / progress.total) * 100)}%
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center space-x-1 text-xs text-gray-500">
-                      <Clock className="h-3 w-3" />
-                      <span>
-                        {isPastMonth ? 'Selesai' : isCurrentMonth ? 'Sedang Berjalan' : 'Akan Datang'}
-                      </span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
                 </div>
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Summary Stats */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Ringkasan Tahunan {selectedYear}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">
-              {Object.values(monthProgress).reduce((sum, p) => sum + p.total, 0)}
-            </div>
-            <div className="text-sm text-gray-600">Total Kegiatan</div>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {Object.values(monthProgress).reduce((sum, p) => sum + p.completed, 0)}
-            </div>
-            <div className="text-sm text-gray-600">Kegiatan Selesai</div>
-          </div>
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600">
-              {Object.values(monthProgress).reduce((sum, p) => sum + (p.total - p.completed), 0)}
-            </div>
-            <div className="text-sm text-gray-600">Kegiatan Tersisa</div>
-          </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
-              {Math.round(
-                (Object.values(monthProgress).reduce((sum, p) => sum + p.completed, 0) /
-                Object.values(monthProgress).reduce((sum, p) => sum + p.total, 0)) * 100
-              )}%
-            </div>
-            <div className="text-sm text-gray-600">Tingkat Penyelesaian</div>
-          </div>
-        </div>
       </div>
     </div>
   );

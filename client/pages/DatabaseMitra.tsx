@@ -16,6 +16,8 @@ import {
   IdCard,
 } from "lucide-react";
 
+import ExampleComponent from '@components/ExampleComponent';
+
 // Mock data untuk mitra
 const mitraData = [
   {
@@ -215,22 +217,7 @@ export default function DatabaseMitra() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-brand-600 to-brand-800 rounded-lg p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Database Mitra</h1>
-            <p className="text-brand-100 mt-1">
-              Manajemen Data Mitra Statistik BPS Lombok Tengah
-            </p>
-          </div>
-          <button className="flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors">
-            <Plus className="h-4 w-4 mr-2" />
-            Tambah Mitra
-          </button>
-        </div>
-      </div>
-
+      <ExampleComponent />
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
@@ -265,59 +252,6 @@ export default function DatabaseMitra() {
             </div>
           </div>
 
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Mitra</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {totalMitra}
-                  </p>
-                </div>
-                <Users className="h-8 w-8 text-blue-500" />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Mitra Aktif</p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {mitraAktif}
-                  </p>
-                </div>
-                <User className="h-8 w-8 text-green-500" />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Laki-laki</p>
-                  <p className="text-2xl font-bold text-blue-600">{lakiLaki}</p>
-                </div>
-                <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-600 font-bold">♂</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Perempuan</p>
-                  <p className="text-2xl font-bold text-pink-600">
-                    {perempuan}
-                  </p>
-                </div>
-                <div className="h-8 w-8 bg-pink-100 rounded-full flex items-center justify-center">
-                  <span className="text-pink-600 font-bold">♀</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Data Table */}
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
@@ -332,12 +266,6 @@ export default function DatabaseMitra() {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Kontak
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Rating
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Aksi
@@ -359,9 +287,6 @@ export default function DatabaseMitra() {
                             <div className="text-sm font-medium text-gray-900">
                               {mitra.nama}
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {mitra.gender} • {mitra.nik}
-                            </div>
                           </div>
                         </div>
                       </td>
@@ -369,51 +294,10 @@ export default function DatabaseMitra() {
                         <div className="text-sm text-gray-900">
                           {mitra.kecamatan}
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {mitra.desa}
-                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {mitra.telpon}
-                        </div>
-                        <div className="text-sm text-gray-500">
                           {mitra.email}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            mitra.status === "Aktif"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {mitra.status}
-                        </span>
-                        <div className="text-xs text-gray-500 mt-1">
-                          Bergabung {mitra.tahun_bergabung}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <div
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < Math.floor(mitra.rating)
-                                    ? "text-yellow-400"
-                                    : "text-gray-200"
-                                }`}
-                              >
-                                ★
-                              </div>
-                            ))}
-                          </div>
-                          <span className="ml-2 text-sm text-gray-600">
-                            {mitra.rating}
-                          </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -471,7 +355,7 @@ export default function DatabaseMitra() {
 
         {/* Right Sidebar Filters */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
+          <div className="bg-white shadow-sm border p-6 sticky top-6">
             <div className="flex items-center mb-4">
               <Filter className="h-5 w-5 text-gray-500 mr-2" />
               <h3 className="text-lg font-semibold text-gray-900">Filter</h3>
@@ -548,43 +432,6 @@ export default function DatabaseMitra() {
                   <option value="Laki-laki">Laki-laki</option>
                   <option value="Perempuan">Perempuan</option>
                 </select>
-              </div>
-            </div>
-
-            {/* Gender Statistics */}
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Statistik Gender
-              </h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                    <span className="text-sm text-gray-600">Laki-laki</span>
-                  </div>
-                  <span className="text-sm font-medium text-gray-900">
-                    {lakiLaki}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-pink-500 rounded-full mr-2"></div>
-                    <span className="text-sm text-gray-600">Perempuan</span>
-                  </div>
-                  <span className="text-sm font-medium text-gray-900">
-                    {perempuan}
-                  </span>
-                </div>
-                <div className="pt-2 border-t border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      Total
-                    </span>
-                    <span className="text-sm font-bold text-brand-600">
-                      {totalMitra}
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

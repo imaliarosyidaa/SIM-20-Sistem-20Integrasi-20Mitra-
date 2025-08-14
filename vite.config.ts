@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
+      "@components": path.resolve(__dirname, "./client/components"),
       "@shared": path.resolve(__dirname, "./shared"),
     },
   },

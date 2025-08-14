@@ -140,18 +140,8 @@ export default function RekapHonor() {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-brand-600 to-brand-800 rounded-lg p-6 text-white">
-        <h1 className="text-2xl font-bold">Rekap Honor Mitra</h1>
-        <p className="text-brand-100 mt-1">
-          Ringkasan dan Detail Pembayaran Honor Mitra BPS Lombok Tengah
-        </p>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="border-b border-gray-200">
+    <>
+    <div className="border-b border-gray-200 bg-white">
           <nav className="flex space-x-8 px-6">
             <button
               onClick={() => setActiveTab("rekap")}
@@ -175,7 +165,10 @@ export default function RekapHonor() {
             </button>
           </nav>
         </div>
+    <div className="space-y-6">
 
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-lg shadow-sm border">
         {/* Tab Content */}
         <div className="p-6">
           {/* Filters Section */}
@@ -457,5 +450,6 @@ export default function RekapHonor() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -297,24 +297,6 @@ export default function EvaluasiMitra() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-brand-600 to-brand-800 rounded-lg p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Evaluasi Mitra</h1>
-            <p className="text-brand-100 mt-1">
-              Sistem Penilaian Kinerja Mitra BPS Lombok Tengah
-            </p>
-          </div>
-          <button
-            onClick={() => setShowEvaluationForm(true)}
-            className="flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Evaluasi Baru
-          </button>
-        </div>
-      </div>
 
       {/* Rating Criteria */}
       <div className="bg-white rounded-lg shadow-sm border p-6">

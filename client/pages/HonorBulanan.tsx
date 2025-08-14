@@ -635,40 +635,7 @@ export default function HonorBulanan() {
               </div>
             </div>
           )}
-
-          {/* Summary Stats */}
-          {activities.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-xl font-bold text-blue-600">
-                    {activities.length}
-                  </div>
-                  <div className="text-xs text-gray-600">Total Kegiatan</div>
-                </div>
-                <div>
-                  <div className="text-xl font-bold text-green-600">
-                    {activities.reduce(
-                      (sum, activity) => sum + activity.participants.length,
-                      0,
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Total Mitra Terlibat
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xl font-bold text-purple-600">
-                    {selectedYearData?.count || 0}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Kegiatan Tahun {selectedYear}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
+          
           {/* Empty State */}
           {activities.length === 0 && (
             <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
