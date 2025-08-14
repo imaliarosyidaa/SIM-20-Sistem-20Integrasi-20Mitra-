@@ -230,6 +230,7 @@ export default function DatabaseMitra() {
     setSelectedStatus("");
     setSelectedGender("");
     setCurrentPage(1);
+    closeAllDropdowns();
   };
 
   return (
