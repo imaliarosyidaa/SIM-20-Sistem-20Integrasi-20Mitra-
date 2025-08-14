@@ -165,7 +165,7 @@ export default function DatabaseMitra() {
   const [selectedGender, setSelectedGender] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-
+  
   // Dropdown states
   const [showKecamatanDropdown, setShowKecamatanDropdown] = useState(false);
   const [showTahunDropdown, setShowTahunDropdown] = useState(false);
@@ -236,307 +236,349 @@ export default function DatabaseMitra() {
   return (
     <div className="space-y-6">
       <ExampleComponent />
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Search and Filters */}
-          <div className="bg-white rounded-lg shadow-sm border p-4">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                {/* Search Input */}
-                <div className="relative flex-1 sm:w-80">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Cari nama, NIK, atau desa..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  />
-                </div>
+      <div className="space-y-6">
+        {/* Search and Filters */}
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              {/* Search Input */}
+              <div className="relative flex-1 sm:w-80">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Cari nama, NIK, atau desa..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
 
-                {/* Filter Icons */}
-                <div className="flex items-center gap-2">
-                  {/* Kecamatan Filter */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setShowKecamatanDropdown(!showKecamatanDropdown);
-                        setShowTahunDropdown(false);
-                        setShowStatusDropdown(false);
-                        setShowGenderDropdown(false);
-                      }}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedKecamatan ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                      title="Filter Kecamatan"
-                    >
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {selectedKecamatan || "Kecamatan"}
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </button>
-
-                    {showKecamatanDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px]">
-                        <div className="py-1">
+              {/* Filter Icons */}
+              <div className="flex items-center gap-2">
+                {/* Kecamatan Filter */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowKecamatanDropdown(!showKecamatanDropdown);
+                      setShowTahunDropdown(false);
+                      setShowStatusDropdown(false);
+                      setShowGenderDropdown(false);
+                    }}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedKecamatan ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    title="Filter Kecamatan"
+                  >
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {selectedKecamatan || "Kecamatan"}
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </button>
+                  
+                  {showKecamatanDropdown && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px]">
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setSelectedKecamatan("");
+                            setShowKecamatanDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedKecamatan ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Semua Kecamatan
+                        </button>
+                        {kecamatanList.map((kecamatan) => (
                           <button
+                            key={kecamatan}
                             onClick={() => {
-                              setSelectedKecamatan("");
+                              setSelectedKecamatan(kecamatan);
                               setShowKecamatanDropdown(false);
                             }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedKecamatan ? "bg-brand-50 text-brand-600" : ""}`}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedKecamatan === kecamatan ? "bg-brand-50 text-brand-600" : ""}`}
                           >
-                            Semua Kecamatan
+                            {kecamatan}
                           </button>
-                          {kecamatanList.map((kecamatan) => (
-                            <button
-                              key={kecamatan}
-                              onClick={() => {
-                                setSelectedKecamatan(kecamatan);
-                                setShowKecamatanDropdown(false);
-                              }}
-                              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedKecamatan === kecamatan ? "bg-brand-50 text-brand-600" : ""}`}
-                            >
-                              {kecamatan}
-                            </button>
-                          ))}
-                        </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
 
-                  {/* Tahun Filter */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setShowTahunDropdown(!showTahunDropdown);
-                        setShowKecamatanDropdown(false);
-                        setShowStatusDropdown(false);
-                        setShowGenderDropdown(false);
-                      }}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedTahun ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                      title="Filter Tahun"
-                    >
-                      <Calendar className="h-4 w-4 mr-1" />
-                      {selectedTahun || "Tahun"}
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </button>
-
-                    {showTahunDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
-                        <div className="py-1">
+                {/* Tahun Filter */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowTahunDropdown(!showTahunDropdown);
+                      setShowKecamatanDropdown(false);
+                      setShowStatusDropdown(false);
+                      setShowGenderDropdown(false);
+                    }}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedTahun ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    title="Filter Tahun"
+                  >
+                    <Calendar className="h-4 w-4 mr-1" />
+                    {selectedTahun || "Tahun"}
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </button>
+                  
+                  {showTahunDropdown && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setSelectedTahun("");
+                            setShowTahunDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedTahun ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Semua Tahun
+                        </button>
+                        {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
                           <button
+                            key={tahun}
                             onClick={() => {
-                              setSelectedTahun("");
+                              setSelectedTahun(tahun);
                               setShowTahunDropdown(false);
                             }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedTahun ? "bg-brand-50 text-brand-600" : ""}`}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedTahun === tahun ? "bg-brand-50 text-brand-600" : ""}`}
                           >
-                            Semua Tahun
+                            {tahun}
                           </button>
-                          {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
-                            <button
-                              key={tahun}
-                              onClick={() => {
-                                setSelectedTahun(tahun);
-                                setShowTahunDropdown(false);
-                              }}
-                              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedTahun === tahun ? "bg-brand-50 text-brand-600" : ""}`}
-                            >
-                              {tahun}
-                            </button>
-                          ))}
-                        </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
 
-                  {/* Status Filter */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setShowStatusDropdown(!showStatusDropdown);
-                        setShowKecamatanDropdown(false);
-                        setShowTahunDropdown(false);
-                        setShowGenderDropdown(false);
-                      }}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedStatus ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                      title="Filter Status"
-                    >
-                      <Users className="h-4 w-4 mr-1" />
-                      {selectedStatus || "Status"}
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </button>
-
-                    {showStatusDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
-                        <div className="py-1">
-                          <button
-                            onClick={() => {
-                              setSelectedStatus("");
-                              setShowStatusDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedStatus ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Semua Status
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedStatus("Aktif");
-                              setShowStatusDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Aktif
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedStatus("Non-Aktif");
-                              setShowStatusDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Non-Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Non-Aktif
-                          </button>
-                        </div>
+                {/* Status Filter */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowStatusDropdown(!showStatusDropdown);
+                      setShowKecamatanDropdown(false);
+                      setShowTahunDropdown(false);
+                      setShowGenderDropdown(false);
+                    }}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedStatus ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    title="Filter Status"
+                  >
+                    <Users className="h-4 w-4 mr-1" />
+                    {selectedStatus || "Status"}
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </button>
+                  
+                  {showStatusDropdown && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setSelectedStatus("");
+                            setShowStatusDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedStatus ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Semua Status
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedStatus("Aktif");
+                            setShowStatusDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Aktif
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedStatus("Non-Aktif");
+                            setShowStatusDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Non-Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Non-Aktif
+                        </button>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
 
-                  {/* Gender Filter */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setShowGenderDropdown(!showGenderDropdown);
-                        setShowKecamatanDropdown(false);
-                        setShowTahunDropdown(false);
-                        setShowStatusDropdown(false);
-                      }}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedGender ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                      title="Filter Jenis Kelamin"
-                    >
-                      <User className="h-4 w-4 mr-1" />
-                      {selectedGender || "Gender"}
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </button>
-
-                    {showGenderDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
-                        <div className="py-1">
-                          <button
-                            onClick={() => {
-                              setSelectedGender("");
-                              setShowGenderDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedGender ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Semua
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedGender("Laki-laki");
-                              setShowGenderDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Laki-laki" ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Laki-laki
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedGender("Perempuan");
-                              setShowGenderDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Perempuan" ? "bg-brand-50 text-brand-600" : ""}`}
-                          >
-                            Perempuan
-                          </button>
-                        </div>
+                {/* Gender Filter */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowGenderDropdown(!showGenderDropdown);
+                      setShowKecamatanDropdown(false);
+                      setShowTahunDropdown(false);
+                      setShowStatusDropdown(false);
+                    }}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                      selectedGender ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    title="Filter Jenis Kelamin"
+                  >
+                    <User className="h-4 w-4 mr-1" />
+                    {selectedGender || "Gender"}
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </button>
+                  
+                  {showGenderDropdown && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setSelectedGender("");
+                            setShowGenderDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedGender ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Semua
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedGender("Laki-laki");
+                            setShowGenderDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Laki-laki" ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Laki-laki
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedGender("Perempuan");
+                            setShowGenderDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Perempuan" ? "bg-brand-50 text-brand-600" : ""}`}
+                        >
+                          Perempuan
+                        </button>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={resetFilters}
-                  className="flex items-center px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  Reset
-                </button>
-                <button className="flex items-center px-4 py-2 text-sm text-white bg-brand-600 rounded-md hover:bg-brand-700 transition-colors">
-                  <Download className="h-4 w-4 mr-1" />
-                  Export
-                </button>
-              </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={resetFilters}
+                className="flex items-center px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                <X className="h-4 w-4 mr-1" />
+                Reset
+              </button>
+              <button className="flex items-center px-4 py-2 text-sm text-white bg-brand-600 rounded-md hover:bg-brand-700 transition-colors">
+                <Download className="h-4 w-4 mr-1" />
+                Export
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* Data Table with Handsontable */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <div className="p-4">
-              <Hottable
-                data={currentData.map(mitra => [
-                  mitra.nama,
-                  mitra.nik,
-                  mitra.gender,
-                  mitra.kecamatan,
-                  mitra.desa,
-                  mitra.alamat,
-                  mitra.telpon,
-                  mitra.email,
-                  mitra.tahun_bergabung,
-                  mitra.status,
-                  mitra.kegiatan_terakhir,
-                  mitra.rating
-                ])}
-                colHeaders={[
-                  'Nama',
-                  'NIK',
-                  'Gender',
-                  'Kecamatan',
-                  'Desa',
-                  'Alamat',
-                  'Telepon',
-                  'Email',
-                  'Tahun Bergabung',
-                  'Status',
-                  'Kegiatan Terakhir',
-                  'Rating'
-                ]}
-                columns={[
-                  { data: 0, readOnly: true },
-                  { data: 1, readOnly: true },
-                  { data: 2, readOnly: true },
-                  { data: 3, readOnly: true },
-                  { data: 4, readOnly: true },
-                  { data: 5, readOnly: true },
-                  { data: 6, readOnly: true },
-                  { data: 7, readOnly: true },
-                  { data: 8, readOnly: true },
-                  { data: 9, readOnly: true },
-                  { data: 10, readOnly: true },
-                  { data: 11, readOnly: true }
-                ]}
-                width="100%"
-                height={400}
-                manualRowResize={true}
-                manualColumnResize={true}
-                contextMenu={true}
-                filters={true}
-                dropdownMenu={true}
-                className="database-mitra-table"
-              />
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Mitra</p>
+                <p className="text-2xl font-bold text-gray-900">{totalMitra}</p>
+              </div>
+              <Users className="h-8 w-8 text-brand-600" />
             </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Laki-laki</p>
+                <p className="text-2xl font-bold text-blue-600">{lakiLaki}</p>
+              </div>
+              <User className="h-8 w-8 text-blue-600" />
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Perempuan</p>
+                <p className="text-2xl font-bold text-pink-600">{perempuan}</p>
+              </div>
+              <User className="h-8 w-8 text-pink-600" />
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Aktif</p>
+                <p className="text-2xl font-bold text-green-600">{mitraAktif}</p>
+              </div>
+              <Users className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
+        </div>
 
-            {/* Pagination */}
+        {/* Data Table with Handsontable */}
+        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <div className="p-4">
+            <Hottable
+              data={currentData.map(mitra => [
+                mitra.nama,
+                mitra.nik,
+                mitra.gender,
+                mitra.kecamatan,
+                mitra.desa,
+                mitra.alamat,
+                mitra.telpon,
+                mitra.email,
+                mitra.tahun_bergabung,
+                mitra.status,
+                mitra.kegiatan_terakhir,
+                mitra.rating
+              ])}
+              colHeaders={[
+                'Nama',
+                'NIK',
+                'Gender',
+                'Kecamatan',
+                'Desa',
+                'Alamat',
+                'Telepon',
+                'Email',
+                'Tahun Bergabung',
+                'Status',
+                'Kegiatan Terakhir',
+                'Rating'
+              ]}
+              columns={[
+                { data: 0, readOnly: true },
+                { data: 1, readOnly: true },
+                { data: 2, readOnly: true },
+                { data: 3, readOnly: true },
+                { data: 4, readOnly: true },
+                { data: 5, readOnly: true },
+                { data: 6, readOnly: true },
+                { data: 7, readOnly: true },
+                { data: 8, readOnly: true },
+                { data: 9, readOnly: true },
+                { data: 10, readOnly: true },
+                { data: 11, readOnly: true }
+              ]}
+              width="100%"
+              height={400}
+              manualRowResize={true}
+              manualColumnResize={true}
+              contextMenu={true}
+              filters={true}
+              dropdownMenu={true}
+              className="database-mitra-table"
+            />
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
             <div className="px-6 py-3 border-t border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-700">
@@ -567,161 +609,7 @@ export default function DatabaseMitra() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Right Sidebar Filters */}
-        <div className="lg:col-span-1">
-          <div className="bg-white shadow-sm border p-6 sticky top-6">
-            <div className="flex items-center mb-4">
-              <Filter className="h-5 w-5 text-gray-500 mr-2" />
-              <h3 className="text-lg font-semibold text-gray-900">Filter</h3>
-            </div>
-
-            <div className="space-y-6">
-              {/* Kecamatan Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Kecamatan
-                </label>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setSelectedKecamatan("")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedKecamatan === ""
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Semua Kecamatan
-                  </button>
-                  {kecamatanList.map((kecamatan) => (
-                    <button
-                      key={kecamatan}
-                      onClick={() => setSelectedKecamatan(kecamatan)}
-                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedKecamatan === kecamatan
-                          ? "bg-brand-600 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {kecamatan}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tahun Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Tahun Bergabung
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => setSelectedTahun("")}
-                    className={`px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedTahun === ""
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Semua
-                  </button>
-                  {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
-                    <button
-                      key={tahun}
-                      onClick={() => setSelectedTahun(tahun)}
-                      className={`px-3 py-2 text-sm rounded-md transition-colors ${
-                        selectedTahun === tahun
-                          ? "bg-brand-600 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {tahun}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Status Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Status
-                </label>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setSelectedStatus("")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedStatus === ""
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Semua Status
-                  </button>
-                  <button
-                    onClick={() => setSelectedStatus("Aktif")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedStatus === "Aktif"
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Aktif
-                  </button>
-                  <button
-                    onClick={() => setSelectedStatus("Non-Aktif")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedStatus === "Non-Aktif"
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Non-Aktif
-                  </button>
-                </div>
-              </div>
-
-              {/* Gender Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Jenis Kelamin
-                </label>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setSelectedGender("")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedGender === ""
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Semua
-                  </button>
-                  <button
-                    onClick={() => setSelectedGender("Laki-laki")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedGender === "Laki-laki"
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Laki-laki
-                  </button>
-                  <button
-                    onClick={() => setSelectedGender("Perempuan")}
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedGender === "Perempuan"
-                        ? "bg-brand-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Perempuan
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
