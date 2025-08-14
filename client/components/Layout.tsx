@@ -63,7 +63,7 @@ const menuItems = [
   },
 ];
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children, submenu }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
