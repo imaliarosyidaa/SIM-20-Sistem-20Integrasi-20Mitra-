@@ -11,6 +11,11 @@ interface HottableProps {
   stretchH?: 'none' | 'last' | 'all';
   className?: string;
   readOnly?: boolean;
+  manualRowResize?: boolean;
+  manualColumnResize?: boolean;
+  contextMenu?: boolean;
+  filters?: boolean;
+  dropdownMenu?: boolean;
   [key: string]: any;
 }
 
