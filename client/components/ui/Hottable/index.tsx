@@ -1,6 +1,5 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
-import 'handsontable/dist/handsontable.full.min.css';
 
 interface HottableProps {
   data: any[];
