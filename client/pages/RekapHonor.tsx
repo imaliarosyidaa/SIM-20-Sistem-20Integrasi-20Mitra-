@@ -140,32 +140,32 @@ export default function RekapHonor() {
     item.nama.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const submenuTabs = (
+    <nav className="flex space-x-8 px-4 lg:px-6">
+      <button
+        onClick={() => setActiveTab("rekap")}
+        className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+          activeTab === "rekap"
+            ? "border-brand-500 text-brand-600"
+            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        }`}
+      >
+        Rekap Honor
+      </button>
+      <button
+        onClick={() => setActiveTab("rincian")}
+        className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+          activeTab === "rincian"
+            ? "border-brand-500 text-brand-600"
+            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        }`}
+      >
+        Rincian Honor Mitra
+      </button>
+    </nav>
+  );
+
   return (
-    <>
-    <div className="border-b border-gray-200 bg-white">
-          <nav className="flex space-x-8 px-6">
-            <button
-              onClick={() => setActiveTab("rekap")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "rekap"
-                  ? "border-brand-500 text-brand-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Rekap Honor
-            </button>
-            <button
-              onClick={() => setActiveTab("rincian")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "rincian"
-                  ? "border-brand-500 text-brand-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Rincian Honor Mitra
-            </button>
-          </nav>
-        </div>
     <div className="space-y-6">
 
       {/* Tab Navigation */}
@@ -385,6 +385,5 @@ export default function RekapHonor() {
         </div>
       </div>
     </div>
-    </>
   );
 }
