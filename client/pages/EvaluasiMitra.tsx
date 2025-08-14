@@ -13,6 +13,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import Hottable from '@components/ui/Hottable';
 
 // Mock data untuk evaluasi mitra
 const evaluasiData = [
