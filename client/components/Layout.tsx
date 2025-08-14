@@ -27,6 +27,7 @@ import {
 
 interface LayoutProps {
   children: React.ReactNode;
+  submenu?: React.ReactNode;
 }
 
 const menuItems = [
