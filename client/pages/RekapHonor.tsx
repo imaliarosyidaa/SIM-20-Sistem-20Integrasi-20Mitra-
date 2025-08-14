@@ -8,6 +8,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
+import Hottable from '@components/ui/Hottable';
 
 // Mock data untuk rincian honor mitra
 const detailHonorData = [
