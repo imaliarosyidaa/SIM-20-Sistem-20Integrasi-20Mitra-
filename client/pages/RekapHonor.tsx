@@ -300,133 +300,67 @@ export default function RekapHonor() {
 
           {activeTab === "rincian" && (
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-3 py-2 text-left text-sm font-medium">
-                      No
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-left text-sm font-medium min-w-[250px]">
-                      Nama
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Jan
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Feb
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Mar
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Apr
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Mei
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Jun
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Jul
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Ags
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Sep
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Okt
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Nov
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-blue-100">
-                      Des
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium bg-green-100">
-                      Total
-                    </th>
-                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">
-                      Aksi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredDetailData.map((row, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-3 py-2 text-sm">
-                        {row.no}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm">
-                        {row.nama}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.jan)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.feb)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.mar)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.apr)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right bg-red-100">
-                        {formatCurrency(row.mei)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.jun)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.jul)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.aug)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.sep)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.okt)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.nov)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right">
-                        {formatCurrency(row.des)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-sm text-right font-bold bg-green-50">
-                        {formatCurrency(row.total)}
-                      </td>
-                      <td className="border border-gray-300 px-3 py-2 text-center">
-                        <div className="flex items-center justify-center space-x-1">
-                          <button
-                            className="text-blue-600 hover:text-blue-800"
-                            title="Lihat"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button
-                            className="text-green-600 hover:text-green-800"
-                            title="Edit"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            className="text-red-600 hover:text-red-800"
-                            title="Hapus"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <Hottable
+                data={filteredDetailData.map(row => [
+                  row.no,
+                  row.nama,
+                  row.jan,
+                  row.feb,
+                  row.mar,
+                  row.apr,
+                  row.mei,
+                  row.jun,
+                  row.jul,
+                  row.aug,
+                  row.sep,
+                  row.okt,
+                  row.nov,
+                  row.des,
+                  row.total
+                ])}
+                colHeaders={[
+                  'No',
+                  'Nama',
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'Mei',
+                  'Jun',
+                  'Jul',
+                  'Ags',
+                  'Sep',
+                  'Okt',
+                  'Nov',
+                  'Des',
+                  'Total'
+                ]}
+                columns={[
+                  { data: 0, type: 'numeric', readOnly: true },
+                  { data: 1, type: 'text', readOnly: true, width: 250 },
+                  { data: 2, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 3, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 4, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 5, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 6, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true, className: 'bg-red-100' },
+                  { data: 7, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 8, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 9, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 10, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 11, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 12, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 13, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true },
+                  { data: 14, type: 'numeric', numericFormat: { pattern: '0,0' }, readOnly: true, className: 'font-bold bg-green-50' }
+                ]}
+                width="100%"
+                height={400}
+                manualRowResize={true}
+                manualColumnResize={true}
+                contextMenu={true}
+                filters={true}
+                dropdownMenu={true}
+                className="rekap-honor-table"
+              />
 
               {/* Pagination Info */}
               <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
