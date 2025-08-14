@@ -1,6 +1,5 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
-import 'handsontable/dist/handsontable.full.min.css';
 
 const ExampleComponent: React.FC = () => {
   const data = [
