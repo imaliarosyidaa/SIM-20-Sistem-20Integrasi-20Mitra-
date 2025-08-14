@@ -14,6 +14,8 @@ import {
   Phone,
   Mail,
   IdCard,
+  ChevronDown,
+  X,
 } from "lucide-react";
 
 import ExampleComponent from '@components/ExampleComponent';
