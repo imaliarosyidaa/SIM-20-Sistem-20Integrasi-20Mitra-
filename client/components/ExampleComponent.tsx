@@ -1,34 +1,13 @@
-// src/components/ExampleComponent.jsx
+// This component has been removed due to missing Handsontable dependencies
+// If you need Handsontable functionality, please install the required packages:
+// npm install @handsontable/react handsontable
 
-import { HotTable } from '@handsontable/react';
-import { registerAllModules } from 'handsontable/registry';
-
-// Import CSS dari Handsontable
-
-
-// Daftarkan semua module Handsontable
-registerAllModules();
-
-const ExampleComponent = () => {
+export default function ExampleComponent() {
   return (
-    <HotTable
-      data={[
-        ['', 'Tesla', 'Nissan', 'Toyota', 'Honda', 'Mazda', 'Ford'],
-        ['2017', 10, 11, 12, 13, 15, 16],
-        ['2018', 10, 11, 12, 13, 15, 16],
-        ['2019', 10, 11, 12, 13, 15, 16],
-        ['2020', 10, 11, 12, 13, 15, 16],
-        ['2021', 10, 11, 12, 13, 15, 16],
-      ]}
-      rowHeaders
-      colHeaders
-      contextMenu
-      height="auto"
-      autoWrapRow
-      autoWrapCol
-      licenseKey="non-commercial-and-evaluation"
-    />
+    <div className="p-4 bg-gray-100 rounded-lg">
+      <p className="text-gray-600">
+        Example component removed due to missing dependencies.
+      </p>
+    </div>
   );
-};
-
-export default ExampleComponent;
+}

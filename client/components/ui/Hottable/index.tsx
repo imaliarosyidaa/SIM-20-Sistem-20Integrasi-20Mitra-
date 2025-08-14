@@ -1,17 +1,13 @@
-import 'handsontable/dist/handsontable.full.css';
-import { HotTable } from '@handsontable/react';
+// This component has been removed due to missing Handsontable dependencies
+// If you need Handsontable functionality, please install the required packages:
+// npm install @handsontable/react handsontable
 
 export default function MyTable() {
   return (
-    <HotTable
-      data={[
-        ['', 'Tesla', 'Nissan'],
-        ['2019', 10, 11],
-        ['2020', 20, 22],
-      ]}
-      colHeaders={true}
-      rowHeaders={true}
-      licenseKey="non-commercial-and-evaluation"
-    />
+    <div className="p-4 bg-gray-100 rounded-lg">
+      <p className="text-gray-600">
+        Handsontable component removed due to missing dependencies.
+      </p>
+    </div>
   );
 }
