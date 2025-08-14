@@ -230,10 +230,11 @@ export default function DatabaseMitra() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Search and Actions */}
+          {/* Search and Filters */}
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3 w-full sm:w-auto">
+                {/* Search Input */}
                 <div className="relative flex-1 sm:w-80">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
@@ -244,6 +245,213 @@ export default function DatabaseMitra() {
                     className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                   />
                 </div>
+
+                {/* Filter Icons */}
+                <div className="flex items-center gap-2">
+                  {/* Kecamatan Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowKecamatanDropdown(!showKecamatanDropdown);
+                        setShowTahunDropdown(false);
+                        setShowStatusDropdown(false);
+                        setShowGenderDropdown(false);
+                      }}
+                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedKecamatan ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                      title="Filter Kecamatan"
+                    >
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {selectedKecamatan || "Kecamatan"}
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </button>
+
+                    {showKecamatanDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px]">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setSelectedKecamatan("");
+                              setShowKecamatanDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedKecamatan ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Semua Kecamatan
+                          </button>
+                          {kecamatanList.map((kecamatan) => (
+                            <button
+                              key={kecamatan}
+                              onClick={() => {
+                                setSelectedKecamatan(kecamatan);
+                                setShowKecamatanDropdown(false);
+                              }}
+                              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedKecamatan === kecamatan ? "bg-brand-50 text-brand-600" : ""}`}
+                            >
+                              {kecamatan}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tahun Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowTahunDropdown(!showTahunDropdown);
+                        setShowKecamatanDropdown(false);
+                        setShowStatusDropdown(false);
+                        setShowGenderDropdown(false);
+                      }}
+                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedTahun ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                      title="Filter Tahun"
+                    >
+                      <Calendar className="h-4 w-4 mr-1" />
+                      {selectedTahun || "Tahun"}
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </button>
+
+                    {showTahunDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setSelectedTahun("");
+                              setShowTahunDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedTahun ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Semua Tahun
+                          </button>
+                          {["2024", "2023", "2022", "2021", "2020", "2019", "2018"].map((tahun) => (
+                            <button
+                              key={tahun}
+                              onClick={() => {
+                                setSelectedTahun(tahun);
+                                setShowTahunDropdown(false);
+                              }}
+                              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedTahun === tahun ? "bg-brand-50 text-brand-600" : ""}`}
+                            >
+                              {tahun}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Status Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowStatusDropdown(!showStatusDropdown);
+                        setShowKecamatanDropdown(false);
+                        setShowTahunDropdown(false);
+                        setShowGenderDropdown(false);
+                      }}
+                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedStatus ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                      title="Filter Status"
+                    >
+                      <Users className="h-4 w-4 mr-1" />
+                      {selectedStatus || "Status"}
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </button>
+
+                    {showStatusDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setSelectedStatus("");
+                              setShowStatusDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedStatus ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Semua Status
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedStatus("Aktif");
+                              setShowStatusDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Aktif
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedStatus("Non-Aktif");
+                              setShowStatusDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedStatus === "Non-Aktif" ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Non-Aktif
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Gender Filter */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowGenderDropdown(!showGenderDropdown);
+                        setShowKecamatanDropdown(false);
+                        setShowTahunDropdown(false);
+                        setShowStatusDropdown(false);
+                      }}
+                      className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors ${
+                        selectedGender ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                      title="Filter Jenis Kelamin"
+                    >
+                      <User className="h-4 w-4 mr-1" />
+                      {selectedGender || "Gender"}
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </button>
+
+                    {showGenderDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[150px]">
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              setSelectedGender("");
+                              setShowGenderDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${!selectedGender ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Semua
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedGender("Laki-laki");
+                              setShowGenderDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Laki-laki" ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Laki-laki
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedGender("Perempuan");
+                              setShowGenderDropdown(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${selectedGender === "Perempuan" ? "bg-brand-50 text-brand-600" : ""}`}
+                          >
+                            Perempuan
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
@@ -251,7 +459,8 @@ export default function DatabaseMitra() {
                   onClick={resetFilters}
                   className="flex items-center px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
                 >
-                  Reset Filter
+                  <X className="h-4 w-4 mr-1" />
+                  Reset
                 </button>
                 <button className="flex items-center px-4 py-2 text-sm text-white bg-brand-600 rounded-md hover:bg-brand-700 transition-colors">
                   <Download className="h-4 w-4 mr-1" />
