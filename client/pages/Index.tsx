@@ -123,30 +123,30 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4 lg:p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Jumlah Mitra</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xl lg:text-2xl font-bold text-gray-900">
                 {formatNumber(statsData.totalMitra)}
               </p>
             </div>
-            <div className="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Users className="h-6 w-6 text-green-600" />
+            <div className="h-10 w-10 lg:h-12 lg:w-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <Users className="h-5 w-5 lg:h-6 lg:w-6 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4 lg:p-6 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Honor</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xl lg:text-2xl font-bold text-gray-900">
                 {formatCurrency(statsData.totalHonor)}
               </p>
             </div>
-            <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="h-6 w-6 text-yellow-600" />
+            <div className="h-10 w-10 lg:h-12 lg:w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <DollarSign className="h-5 w-5 lg:h-6 lg:w-6 text-yellow-600" />
             </div>
           </div>
         </div>
