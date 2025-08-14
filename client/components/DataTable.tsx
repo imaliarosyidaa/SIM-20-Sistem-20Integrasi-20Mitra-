@@ -66,9 +66,7 @@ export default function DataTable({
   const tableColumns = useMemo(() => {
     return columns.map((column, index) => ({
       data: index,
-      type: column.type || 'text',
       readOnly: true,
-      numericFormat: column.numericFormat,
     }));
   }, [columns]);
 
