@@ -167,7 +167,8 @@ export default function RekapHonor() {
   );
 
   return (
-    <div className="space-y-6">
+    <Layout submenu={submenuTabs}>
+      <div className="space-y-6">
 
       {/* Tab Navigation */}
       <div className="bg-white rounded-lg shadow-sm border">
@@ -385,6 +386,7 @@ export default function RekapHonor() {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </Layout>
   );
 }
