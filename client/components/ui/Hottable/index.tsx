@@ -47,6 +47,11 @@ const Hottable: React.FC<HottableProps> = ({
         height={height}
         stretchH={stretchH}
         readOnly={readOnly}
+        manualRowResize={manualRowResize}
+        manualColumnResize={manualColumnResize}
+        contextMenu={contextMenu}
+        filters={filters}
+        dropdownMenu={dropdownMenu}
         licenseKey="non-commercial-and-evaluation"
         {...otherProps}
       />
