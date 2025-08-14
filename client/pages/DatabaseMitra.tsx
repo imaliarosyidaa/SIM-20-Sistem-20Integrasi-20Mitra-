@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import ExampleComponent from '@components/ExampleComponent';
+import Hottable from '@components/ui/Hottable';
 
 // Mock data untuk mitra
 const mitraData = [
