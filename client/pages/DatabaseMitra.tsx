@@ -166,6 +166,12 @@ export default function DatabaseMitra() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
+  // Dropdown states
+  const [showKecamatanDropdown, setShowKecamatanDropdown] = useState(false);
+  const [showTahunDropdown, setShowTahunDropdown] = useState(false);
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+
   // Filter data berdasarkan kriteria
   const filteredData = mitraData.filter((mitra) => {
     const matchesSearch =
