@@ -24,20 +24,27 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/matriks" element={<MatriksKegiatanOverview />} />
-            <Route path="/matriks/calendar" element={<MatriksKegiatanCalendar />} />
-            <Route path="/matriks/calendar/:month" element={<MatriksKegiatanCalendar />} />
-            <Route path="/rekap-honor" element={<RekapHonor />} />
-            <Route path="/honor-bulanan" element={<HonorBulanan />} />
-            <Route path="/database" element={<DatabaseMitra />} />
-            <Route path="/evaluasi" element={<EvaluasiMitra />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          {/* Route with custom layout */}
+          <Route path="/rekap-honor" element={<RekapHonor />} />
+
+          {/* Routes with standard layout */}
+          <Route path="/*" element={
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/matriks" element={<MatriksKegiatanOverview />} />
+                <Route path="/matriks/calendar" element={<MatriksKegiatanCalendar />} />
+                <Route path="/matriks/calendar/:month" element={<MatriksKegiatanCalendar />} />
+                <Route path="/honor-bulanan" element={<HonorBulanan />} />
+                <Route path="/database" element={<DatabaseMitra />} />
+                <Route path="/evaluasi" element={<EvaluasiMitra />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          } />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
