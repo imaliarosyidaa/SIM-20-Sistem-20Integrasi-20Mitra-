@@ -171,8 +171,9 @@ export default function Layout({ children }: LayoutProps) {
                       {/* Halaman saat ini */}
                       <BreadcrumbPage>
                         {(() => {
-                            const label = menuItems.find(item => item.href === location.pathname)?.label;
-                            return label && label !== 'Dashboard' ? label : '';
+                            const currentItem = menuItems.find(item => item.href === location.pathname);
+                            const label = currentItem?.label || 'Dashboard';
+                            return label !== 'Dashboard' ? label : 'Dashboard';
                           })()}
                       </BreadcrumbPage>
                     </BreadcrumbItem>
