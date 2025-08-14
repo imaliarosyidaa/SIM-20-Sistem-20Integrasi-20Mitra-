@@ -29,6 +29,11 @@ const Hottable: React.FC<HottableProps> = ({
   stretchH = 'all',
   className = '',
   readOnly = false,
+  manualRowResize = false,
+  manualColumnResize = false,
+  contextMenu = false,
+  filters = false,
+  dropdownMenu = false,
   ...otherProps
 }) => {
   return (
