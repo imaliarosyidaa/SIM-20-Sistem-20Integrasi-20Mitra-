@@ -231,6 +231,13 @@ export default function Layout({ children, submenu }: LayoutProps) {
           </div>
         </header>
 
+        {/* Submenu */}
+        {submenu && (
+          <div className="bg-white border-b border-gray-200 sticky top-14 z-10">
+            {submenu}
+          </div>
+        )}
+
         {/* Page content */}
         <main className="p-4 lg:p-6">
           <div className="max-w-7xl mx-auto">
