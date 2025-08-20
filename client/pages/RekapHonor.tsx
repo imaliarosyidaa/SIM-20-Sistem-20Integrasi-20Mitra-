@@ -145,22 +145,27 @@ export default function RekapHonor() {
     <nav className="flex space-x-8 px-4 lg:px-6">
       <button
         onClick={() => setActiveTab("rekap")}
-        className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-          activeTab === "rekap"
-            ? "border-brand-500 text-brand-600"
-            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-        }`}
+        className={`py-4 flex gap-2 items-center px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rekap"
+          ? "border-brand-500 text-brand-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          }`}
       >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-check-fill" viewBox="0 0 16 16">
+          <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708" />
+        </svg>
         Rekap Honor
       </button>
       <button
         onClick={() => setActiveTab("rincian")}
-        className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-          activeTab === "rincian"
-            ? "border-brand-500 text-brand-600"
-            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-        }`}
+        className={`py-4 flex items-center gap-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rincian"
+          ? "border-brand-500 text-brand-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          }`}
       >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-file-earmark-spreadsheet-fill" viewBox="0 0 16 16">
+          <path d="M6 12v-2h3v2z" />
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M3 9h10v1h-3v2h3v1h-3v2H9v-2H6v2H5v-2H3v-1h2v-2H3z" />
+        </svg>
         Rincian Honor Mitra
       </button>
     </nav>
@@ -214,18 +219,6 @@ export default function RekapHonor() {
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                     <option value="2022">2022</option>
-                  </select>
-
-                  <select
-                    value={selectedId}
-                    onChange={(e) => setSelectedId(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  >
-                    <option value="">Id_nama</option>
-                    <option value="a390">A390</option>
-                    <option value="a815">A815</option>
-                    <option value="a547">A547</option>
-                    <option value="a74">A74</option>
                   </select>
 
                   {activeTab === "rincian" && (

@@ -1,5 +1,9 @@
 import React from "react";
 import { HotTable } from "@handsontable/react";
+import { registerAllModules } from 'handsontable/registry';
+
+registerAllModules();
+
 
 interface HottableProps {
   data: any[];
@@ -31,7 +35,7 @@ const Hottable: React.FC<HottableProps> = ({
   readOnly = false,
   manualRowResize = false,
   manualColumnResize = false,
-  contextMenu = false,
+  contextMenu = true,
   filters = false,
   dropdownMenu = false,
   ...otherProps
