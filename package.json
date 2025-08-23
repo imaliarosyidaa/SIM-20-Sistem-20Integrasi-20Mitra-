@@ -21,14 +21,18 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@babel/runtime": "^7.28.3",
     "@handsontable/react": "^16.0.1",
+    "@heroicons/react": "^1.0.6",
     "axios": "^1.11.0",
     "dotenv": "^17.2.0",
     "express": "^4.18.2",
+    "react-table": "^7.8.0",
     "react-tabulator": "^0.21.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.28.3",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",

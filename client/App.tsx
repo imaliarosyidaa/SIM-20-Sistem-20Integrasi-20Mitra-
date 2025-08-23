@@ -15,6 +15,7 @@ import HonorBulanan from "./pages/HonorBulanan";
 import DatabaseMitra from "./pages/DatabaseMitra";
 import EvaluasiMitra from "./pages/EvaluasiMitra";
 import NotFound from "./pages/NotFound";
+import UploadTemplate from "./pages/UploadTemplate";
 
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
                   <Route path="/honor-bulanan" element={<HonorBulanan />} />
                   <Route path="/database" element={<DatabaseMitra />} />
                   <Route path="/evaluasi" element={<EvaluasiMitra />} />
+                  <Route path="/upload-template" element={<UploadTemplate />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

@@ -72,7 +72,7 @@ export default function Layout({ children, submenu }: LayoutProps) {
   const mainMargin = sidebarCollapsed ? "lg:pl-16" : "lg:pl-52";
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gray-100 font-sans">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
