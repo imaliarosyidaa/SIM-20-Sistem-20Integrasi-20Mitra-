@@ -8,20 +8,25 @@ import { Button } from "@/components/ui/button";
 import { ReactTabulator } from 'react-tabulator'
 import { Input } from '@components/ui/input'
 import { Link } from "react-router-dom";
+import ComboBox from "@/components/combobox";
+import userApi from "@/lib/userApi";
+import { User } from "@/interfaces/types";
 
 
 export default function HonorBulanan() {
   const [kegiatanMitra, setKegiatanMitra] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [expandedInputRows, setExpandedInputRows] = useState<number[]>([]);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [formData, setFormData] = useState({
-    volum: 0,
-    harga_per_satuan: 0,
-    nama_petugas: ''
+    volum: "",
+    harga_per_satuan: "",
+    id_sobat: ""
   });
+
+  const [mitraData, setMitraData] = useState([]);
 
   const toggleRow = (id: number) => {
     setExpandedRows((prev) =>
@@ -47,27 +52,8 @@ export default function HonorBulanan() {
       setError(null);
       try {
         const res = await axios.get('/kegiatanmitra');
-        if (Array.isArray(res.data.data)) {
-          const formatted = res.data.data.map((kegiatan) => ({
-            id: kegiatan.id,
-            bulan: kegiatan.bulan,
-            tanggal: kegiatan.tanggal,
-            tim: kegiatan.tim,
-            nama_survei: kegiatan.nama_survei,
-            nama_survei_sobat: kegiatan.nama_survei_sobat,
-            kegiatan: kegiatan.kegiatan,
-            pcl_pml_olah: kegiatan.pcl_pml_olah,
-            satuan: kegiatan.satuan,
-            konfirmasi: kegiatan.konfirmasi,
-            flag_sobat: kegiatan.flag_sobat,
-            data: kegiatan.data
-          }));
-          setKegiatanMitra(formatted);
-        } else {
-          setKegiatanMitra([]);
-        }
+        setKegiatanMitra(res.data.data);
       } catch (err) {
-        setError("Gagal mengambil data. Silakan coba lagi.");
         console.error("Fetch error:", err);
       } finally {
         setIsLoading(false);
@@ -76,16 +62,17 @@ export default function HonorBulanan() {
     getData();
   }, [kegiatanMitra]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<any>) => {
+    console.log("name:", e.target.name, "value:", e.target.value);
     const { name, value, type } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === 'number' ? parseInt(value, 10) || 0 : value,
     }));
   };
 
-  // Create Data
-  async function handleFormSubmit(event, kegiatan) {
+
+  async function handleFormSubmit(event, kegiatan, mitraData) {
     event.preventDefault();
 
     const payload = {
@@ -96,14 +83,12 @@ export default function HonorBulanan() {
       nama_survei: kegiatan.nama_survei,
       nama_survei_sobat: kegiatan.nama_survei_sobat,
       kegiatan: kegiatan.kegiatan,
-      pcl_pml_olah: kegiatan.pcl_pml_olah,
-      id_sobat: kegiatan.id_sobat,
-      satuan: kegiatan.satuan,
-      konfirmasi: kegiatan.konfirmasi,
-      flag_sobat: kegiatan.flag_sobat,
-      jumlah: formData.harga_per_satuan * formData.volum
+      tahun: kegiatan.tahun,
+      kegiatanId: kegiatan.kodeKegiatan,
+      jumlah: Number(formData.harga_per_satuan) * Number(formData.volum)
     };
 
+    console.log(payload)
     try {
       await axios.post('/kegiatanmitra',
         payload, {
@@ -114,17 +99,15 @@ export default function HonorBulanan() {
       }
       );
       setFormData({
-        volum: 0,
-        harga_per_satuan: 0,
-        nama_petugas: ''
+        volum: "0",
+        harga_per_satuan: "0",
+        id_sobat: ''
       })
     } catch (error) {
       console.error("Error response:", error.response?.data || error.message);
-      alert("update failed, please check your credentials.");
     }
   }
 
-  // Delete Data
   async function deleteData(id) {
     try {
       await axios.delete("/kegiatanmitra/delete", {
@@ -140,8 +123,21 @@ export default function HonorBulanan() {
     }
   }
 
+  useEffect(() => {
+    userApi.getAllUsers().then((users) => {
+      const filtered = users.map(user => ({
+        id: user.id,
+        namaLengkap: user.namaLengkap,
+        sobatId: user.sobatId
+      }));
+      setMitraData(filtered)
+    })
+      .catch((err) => { setError(true) })
+      .finally(() => { setIsLoading(false) })
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <table className="w-full border overflow-hidden">
         <thead className="w-full">
           <tr>
@@ -213,58 +209,101 @@ export default function HonorBulanan() {
               {expandedRows.includes(kegiatan.id) && (
                 <tr className="bg-gray-50 border-t">
                   <td colSpan={7} className="p-4 text-sm text-gray-600">
-                    {Array.isArray(kegiatan.data) && kegiatan.data.length > 0 ? (
-                      <ol className="list-decimal pl-5">
-                        {kegiatan.data.map((pcl, index) => (
-                          <li key={index} className="py-2">
-                            <div className="grid grid-cols-5 gap-4 w-fit">
-                              <span>{pcl.nama_petugas}</span>
-                              <span className="text-left"><span className="font-bold">Volume : </span> {pcl.volum}</span>
-                              <span className="text-left"><span className="font-bold">Harga per satuan : </span>{pcl.harga_per_satuan}</span>
-                              <span className="text-left pl-12"><span className="font-bold">Jumlah : </span>{pcl.jumlah}</span>
-                              <span className="text-left flex gap-2">
-                                <span className="text-blue-600/100 cursor-pointer hover:underline hover:underline-offset-auto flex items-center gap-1">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                  </svg>
-                                  Edit</span>
-                                <span> | </span>
-                                <span onClick={() => deleteData(pcl.id)} className="text-blue-600/100 cursor-pointer hover:underline hover:underline-offset-auto hover:underline-offset-auto flex items-center gap-1">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-circle" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                                  </svg>
-                                  Hapus</span>
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
+                    {Array.isArray(kegiatan.mitra) && kegiatan.mitra.length > 0 ? (
+                      <div className="overflow-x-auto rounded-lg shadow-sm border">
+                        <table className="min-w-full divide-y divide-gray-200 text-sm">
+                          <thead className="bg-gray-100">
+                            <tr>
+                              <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
+                                Nama Petugas
+                              </th>
+                              <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
+                                Volume
+                              </th>
+                              <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
+                                Harga per Satuan
+                              </th>
+                              <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
+                                Jumlah
+                              </th>
+                              <th className="px-6 py-3 text-right font-semibold text-gray-600 uppercase tracking-wide">
+                                Aksi
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {kegiatan.mitra.map((pcl, index) => (
+                              <tr key={index} className="hover:bg-gray-50 transition">
+                                <td className="px-6 py-3 whitespace-nowrap">{pcl.nama_petugas}</td>
+                                <td className="px-6 py-3 whitespace-nowrap">{pcl.volum}</td>
+                                <td className="px-6 py-3 whitespace-nowrap">{pcl.harga_per_satuan}</td>
+                                <td className="px-6 py-3 whitespace-nowrap font-medium text-gray-700">
+                                  {pcl.jumlah}
+                                </td>
+                                <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                  <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1 inline-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                      <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                    </svg>
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => deleteData(pcl.id)}
+                                    className="text-red-600 hover:text-red-800 flex items-center gap-1 inline-flex"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-circle" viewBox="0 0 16 16">
+                                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                                    </svg>
+                                    Hapus
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ) : (
                       <div className="text-gray-400 italic">Tidak ada data petugas</div>
                     )}
-                    <div onClick={() => toggleRowInput(kegiatan.id)} className="w-fit flex items-center gap-2 pt-4 cursor-pointer hover:underline hover:underline-offset-auto text-red-600">
+
+                    <div
+                      onClick={() => toggleRowInput(kegiatan.id)}
+                      className="w-fit flex items-center gap-2 pt-4 cursor-pointer hover:underline text-red-600"
+                    >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle-dotted" viewBox="0 0 16 16">
                         <path d="M8 0q-.264 0-.523.017l.064.998a7 7 0 0 1 .918 0l.064-.998A8 8 0 0 0 8 0M6.44.152q-.52.104-1.012.27l.321.948q.43-.147.884-.237L6.44.153zm4.132.271a8 8 0 0 0-1.011-.27l-.194.98q.453.09.884.237zm1.873.925a8 8 0 0 0-.906-.524l-.443.896q.413.205.793.459zM4.46.824q-.471.233-.905.524l.556.83a7 7 0 0 1 .793-.458zM2.725 1.985q-.394.346-.74.74l.752.66q.303-.345.648-.648zm11.29.74a8 8 0 0 0-.74-.74l-.66.752q.346.303.648.648zm1.161 1.735a8 8 0 0 0-.524-.905l-.83.556q.254.38.458.793l.896-.443zM1.348 3.555q-.292.433-.524.906l.896.443q.205-.413.459-.793zM.423 5.428a8 8 0 0 0-.27 1.011l.98.194q.09-.453.237-.884zM15.848 6.44a8 8 0 0 0-.27-1.012l-.948.321q.147.43.237.884zM.017 7.477a8 8 0 0 0 0 1.046l.998-.064a7 7 0 0 1 0-.918zM16 8a8 8 0 0 0-.017-.523l-.998.064a7 7 0 0 1 0 .918l.998.064A8 8 0 0 0 16 8M.152 9.56q.104.52.27 1.012l.948-.321a7 7 0 0 1-.237-.884l-.98.194zm15.425 1.012q.168-.493.27-1.011l-.98-.194q-.09.453-.237.884zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a7 7 0 0 1-.458-.793zm13.828.905q.292-.434.524-.906l-.896-.443q-.205.413-.459.793zm-12.667.83q.346.394.74.74l.66-.752a7 7 0 0 1-.648-.648zm11.29.74q.394-.346.74-.74l-.752-.66q-.302.346-.648.648zm-1.735 1.161q.471-.233.905-.524l-.556-.83a7 7 0 0 1-.793.458zm-7.985-.524q.434.292.906.524l.443-.896a7 7 0 0 1-.793-.459zm1.873.925q.493.168 1.011.27l.194-.98a7 7 0 0 1-.884-.237zm4.132.271a8 8 0 0 0 1.012-.27l-.321-.948a7 7 0 0 1-.884.237l.194.98zm-2.083.135a8 8 0 0 0 1.046 0l-.064-.998a7 7 0 0 1-.918 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
                       </svg>
                       Tambah
                     </div>
-                    {expandedInputRows.includes(kegiatan.id) && (
-                      <form onSubmit={(e) => handleFormSubmit(e, kegiatan)} method="POST" className="bg-white my-4 py-4 px-4 border">
-                        <div className="flex flex-row gap-4 mb-4">
-                          <div className="flex flex-row gap-4 items-center">
-                            <label className="text-sm font-medium text-gray-700 mb-1 ">Nama:</label>
-                            <Input
-                              type="text"
-                              name="nama_petugas"
-                              value={formData.nama_petugas}
-                              onChange={handleInputChange}
-                            />
-                          </div>
 
-                          <div className="flex flex-row gap-4 items-center">
-                            <label className="text-sm font-medium text-gray-700 mb-1">Volume:</label>
+                    {expandedInputRows.includes(kegiatan.id) && (
+                      <form
+                        onSubmit={(e) => handleFormSubmit(e, kegiatan, mitraData)}
+                        method="POST"
+                        className="bg-white my-4 py-4 px-6 border rounded-lg shadow-sm"
+                      >
+                        <div className="grid grid-cols-3 gap-6 mb-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                            <select
+                              name="id_sobat"
+                              value={formData.id_sobat}
+                              onChange={handleInputChange}
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            >
+                              <option value="">Pilih mitra...</option>
+                              {mitraData?.map((mitra: any) => (
+                                <option key={mitra.id} value={mitra.sobatId}>
+                                  {mitra.namaLengkap}
+                                </option>
+                              ))}
+                            </select>
+
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Volume</label>
                             <Input
                               type="number"
                               value={formData.volum}
@@ -272,9 +311,8 @@ export default function HonorBulanan() {
                               name="volum"
                             />
                           </div>
-
-                          <div className="flex flex-row gap-4 items-center">
-                            <label className="text-sm font-medium text-gray-700 mb-1">Harga Per Satuan:</label>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Harga Per Satuan</label>
                             <Input
                               type="number"
                               value={formData.harga_per_satuan}
@@ -283,9 +321,10 @@ export default function HonorBulanan() {
                             />
                           </div>
                         </div>
-                        <div className="flex gap-2 justify-end">
-                          <Button type="submit"
-                            variant="destructive" size="sxl">Simpan</Button>
+                        <div className="flex justify-end">
+                          <Button type="submit" variant="destructive" size="sxl">
+                            Simpan
+                          </Button>
                         </div>
                       </form>
                     )}
@@ -296,6 +335,28 @@ export default function HonorBulanan() {
           ))}
         </tbody>
       </table>
+      <Link to="/add-kegiatan">
+        <button
+          className="fixed bottom-4 right-4 p-4 rounded-full bg-blue-600 text-white shadow-lg 
+                 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+                 transform transition-transform hover:scale-110"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+        </button>
+      </Link>
     </div>
   );
 }

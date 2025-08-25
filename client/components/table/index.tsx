@@ -1,21 +1,9 @@
-// Jangan import ini, karena sudah ada di react-table
-// const useAsyncDebounce = (callback, wait) => {
-//     const [debounced, setDebounced] = useState(callback);
-//     useEffect(() => {
-//         const timeout = setTimeout(() => setDebounced(callback), wait);
-//         return () => clearTimeout(timeout);
-//     }, [callback, wait]);
-//     return debounced;
-// };
-
 import { useTable, useGlobalFilter, useSortBy, usePagination } from 'react-table';
 import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid';
 import { Button, PageButton } from '../shared';
 import React, { useState, useEffect } from 'react';
-// Import useAsyncDebounce dari react-table
 import { useAsyncDebounce } from 'react-table';
 
-// Perbaikan pada GlobalFilter
 function GlobalFilter({
     preGlobalFilteredRows,
     globalFilter,
@@ -24,12 +12,10 @@ function GlobalFilter({
     const count = preGlobalFilteredRows.length;
     const [value, setValue] = useState(globalFilter);
 
-    // useAsyncDebounce yang benar: Panggil setGlobalFilter di dalam debouncer
     const onChange = useAsyncDebounce(value => {
         setGlobalFilter(value || undefined);
     }, 200);
 
-    // Gunakan useEffect untuk memanggil debouncer saat value berubah
     useEffect(() => {
         onChange(value);
     }, [value, onChange]);
@@ -50,8 +36,7 @@ function GlobalFilter({
     );
 }
 
-// Perbaikan pada komponen Table
-export default function Table({ columns, data }) {
+export default function Table({ columns, data, getCellProps = (cell) => ({className: cell}) }) {
     const {
         getTableProps,
         getTableBodyProps,
@@ -91,19 +76,15 @@ export default function Table({ columns, data }) {
             </div>
 
             <div className="mt-2 flex flex-col">
-                <div className="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
-                    <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="-my-2 overflow-x-auto">
+                    <div className="py-2 align-middle inline-block min-w-full">
                         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                // Perbaikan pada header table
                                 <thead className="bg-gray-50">
                                     {headerGroups.map(headerGroup => (
-                                        // Pisahkan 'key' dari spread operator
-                                        <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                                        <tr {...headerGroup.getHeaderGroupProps()}>
                                             {headerGroup.headers.map(column => (
-                                                // Pisahkan 'key' dari spread operator
                                                 <th
-                                                    key={column.id}
                                                     scope="col"
                                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                                     {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -115,31 +96,35 @@ export default function Table({ columns, data }) {
                                     ))}
                                 </thead>
 
-// Perbaikan pada body table
                                 <tbody
                                     {...getTableBodyProps()}
                                     className="bg-white divide-y divide-gray-200"
                                 >
-                                    {page.map((row) => {
-                                        prepareRow(row);
-                                        return (
-                                            // Pisahkan 'key' dari spread operator
-                                            <tr key={row.id} {...row.getRowProps()}>
-                                                {row.cells.map(cell => {
-                                                    return (
-                                                        // Pisahkan 'key' dari spread operator
-                                                        <td
-                                                            key={cell.id}
-                                                            {...cell.getCellProps()}
-                                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                                                        >
-                                                            {cell.render('Cell')}
-                                                        </td>
-                                                    );
-                                                })}
-                                            </tr>
-                                        );
-                                    })}
+                                    {page.length > 0 &&
+                                        page.map((row) => {
+                                            prepareRow(row);
+                                            return (
+                                                <tr key={row.id} {...row.getRowProps()}>
+                                                    {row.cells.map(cell => {
+                                                        const cellProps = cell.getCellProps();
+                                                        const customProps = getCellProps(cell);
+
+                                                        const finalClassName = `${cellProps.className || ''} ${customProps.className || ''}`.trim();
+
+                                                        return (
+                                                            <td
+                                                                key={cell.id}
+                                                                {...cellProps}
+                                                                {...customProps}
+                                                                className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900`+finalClassName}
+                                                            >
+                                                                {cell.render('Cell')}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            );
+                                        })}
                                 </tbody>
                             </table>
                         </div>
@@ -148,7 +133,72 @@ export default function Table({ columns, data }) {
             </div>
 
             {/* Pagination */}
-            {/* ... (kode pagination tidak diubah karena sudah benar) */}
+            <div className="py-3 flex items-center justify-between">
+                <div className="flex-1 flex justify-between sm:hidden">
+                    <Button onClick={() => previousPage()} disabled={!canPreviousPage}>Sebelumnya</Button>
+                    <Button onClick={() => nextPage()} disabled={!canNextPage}>Selanjutnya</Button>
+                </div>
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div className="flex items-center space-x-2">
+                        <span>
+                            Halaman{' '}
+                            <strong>
+                                {state.pageIndex + 1} dari {pageOptions.length}
+                            </strong>{' '}
+                        </span>
+                        <span>|</span>
+                        <span>
+                            Lihat
+                            <select
+                                value={state.pageSize}
+                                onChange={e => {
+                                    setPageSize(Number(e.target.value));
+                                }}
+                                className="ml-2 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-brand-500 focus:border-brand-500"
+                            >
+                                {[10, 20, 30, 40, 50].map(pageSize => (
+                                    <option key={pageSize} value={pageSize}>
+                                        {pageSize}
+                                    </option>
+                                ))}
+                            </select>
+                            {' '}data
+                        </span>
+                    </div>
+                    <div>
+                        <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <PageButton
+                                onClick={() => gotoPage(0)}
+                                disabled={!canPreviousPage}
+                            >
+                                <span className="sr-only">Halaman Pertama</span>
+                                <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
+                            </PageButton>
+                            <PageButton
+                                onClick={() => previousPage()}
+                                disabled={!canPreviousPage}
+                            >
+                                <span className="sr-only">Sebelumnya</span>
+                                <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                            </PageButton>
+                            <PageButton
+                                onClick={() => nextPage()}
+                                disabled={!canNextPage}
+                            >
+                                <span className="sr-only">Selanjutnya</span>
+                                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                            </PageButton>
+                            <PageButton
+                                onClick={() => gotoPage(pageCount - 1)}
+                                disabled={!canNextPage}
+                            >
+                                <span className="sr-only">Halaman Terakhir</span>
+                                <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
+                            </PageButton>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

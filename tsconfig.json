@@ -30,6 +30,7 @@
     "paths": {
       "@/*": ["./client/*"],
       "@components/*": ["./client/components/*"],
+      "@types/*": ["client/interfaces/*"],
       "@shared/*": ["./shared/*"]
     }
   },

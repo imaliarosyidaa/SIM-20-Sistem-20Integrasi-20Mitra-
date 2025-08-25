@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   Filter,
   RotateCcw,
   ChevronRight,
@@ -12,7 +12,7 @@ import {
 const monthlyActivities = {
   'Januari': [
     'SPKK',
-    'SPH', 
+    'SPH',
     'Pendataan RPH',
     'Pendataan IBS Bulanan',
     'Pemutakhiran SAKEENAS Februari 2024',
@@ -60,7 +60,7 @@ const monthlyActivities = {
   ],
   'Juli': [
     'Sensus Penduduk',
-    'Survei Ekonomi', 
+    'Survei Ekonomi',
     'Pendataan Harga',
     'SPKK',
     'Dan lainnya...'
@@ -91,7 +91,7 @@ const monthlyActivities = {
   ],
   'Desember': [
     'Updating Survei Upahan',
-    'Pendataan IBS Bulanan', 
+    'Pendataan IBS Bulanan',
     'VHTS',
     'Dan lainnya...'
   ]
@@ -138,7 +138,7 @@ export default function MatriksKegiatanOverview() {
   const getMonthCardColor = (month: string) => {
     const progress = monthProgress[month];
     const completionRate = progress.completed / progress.total;
-    
+
     if (completionRate >= 1) return 'bg-green-500';
     if (completionRate >= 0.7) return 'bg-blue-500';
     if (completionRate >= 0.3) return 'bg-yellow-500';
@@ -147,7 +147,7 @@ export default function MatriksKegiatanOverview() {
 
   const getCurrentMonth = () => {
     const now = new Date();
-    return now.getMonth(); // 0-based index
+    return now.getMonth();
   };
 
   return (
@@ -156,7 +156,7 @@ export default function MatriksKegiatanOverview() {
       <div className="bg-white rounded-lg shadow-sm border p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
-            <select 
+            <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 min-w-[100px]"
@@ -167,7 +167,7 @@ export default function MatriksKegiatanOverview() {
               <option value="2022">2022</option>
             </select>
 
-            <select 
+            <select
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 min-w-[100px]"
@@ -180,7 +180,7 @@ export default function MatriksKegiatanOverview() {
               <option value="distribusi">Tim Distribusi</option>
             </select>
 
-            <select 
+            <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 min-w-[100px]"
@@ -194,7 +194,7 @@ export default function MatriksKegiatanOverview() {
             </select>
           </div>
 
-          <button 
+          <button
             onClick={resetFilters}
             className="flex items-center px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
           >
@@ -208,48 +208,38 @@ export default function MatriksKegiatanOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {months.map((month, index) => {
           const activities = monthlyActivities[month] || [];
-          const progress = monthProgress[month];
           const isCurrentMonth = index === getCurrentMonth();
-          const isPastMonth = index < getCurrentMonth();
-          const cardColor = getMonthCardColor(month);
-          
+
           return (
-            <div 
+            <div
               key={month}
               onClick={() => handleMonthClick(month)}
               className={`
-                bg-white rounded-lg shadow-sm border cursor-pointer transition-all duration-200 
-                hover:shadow-md hover:scale-105 overflow-hidden
+                relative bg-white p-4 rounded-lg shadow overflow-hidden
                 ${isCurrentMonth ? 'ring-2 ring-brand-500' : ''}
               `}
             >
-              {/* Month Header */}
-              <div className={`${cardColor} text-white p-4`}>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold">{month}</h3>
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4" />
-                    {isCurrentMonth && (
-                      <span className="bg-white/20 px-2 py-1 rounded-full text-xs">Aktif</span>
-                    )}
-                  </div>
-                </div>
+              <div className='absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-purple-100 to-transparent rounded-b-lg'></div>
+              <div className='p-4 flex justify-between items-center w-full'>
+                <h2 className="text-xl font-bold">{month}</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 
+             002-2V7a2 2 0 00-2-2H5a2 2 0 
+             00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
-
               {/* Activities List */}
-              <div className="p-4">
-                <div className="space-y-2 mb-4">
+              <div className="px-4 relative flex items-center justify-between">
+                <div className="space-y-2 mb-4 w-full">
                   {activities.slice(0, 6).map((activity, actIndex) => (
-                    <div 
+                    <div
                       key={actIndex}
-                      className="text-sm text-gray-700 py-1 px-2 bg-gray-50 rounded flex items-center justify-between hover:bg-gray-100 transition-colors"
+                      className="text-[10px] text-gray-700 py-1 px-2 rounded flex items-center gap-2 hover:bg-gray-100 cursor-default transition-colors"
                     >
+                      <div className="w-1 h-1 rounded-full bg-gradient-to-r from-purple-400 to-pink-700"></div>
                       <span className="truncate">{activity}</span>
-                      {actIndex < 3 && (
-                        <div className="ml-2 flex items-center">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>

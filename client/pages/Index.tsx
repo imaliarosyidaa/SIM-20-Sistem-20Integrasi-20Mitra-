@@ -63,7 +63,7 @@ export default function Index() {
           <div className="text-white">
               <>
                 <h3 className="text-xl font-semibold mb-2"> Rp {(batasHonor[i]?.biaya || 0).toLocaleString("id-ID")}</h3>
-                <p className="text-white/90">{batasHonor[i]?.nama_posisi || "Loading..."}</p>
+                <p className="text-white/90">{batasHonor[i]?.keterangan || "Loading..."}</p>
               </>
           </div>
         </div>

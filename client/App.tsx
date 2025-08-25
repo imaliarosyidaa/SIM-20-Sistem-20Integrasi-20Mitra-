@@ -1,5 +1,5 @@
 import "./global.css";
-
+import 'regenerator-runtime';
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -16,6 +16,7 @@ import DatabaseMitra from "./pages/DatabaseMitra";
 import EvaluasiMitra from "./pages/EvaluasiMitra";
 import NotFound from "./pages/NotFound";
 import UploadTemplate from "./pages/UploadTemplate";
+import AddKegiatan from "./pages/AddKegiatan";
 
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
                   <Route path="/honor-bulanan" element={<HonorBulanan />} />
                   <Route path="/database" element={<DatabaseMitra />} />
                   <Route path="/evaluasi" element={<EvaluasiMitra />} />
+                  <Route path="/add-kegiatan" element={<AddKegiatan />} />
                   <Route path="/upload-template" element={<UploadTemplate />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
