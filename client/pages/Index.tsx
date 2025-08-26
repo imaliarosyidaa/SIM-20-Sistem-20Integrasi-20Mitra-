@@ -39,7 +39,6 @@ export default function Index() {
 
   async function streamDoc(filename: string) {
     try {
-      // cukup bikin URL ke backend
       const url = `${axiosPrivate.defaults.baseURL}/files/stream/${filename}`;
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
@@ -54,9 +53,7 @@ export default function Index() {
         <p className="font-semibold whitespace-nowrap mr-4">
           Batas Honor Mitra
         </p>
-        <hr className="border-t border-gray-300 w-full"></hr>
       </div>
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         {Array.from({length: batasHonor.length}).map((_,i) =>(
         <div key={i} className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg p-6 hover:shadow-3xl transition-all duration-300 hover:scale-105">
@@ -73,9 +70,7 @@ export default function Index() {
         <p className="font-semibold whitespace-nowrap mr-4">
           Sumber
         </p>
-        <hr className="border-t border-gray-300 w-full" />
       </div>
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         {Array.from({length: files.length}).map((_,i)=>(
           <a className="relative bg-gray-900 block p-6 border border-gray-100 rounded-lg mx-auto hover:shadow-3xl transition-all duration-300 hover:scale-105">

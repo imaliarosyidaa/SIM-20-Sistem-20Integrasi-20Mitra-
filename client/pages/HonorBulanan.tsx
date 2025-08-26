@@ -23,7 +23,9 @@ export default function HonorBulanan() {
   const [formData, setFormData] = useState({
     volum: "",
     harga_per_satuan: "",
-    id_sobat: ""
+    id_sobat: "",
+    pcl_pml_olah: '',
+    satuan: ''
   });
 
   const [mitraData, setMitraData] = useState([]);
@@ -77,13 +79,6 @@ export default function HonorBulanan() {
 
     const payload = {
       ...formData,
-      bulan: kegiatan.bulan,
-      tanggal: kegiatan.tanggal,
-      tim: kegiatan.tim,
-      nama_survei: kegiatan.nama_survei,
-      nama_survei_sobat: kegiatan.nama_survei_sobat,
-      kegiatan: kegiatan.kegiatan,
-      tahun: kegiatan.tahun,
       kegiatanId: kegiatan.kodeKegiatan,
       jumlah: Number(formData.harga_per_satuan) * Number(formData.volum)
     };
@@ -101,7 +96,9 @@ export default function HonorBulanan() {
       setFormData({
         volum: "0",
         harga_per_satuan: "0",
-        id_sobat: ''
+        id_sobat: '',
+        pcl_pml_olah: '',
+        satuan: ''
       })
     } catch (error) {
       console.error("Error response:", error.response?.data || error.message);
@@ -286,7 +283,7 @@ export default function HonorBulanan() {
                       >
                         <div className="grid grid-cols-3 gap-6 mb-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama<span className="text-red-500">*</span></label>
                             <select
                               name="id_sobat"
                               value={formData.id_sobat}
@@ -303,7 +300,31 @@ export default function HonorBulanan() {
 
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Volume</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">PCL/PML/OLAH<span className="text-red-500">*</span></label>
+                            <select
+                              name="pcl_pml_olah"
+                              value={formData.pcl_pml_olah}
+                              onChange={handleInputChange}
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            >
+                              <option value="" disabled>Pilih salah satu</option>
+                                <option key="pcl" value="PCL">PCL</option>
+                                <option key="PML" value="PML">PML</option>
+                                <option key="Pengolah" value="Pengolah">PENGOLAH</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Satuan<span className="text-red-500">*</span></label>
+                            <Input
+                              type="text"
+                              value={formData.satuan}
+                              onChange={handleInputChange}
+                              name="satuan"
+                              placeholder="Masukan Satuan"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Volume<span className="text-red-500">*</span></label>
                             <Input
                               type="number"
                               value={formData.volum}
@@ -312,7 +333,7 @@ export default function HonorBulanan() {
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Harga Per Satuan</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Harga Per Satuan<span className="text-red-500">*</span></label>
                             <Input
                               type="number"
                               value={formData.harga_per_satuan}

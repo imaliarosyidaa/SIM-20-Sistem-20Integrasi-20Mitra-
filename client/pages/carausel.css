@@ -1,0 +1,9 @@
+/* Menggunakan kelas kustom untuk menghilangkan scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Untuk browser berbasis WebKit (Chrome, Safari, Edge) */
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* Untuk Internet Explorer dan Edge */
+    scrollbar-width: none;  /* Untuk Firefox */
+}

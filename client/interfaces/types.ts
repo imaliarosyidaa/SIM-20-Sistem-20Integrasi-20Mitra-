@@ -54,3 +54,7 @@ export interface Kegiatan{
   kegiatan   : string,
   tahun : number,
 }
+
+export interface File{
+  file : FormData
+}

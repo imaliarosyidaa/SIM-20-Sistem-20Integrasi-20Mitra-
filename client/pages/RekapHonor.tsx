@@ -1,8 +1,11 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import Layout from "@components/Layout";
 import axios from '../lib/api'
 import Table from "@components/table"
 import honorApi from "@/lib/honorApi";
+import './carausel.css'
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import KegiatanMitraTable from "./KegiatanMitraTable";
 
 export default function RekapHonor() {
   const [activeTab, setActiveTab] = useState<"rekap" | "rincian">("rekap");
@@ -12,11 +15,12 @@ export default function RekapHonor() {
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const batasHonor = 5000000;
+  const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
 
   const getCellClassName = (cell) => {
-    if ((cell.column.id == 'januari' ||cell.column.id == 'februari' || cell.column.id == 'maret' ||
+    if ((cell.column.id == 'januari' || cell.column.id == 'februari' || cell.column.id == 'maret' ||
       cell.column.id == 'april' || cell.column.id == 'mei' || cell.column.id == 'juni' ||
-      cell.column.id == 'juli' ||cell.column.id == 'agustus' || cell.column.id == 'september' || cell.column.id == 'oktober'
+      cell.column.id == 'juli' || cell.column.id == 'agustus' || cell.column.id == 'september' || cell.column.id == 'oktober'
       || cell.column.id == 'november' || cell.column.id == 'desember'
     ) && cell.value > batasHonor) {
       return {
@@ -39,19 +43,19 @@ export default function RekapHonor() {
       },
     },
     { Header: "Nama Mitra", accessor: "namaLengkap" },
-    { Header: "Januari", accessor: "januari",  Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'januari' },
-    { Header: "Februari",accessor: "februari", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'februari'},
-    { Header: "Maret", accessor: "maret", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'maret' },
-    { Header: "April", accessor: "april", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'april' },
-    { Header: "Mei", accessor: "mei", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'mei' },
-    { Header: "Juni", accessor: "juni", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'juni' },
-    { Header: "Juli", accessor: "juli", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'juli' },
-    { Header: "Agustus", accessor: "agustus", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'agustus' },
-    { Header: "September", accessor: "september", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'september' },
-    { Header: "Oktober", accessor: "oktober", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'oktober' },
-    { Header: "November", accessor: "november", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'november' },
-    { Header: "Desember", accessor: "desember", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, id:'desember' },
-    { Header: "Total", accessor: "total", Cell:({value}) =>{ return new Intl.NumberFormat("id-ID").format(value)}, },
+    { Header: "Januari", accessor: "januari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'januari' },
+    { Header: "Februari", accessor: "februari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'februari' },
+    { Header: "Maret", accessor: "maret", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'maret' },
+    { Header: "April", accessor: "april", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'april' },
+    { Header: "Mei", accessor: "mei", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'mei' },
+    { Header: "Juni", accessor: "juni", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juni' },
+    { Header: "Juli", accessor: "juli", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juli' },
+    { Header: "Agustus", accessor: "agustus", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'agustus' },
+    { Header: "September", accessor: "september", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'september' },
+    { Header: "Oktober", accessor: "oktober", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'oktober' },
+    { Header: "November", accessor: "november", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'november' },
+    { Header: "Desember", accessor: "desember", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'desember' },
+    { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, },
   ];
   const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
     try {
@@ -61,6 +65,16 @@ export default function RekapHonor() {
       console.error("gagal mengambil data", err)
     }
   }, [])
+
+  const gettJumlahKegiatanMitra = async function getData() {
+    try {
+      const res = await axios.get('/kegiatanmitra/count');
+      setMitraXKegiatan(res.data.data);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+    }
+  }
 
   const getRincianHonor = useCallback(async () => {
     try {
@@ -74,6 +88,7 @@ export default function RekapHonor() {
   useEffect(() => {
     if (activeTab === "rekap") {
       getRekapHonorPerBulan(selectedYear);
+      gettJumlahKegiatanMitra()
     } else {
       getRincianHonor();
     }
@@ -108,7 +123,40 @@ export default function RekapHonor() {
       </button>
     </nav>
   );
+  const carouselRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  const handleScroll = () => {
+    if (carouselRef.current) {
+      const scrollPosition = carouselRef.current.scrollLeft;
+      const cardWidth = carouselRef.current.offsetWidth;
+      const index = Math.round(scrollPosition / cardWidth);
+      setActiveIndex(index);
+    }
+  };
+
+  const handleArrowClick = (direction) => {
+    if (carouselRef.current) {
+      const cardWidth = carouselRef.current.offsetWidth;
+      const newScrollPosition =
+        direction === "left"
+          ? carouselRef.current.scrollLeft - cardWidth
+          : carouselRef.current.scrollLeft + cardWidth;
+
+      carouselRef.current.scrollTo({ left: newScrollPosition, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const carouselElement = carouselRef.current;
+    if (!carouselElement) return;
+
+    carouselElement.addEventListener("scroll", handleScroll);
+
+    return () => {
+      carouselElement.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <Layout submenu={submenuTabs}>
       <div>
@@ -137,17 +185,58 @@ export default function RekapHonor() {
                         ))}
                       </select>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {Array.from({ length: 12 }).map((_, i) => (
-                        <div key={i} className="bg-purple-100 p-5 rounded-lg border-2 border-purple-400">
-                          <h4 className="font-bold text-purple-700 mb-2">{rekapHonorPerBulan[i]?.bulan}</h4>
-                          <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
-                            Rp {(rekapHonorPerBulan[i]?.total || 0).toLocaleString("id-ID")}
-                          </div>
+                    <div className="relative">
+                      <div className="relative overflow-hidden">
+                        {/* Tombol navigasi kiri */}
+                        <button
+                          onClick={() => handleArrowClick("left")}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
+                        >
+                          <ChevronLeft size={24} />
+                        </button>
+                        <div
+                          ref={carouselRef}
+                          className="flex space-x-6 overflow-x-auto p-4 scroll-smooth hide-scrollbar"
+                        >
+                          {rekapHonorPerBulan.map((item, i) => (
+                            <div
+                              key={i}
+                              className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-5 rounded-lg border-2 border-purple-400"
+                            >
+                              <h4 className="font-bold text-purple-700 mb-2">{item.bulan}</h4>
+                              <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
+                                Rp {(item.total || 0).toLocaleString("id-ID")}
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                        {/* Tombol navigasi kanan */}
+                        <button
+                          onClick={() => handleArrowClick("right")}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
+                        >
+                          <ChevronRight size={24} />
+                        </button>
+                      </div>
+                      <div className="flex justify-center mt-4">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              if (carouselRef.current) {
+                                const cardWidth = carouselRef.current.offsetWidth;
+                                carouselRef.current.scrollTo({ left: cardWidth * i, behavior: "smooth" });
+                                setActiveIndex(i);
+                              }
+                            }}
+                            className={`w-3 h-3 mx-1 rounded-full transition-colors duration-300 ${i === activeIndex % 5 ? "bg-purple-700" : "bg-gray-400"
+                              }`}
+                          ></button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <KegiatanMitraTable mitraxkegaiatan={mitraxkegaiatan}/>
                 </main>
 
                 <aside className="w-80 bg-white p-6 shadow-md rounded-l-lg overflow-y-auto">
