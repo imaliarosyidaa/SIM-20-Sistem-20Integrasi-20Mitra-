@@ -1,15 +1,18 @@
 import { ArrowLeft } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../lib/api'
 
-export default function KegiatanMitraTable(props) {
-    const mitraxkegaiatan = props.mitraxkegaiatan;
+export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
-    const [expandedRow, setExpandedRow] = useState(null); // State to hold the ID of the expanded row
-    const [expandedRowData, setExpandedRowData] = useState([]); // State to hold the data for the expanded row
+    const [expandedRow, setExpandedRow] = useState(null);
+    const [expandedRowData, setExpandedRowData] = useState([]);
     const [isLoadingExpandedRow, setIsLoadingExpandedRow] = useState(false);
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
 
     const filteredItems = mitraxkegaiatan.filter(item =>
         item.namaLengkap.toLowerCase().includes(searchQuery.toLowerCase())
@@ -30,17 +33,15 @@ export default function KegiatanMitraTable(props) {
         setCurrentPage(1);
     };
 
-    // --- Handle row click to expand and fetch data ---
     const getKegiatanById = async (id) => {
         setIsLoadingExpandedRow(true);
         try {
-            // Assuming your API endpoint is '/api/kegiatan-mitra/id'
             const response = await axios.get(`/kegiatanmitra/${id}`);
             setExpandedRowData(response.data.KegiatanMitra);
             console.log(response.data.KegiatanMitra)
         } catch (error) {
             console.error("Failed to fetch kegiatan data:", error);
-            setExpandedRowData([]); // Clear data on error
+            setExpandedRowData([]);
         } finally {
             setIsLoadingExpandedRow(false);
         }
@@ -48,21 +49,50 @@ export default function KegiatanMitraTable(props) {
 
     const handleRowClick = (id) => {
         if (expandedRow === id) {
-            setExpandedRow(null); // Collapse the row if it's already expanded
-            setExpandedRowData([]); // Clear the data
+            setExpandedRow(null);
+            setExpandedRowData([]);
         } else {
-            setExpandedRow(id); // Expand the new row
-            getKegiatanById(id); // Fetch data for the new row
+            setExpandedRow(id);
+            getKegiatanById(id);
         }
     };
 
+    const gettJumlahKegiatanMitra = async function getData(year) {
+        try {
+            const res = await axios.get(`/kegiatanmitra/count/${year}`);
+            setMitraXKegiatan(res.data.data);
+        } catch (err) {
+            console.error("Fetch error:", err);
+        } finally {
+        }
+    }
+
+    useEffect(() => {
+        gettJumlahKegiatanMitra(currentYear)
+    }, []);
 
     return (
         <div className="">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-gray-800">Jumlah Kegiatan Mitra</h3>
                 {/* Search Input */}
-                <div>
+                <div className='flex gap-4'>
+                    <select
+                        id="tahun"
+                        value={selectedYear}
+                        onChange={(e) => {
+                            const year = Number(e.target.value);
+                            setSelectedYear(year);
+                            gettJumlahKegiatanMitra(year);
+                        }}
+                        className="border rounded px-3 py-2"
+                    >
+                        {years.map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
+                    </select>
                     <input
                         type="text"
                         placeholder="Cari nama mitra..."

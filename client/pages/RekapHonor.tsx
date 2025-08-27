@@ -6,6 +6,7 @@ import honorApi from "@/lib/honorApi";
 import './carausel.css'
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import KegiatanMitraTable from "./KegiatanMitraTable";
+import { months } from '../constants'
 
 export default function RekapHonor() {
   const [activeTab, setActiveTab] = useState<"rekap" | "rincian">("rekap");
@@ -15,7 +16,6 @@ export default function RekapHonor() {
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const batasHonor = 5000000;
-  const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
 
   const getCellClassName = (cell) => {
     if ((cell.column.id == 'januari' || cell.column.id == 'februari' || cell.column.id == 'maret' ||
@@ -66,16 +66,6 @@ export default function RekapHonor() {
     }
   }, [])
 
-  const gettJumlahKegiatanMitra = async function getData() {
-    try {
-      const res = await axios.get('/kegiatanmitra/count');
-      setMitraXKegiatan(res.data.data);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    } finally {
-    }
-  }
-
   const getRincianHonor = useCallback(async () => {
     try {
       const res = await axios.get('/honormitra');
@@ -88,7 +78,6 @@ export default function RekapHonor() {
   useEffect(() => {
     if (activeTab === "rekap") {
       getRekapHonorPerBulan(selectedYear);
-      gettJumlahKegiatanMitra()
     } else {
       getRincianHonor();
     }
@@ -198,17 +187,21 @@ export default function RekapHonor() {
                           ref={carouselRef}
                           className="flex space-x-6 overflow-x-auto p-4 scroll-smooth hide-scrollbar"
                         >
-                          {rekapHonorPerBulan.map((item, i) => (
-                            <div
-                              key={i}
-                              className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-5 rounded-lg border-2 border-purple-400"
-                            >
-                              <h4 className="font-bold text-purple-700 mb-2">{item.bulan}</h4>
-                              <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
-                                Rp {(item.total || 0).toLocaleString("id-ID")}
+                          {months.map((month, i) => {
+                            const monthData = rekapHonorPerBulan.find(item => item.bulan === month);
+
+                            return (
+                              <div
+                                key={i}
+                                className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-5 rounded-lg border-2 border-purple-400"
+                              >
+                                <h4 className="font-bold text-purple-700 mb-2">{month}</h4>
+                                <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
+                                  Rp {(monthData?.total || 0).toLocaleString("id-ID")}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                         {/* Tombol navigasi kanan */}
                         <button
@@ -236,7 +229,7 @@ export default function RekapHonor() {
                       </div>
                     </div>
                   </div>
-                  <KegiatanMitraTable mitraxkegaiatan={mitraxkegaiatan}/>
+                  <KegiatanMitraTable />
                 </main>
               </div>
             )}

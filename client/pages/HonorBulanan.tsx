@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
 } from "lucide-react";
 import axios from '../lib/api'
@@ -10,7 +12,6 @@ import { Input } from '@components/ui/input'
 import { Link } from "react-router-dom";
 import ComboBox from "@/components/combobox";
 import userApi from "@/lib/userApi";
-import { User } from "@/interfaces/types";
 
 
 export default function HonorBulanan() {
@@ -27,7 +28,20 @@ export default function HonorBulanan() {
     pcl_pml_olah: '',
     satuan: ''
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
+  const totalPages = Math.ceil(kegiatanMitra.length / rowsPerPage);
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = kegiatanMitra.slice(indexOfFirstRow, indexOfLastRow);
+
+  const goToPage = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
   const [mitraData, setMitraData] = useState([]);
 
   const toggleRow = (id: number) => {
@@ -73,7 +87,6 @@ export default function HonorBulanan() {
     }));
   };
 
-
   async function handleFormSubmit(event, kegiatan, mitraData) {
     event.preventDefault();
 
@@ -82,8 +95,6 @@ export default function HonorBulanan() {
       kegiatanId: kegiatan.kodeKegiatan,
       jumlah: Number(formData.harga_per_satuan) * Number(formData.volum)
     };
-
-    console.log(payload)
     try {
       await axios.post('/kegiatanmitra',
         payload, {
@@ -94,8 +105,8 @@ export default function HonorBulanan() {
       }
       );
       setFormData({
-        volum: "0",
-        harga_per_satuan: "0",
+        volum: "",
+        harga_per_satuan: "",
         id_sobat: '',
         pcl_pml_olah: '',
         satuan: ''
@@ -170,7 +181,7 @@ export default function HonorBulanan() {
           </tr>
         </thead>
         <tbody>
-          {kegiatanMitra.map((kegiatan, index) => (
+          {currentRows.map((kegiatan, index) => (
             <React.Fragment key={kegiatan.id}>
               <tr className="border-t hover:bg-gray-50" key={index}>
                 <td className="p-2 text-center">{kegiatan.id}.</td>
@@ -188,7 +199,7 @@ export default function HonorBulanan() {
                 </td>
               </tr>
               {expandedRows.includes(kegiatan.id) && (
-                <tr className="bg-gray-50 border-t">
+                <tr className="border-t">
                   <td colSpan={7} className="p-4 text-sm text-gray-600">
                     {Array.isArray(kegiatan.mitra) && kegiatan.mitra.length > 0 ? (
                       <div className="overflow-x-auto rounded-lg shadow-sm border">
@@ -263,34 +274,36 @@ export default function HonorBulanan() {
                         <div className="grid grid-cols-3 gap-6 mb-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nama<span className="text-red-500">*</span></label>
-                            <select
-                              name="id_sobat"
-                              value={formData.id_sobat}
-                              onChange={handleInputChange}
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            >
-                              <option value="">Pilih mitra...</option>
-                              {mitraData?.map((mitra: any) => (
-                                <option key={mitra.id} value={mitra.sobatId}>
-                                  {mitra.namaLengkap}
-                                </option>
-                              ))}
-                            </select>
+                            <ComboBox
+                              data={mitraData}
+                              labelKey="namaLengkap"
+                              valueKey="sobatId"
+                              placeholder="Pilih mitra..."
+                              onChange={(mitra) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  id_sobat: mitra.sobatId,
+                                }))
+                              }
+                            />
 
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">PCL/PML/OLAH<span className="text-red-500">*</span></label>
+
                             <select
                               name="pcl_pml_olah"
                               value={formData.pcl_pml_olah}
                               onChange={handleInputChange}
-                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm 
+                                          hover:border-indigo-400 transition duration-150 ease-in-out"
                             >
-                              <option value="" disabled>Pilih salah satu</option>
+                              <option value="" disabled className="text-gray-400">Pilih salah satu</option>
                               <option key="pcl" value="PCL">PCL</option>
                               <option key="PML" value="PML">PML</option>
                               <option key="Pengolah" value="Pengolah">PENGOLAH</option>
                             </select>
+
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Satuan<span className="text-red-500">*</span></label>
@@ -335,6 +348,49 @@ export default function HonorBulanan() {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between p-4 border-t bg-gray-50">
+        <p className="text-sm text-gray-600">
+          Menampilkan{" "}
+          <span className="font-semibold">
+            {indexOfFirstRow + 1}-{Math.min(indexOfLastRow, kegiatanMitra.length)}
+          </span>{" "}
+          dari <span className="font-semibold">{kegiatanMitra.length}</span> data
+        </p>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex items-center px-3 py-1.5 rounded-md border text-sm disabled:opacity-40 hover:bg-gray-100"
+          >
+            <ChevronLeft size={16} />
+            Prev
+          </button>
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goToPage(i + 1)}
+              className={`px-3 py-1.5 rounded-md text-sm ${
+                currentPage === i + 1
+                  ? "bg-indigo-600 text-white"
+                  : "border hover:bg-gray-100"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="flex items-center px-3 py-1.5 rounded-md border text-sm disabled:opacity-40 hover:bg-gray-100"
+          >
+            Next
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </div>
       <Link to="/add-kegiatan">
         <button
           className="fixed bottom-4 right-4 p-4 rounded-full bg-blue-600 text-white shadow-lg 

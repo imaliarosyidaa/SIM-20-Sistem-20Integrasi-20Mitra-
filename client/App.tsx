@@ -28,10 +28,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Route with custom layout */}
           <Route path="/rekap-honor" element={<RekapHonor />} />
-
-          {/* Routes with standard layout */}
           <Route
             path="/*"
             element={
@@ -55,7 +52,6 @@ const App = () => (
                   <Route path="/evaluasi" element={<EvaluasiMitra />} />
                   <Route path="/add-kegiatan" element={<AddKegiatan />} />
                   <Route path="/upload-template" element={<UploadTemplate />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>

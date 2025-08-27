@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {months} from '../constants'
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -50,21 +52,6 @@ const activities = [
     color: "bg-purple-500",
     status: "confirmed",
   },
-];
-
-const months = [
-  "Januari",
-  "Februari",
-  "Maret",
-  "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Agustus",
-  "September",
-  "Oktober",
-  "November",
-  "Desember",
 ];
 
 const dayNames = ["SEN", "SEL", "RAB", "KAM", "JUM", "SAB", "MIN"];
