@@ -142,11 +142,6 @@ export default function HonorBulanan() {
               <div className="flex justify-between">
                 <div>Tim Kegiatan</div>
                 <div className="flex gap-4 items-center">
-                  {selectedRows.length > 0 && (
-                    <div className="space-x-2">
-                      <Button size="sxl" variant="destructive">Delete</Button>
-                    </div>
-                  )}
                   <Link to="/upload-template" className="flex gap-2">
                     <Button variant="outline">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
@@ -165,42 +160,31 @@ export default function HonorBulanan() {
         </thead>
         <thead className="">
           <tr>
-            <th className="p-2"><input
-              type="checkbox"
-            />
-            </th>
-            <th className="p-2 text-left">Nama Survei Sobat</th>
-            <th className="p-2">Nama Survei</th>
+            <th className="p-2">No.</th>
+            <th className="p-2">Bulan</th>
+            <th className="p-2">Tanggal</th>
             <th className="p-2">Tim</th>
-            <th className="p-2">Tanggal Lapangan</th>
-            <th className="p-2">Bulan Lapangan</th>
+            <th className="p-2">Nama Survei</th>
+            <th className="p-2 text-left">Nama Survei Sobat</th>
             <th className="p-2"></th>
           </tr>
         </thead>
         <tbody>
-          {kegiatanMitra.map((kegiatan) => (
+          {kegiatanMitra.map((kegiatan, index) => (
             <React.Fragment key={kegiatan.id}>
-              <tr className="border-t hover:bg-gray-50">
-                <td className="p-2 text-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(kegiatan.id)}
-                    onChange={() => toggleSelect(kegiatan.id)}
-                  />
-                </td>
-                <td className="p-2 text-start text-xs text-blue-600/100 hover:underline hover:underline-offset-auto cursor-pointer" onClick={() => toggleRow(kegiatan.id)}>{kegiatan.nama_survei_sobat}</td>
-                <td className="p-2 text-center text-xs">{kegiatan.nama_survei}</td>
-                <td className="p-2 text-center text-xs">{kegiatan.tim}</td>
-                <td className="p-2 text-center text-xs">{kegiatan.tanggal}</td>
+              <tr className="border-t hover:bg-gray-50" key={index}>
+                <td className="p-2 text-center">{kegiatan.id}.</td>
                 <td className="p-2 text-center text-xs">{kegiatan.bulan}</td>
+                <td className="p-2 text-center text-xs">{kegiatan.tanggal}</td>
+                <td className="p-2 text-center text-xs">{kegiatan.tim}</td>
+                <td className="p-2 text-center text-xs">{kegiatan.nama_survei}</td>
+                <td className="p-2 text-start text-xs text-blue-600/100 hover:underline hover:underline-offset-auto cursor-pointer" onClick={() => toggleRow(kegiatan.id)}>{kegiatan.nama_survei_sobat}</td>
                 <td className="p-2 text-center">
-                  <button>
-                    {expandedRows.includes(kegiatan.id) ? (
-                      <ChevronUp size={18} />
-                    ) : (
-                      <ChevronDown size={18} />
-                    )}
-                  </button>
+                  {expandedRows.includes(kegiatan.id) ? (
+                    <ChevronUp size={18} />
+                  ) : (
+                    <ChevronDown size={18} />
+                  )}
                 </td>
               </tr>
               {expandedRows.includes(kegiatan.id) && (
@@ -211,6 +195,9 @@ export default function HonorBulanan() {
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
                           <thead className="bg-gray-100">
                             <tr>
+                              <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
+                                No.
+                              </th>
                               <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
                                 Nama Petugas
                               </th>
@@ -231,30 +218,22 @@ export default function HonorBulanan() {
                           <tbody className="bg-white divide-y divide-gray-200">
                             {kegiatan.mitra.map((pcl, index) => (
                               <tr key={index} className="hover:bg-gray-50 transition">
+                                <td className="px-6 py-3 whitespace-nowrap">{index + 1}.</td>
                                 <td className="px-6 py-3 whitespace-nowrap">{pcl.nama_petugas}</td>
                                 <td className="px-6 py-3 whitespace-nowrap">{pcl.volum}</td>
-                                <td className="px-6 py-3 whitespace-nowrap">{pcl.harga_per_satuan}</td>
+                                <td className="px-6 py-3 whitespace-nowrap">{new Intl.NumberFormat("id-ID").format(pcl.harga_per_satuan)}</td>
                                 <td className="px-6 py-3 whitespace-nowrap font-medium text-gray-700">
-                                  {pcl.jumlah}
+                                  {new Intl.NumberFormat("id-ID").format(pcl.jumlah)}
                                 </td>
                                 <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                  <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1 inline-flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                      <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                    </svg>
-                                    Edit
-                                  </button>
-                                  <button
+                                  <Button
                                     onClick={() => deleteData(pcl.id)}
-                                    className="text-red-600 hover:text-red-800 flex items-center gap-1 inline-flex"
+                                    className=""
+                                    variant="destructive"
+                                    size="sxl"
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-circle" viewBox="0 0 16 16">
-                                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                                    </svg>
                                     Hapus
-                                  </button>
+                                  </Button>
                                 </td>
                               </tr>
                             ))}
@@ -308,9 +287,9 @@ export default function HonorBulanan() {
                               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             >
                               <option value="" disabled>Pilih salah satu</option>
-                                <option key="pcl" value="PCL">PCL</option>
-                                <option key="PML" value="PML">PML</option>
-                                <option key="Pengolah" value="Pengolah">PENGOLAH</option>
+                              <option key="pcl" value="PCL">PCL</option>
+                              <option key="PML" value="PML">PML</option>
+                              <option key="Pengolah" value="Pengolah">PENGOLAH</option>
                             </select>
                           </div>
                           <div>

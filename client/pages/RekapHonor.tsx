@@ -164,7 +164,7 @@ export default function RekapHonor() {
           <div>
             {activeTab === "rekap" && (
               <div className="flex min-h-screen">
-                <main className="flex-1 overflow-y-auto pr-8">
+                <main className="flex-1 overflow-y-auto">
                   <div className="mb-8">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-xl font-bold text-gray-800">Bulan</h3>
@@ -238,21 +238,6 @@ export default function RekapHonor() {
                   </div>
                   <KegiatanMitraTable mitraxkegaiatan={mitraxkegaiatan}/>
                 </main>
-
-                <aside className="w-80 bg-white p-6 shadow-md rounded-l-lg overflow-y-auto">
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-4">Mitra Dengan Tim Terbanyak</h4>
-                    <ul className="space-y-3">
-                      <li className="p-3 bg-gray-50 rounded-lg flex items-start">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3"></div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium">Ilham</p>
-                          <span className="text-xs text-gray-500">4</span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </aside>
               </div>
             )}
 
