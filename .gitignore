@@ -11,7 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-client/lib/api.ts
 
 # Editor directories and files
 .vscode/*
