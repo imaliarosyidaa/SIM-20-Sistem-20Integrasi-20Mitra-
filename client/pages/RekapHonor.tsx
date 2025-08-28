@@ -15,7 +15,7 @@ export default function RekapHonor() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const batasHonor = 5000000;
+  const batasHonor = 3226000;
   const [isLoading, setIsLoading] = useState(true);
 
   const getCellClassName = (cell) => {
