@@ -1,6 +1,7 @@
 @import "handsontable/dist/handsontable.full.min.css";
 @import 'react-tabulator/lib/styles.css';
 @import 'tabulator-tables/dist/css/tabulator.min.css';
+@import 'react-loading-skeleton/dist/skeleton.css';
 
 @tailwind base;
 @tailwind components;

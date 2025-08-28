@@ -3,6 +3,7 @@ import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDouble
 import { Button, PageButton } from '../shared';
 import React, { useState, useEffect } from 'react';
 import { useAsyncDebounce } from 'react-table';
+import Skeleton from 'react-loading-skeleton';
 
 function GlobalFilter({
     preGlobalFilteredRows,
@@ -36,7 +37,7 @@ function GlobalFilter({
     );
 }
 
-export default function Table({ columns, data, getCellProps = (cell) => ({className: cell}) }) {
+export default function Table({ columns, data, isLoading, getCellProps = (cell) => ({ className: cell }) }) {
     const {
         getTableProps,
         getTableBodyProps,
@@ -100,31 +101,51 @@ export default function Table({ columns, data, getCellProps = (cell) => ({classN
                                     {...getTableBodyProps()}
                                     className="bg-white divide-y divide-gray-200"
                                 >
-                                    {page.length > 0 &&
+                                    {isLoading ? (
+                                        [...Array(10)].map((_, i) => (
+                                            <tr key={i}>
+                                                {Array.from({ length: columns.length }).map((_, j) => (
+                                                    <td key={j} className="px-6 py-4 whitespace-nowrap">
+                                                        <Skeleton height={20} width="80%" />
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))
+                                    ) : page.length > 0 ? (
                                         page.map((row) => {
                                             prepareRow(row);
                                             return (
                                                 <tr key={row.id} {...row.getRowProps()}>
-                                                    {row.cells.map(cell => {
+                                                    {row.cells.map((cell) => {
                                                         const cellProps = cell.getCellProps();
                                                         const customProps = getCellProps(cell);
-
-                                                        const finalClassName = `${cellProps.className || ''} ${customProps.className || ''}`.trim();
+                                                        const finalClassName = `${cellProps.className || ""} ${customProps.className || ""
+                                                            }`.trim();
 
                                                         return (
                                                             <td
                                                                 key={cell.id}
                                                                 {...cellProps}
                                                                 {...customProps}
-                                                                className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900`+finalClassName}
+                                                                className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${finalClassName}`}
                                                             >
-                                                                {cell.render('Cell')}
+                                                                {cell.render("Cell")}
                                                             </td>
                                                         );
                                                     })}
                                                 </tr>
                                             );
-                                        })}
+                                        })
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan={columns.length}
+                                                className="text-center py-6 text-gray-500"
+                                            >
+                                                Tidak ada data
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>

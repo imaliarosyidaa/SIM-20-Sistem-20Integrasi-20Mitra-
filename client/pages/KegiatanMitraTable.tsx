@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import axios from '../lib/api'
+import Skeleton from 'react-loading-skeleton';
 
 export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -9,6 +10,7 @@ export default function KegiatanMitraTable() {
     const [expandedRow, setExpandedRow] = useState(null);
     const [expandedRowData, setExpandedRowData] = useState([]);
     const [isLoadingExpandedRow, setIsLoadingExpandedRow] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
     const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -38,7 +40,7 @@ export default function KegiatanMitraTable() {
         try {
             const response = await axios.get(`/kegiatanmitra/${id}`);
             setExpandedRowData(response.data.KegiatanMitra);
-            console.log(response.data.KegiatanMitra)
+            console.log(response.data.KegiatanMitra);
         } catch (error) {
             console.error("Failed to fetch kegiatan data:", error);
             setExpandedRowData([]);
@@ -58,14 +60,17 @@ export default function KegiatanMitraTable() {
     };
 
     const gettJumlahKegiatanMitra = async function getData(year) {
+        setIsLoading(true); // ⬅️ mulai loading
         try {
             const res = await axios.get(`/kegiatanmitra/count/${year}`);
             setMitraXKegiatan(res.data.data);
         } catch (err) {
             console.error("Fetch error:", err);
+            setMitraXKegiatan([]);
         } finally {
+            setIsLoading(false); // ⬅️ selesai loading
         }
-    }
+    };
 
     useEffect(() => {
         gettJumlahKegiatanMitra(currentYear)
@@ -113,7 +118,24 @@ export default function KegiatanMitraTable() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {currentItems.length > 0 ? (
+                        {isLoading ? (
+                            // Skeleton loader saat loading utama
+                            <>
+                                {[...Array(10)].map((_, i) => (
+                                    <tr key={i} className="animate-pulse">
+                                        <td className="px-4 py-2">
+                                            <div className="h-4 bg-gray-200 rounded w-6"></div>
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            <div className="h-4 bg-gray-200 rounded w-32"></div>
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            <div className="h-4 bg-gray-200 rounded w-16"></div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </>
+                        ) : currentItems.length > 0 ? (
                             currentItems.map((kegmitra, index) => (
                                 <React.Fragment key={index}>
                                     <tr
@@ -136,7 +158,9 @@ export default function KegiatanMitraTable() {
                                         <tr>
                                             <td colSpan="4" className="p-4 bg-gray-100">
                                                 {isLoadingExpandedRow ? (
-                                                    <div className="text-center text-gray-500">Memuat list kegiatan...</div>
+                                                    <div className="text-center text-gray-500">
+                                                        Memuat list kegiatan...
+                                                    </div>
                                                 ) : (
                                                     <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
                                                         {expandedRowData.length > 0 ? (
@@ -146,7 +170,9 @@ export default function KegiatanMitraTable() {
                                                                 </li>
                                                             ))
                                                         ) : (
-                                                            <div className="text-gray-500">Tidak ada kegiatan ditemukan.</div>
+                                                            <div className="text-gray-500">
+                                                                Tidak ada kegiatan ditemukan.
+                                                            </div>
                                                         )}
                                                     </ul>
                                                 )}
@@ -163,6 +189,7 @@ export default function KegiatanMitraTable() {
                             </tr>
                         )}
                     </tbody>
+
                 </table>
             </div>
 

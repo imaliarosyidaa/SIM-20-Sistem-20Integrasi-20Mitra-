@@ -103,7 +103,7 @@ export default function DatabaseMitra() {
 
   return (
     <div className="space-y-6">
-      <Table columns={columns} data={mitraData} />
+      <Table columns={columns} data={mitraData} isLoading={isLoading}/>
     </div>
   );
 }

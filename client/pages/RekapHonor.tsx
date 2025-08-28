@@ -16,6 +16,7 @@ export default function RekapHonor() {
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const batasHonor = 5000000;
+  const [isLoading, setIsLoading] = useState(true);
 
   const getCellClassName = (cell) => {
     if ((cell.column.id == 'januari' || cell.column.id == 'februari' || cell.column.id == 'maret' ||
@@ -57,21 +58,28 @@ export default function RekapHonor() {
     { Header: "Desember", accessor: "desember", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'desember' },
     { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, },
   ];
+
   const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
+    setIsLoading(true);
     try {
       const res = await axios.get(`/honormitra/rekap/${selectedYear}`);
-      setRekapHonorPerBulan(res.data.data)
+      setRekapHonorPerBulan(res.data.data);
     } catch (err) {
-      console.error("gagal mengambil data", err)
+      console.error("gagal mengambil data", err);
+    } finally {
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   const getRincianHonor = useCallback(async () => {
+    setIsLoading(true);
     try {
       const res = await axios.get('/honormitra');
       setDetailHonorData(res.data.data);
     } catch (err) {
       setDetailHonorData([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -236,7 +244,7 @@ export default function RekapHonor() {
 
             {activeTab === "rincian" && (
               <div className="flex-1">
-                <Table columns={columns} data={detailHonorData} getCellProps={getCellClassName} />
+                <Table columns={columns} data={detailHonorData} getCellProps={getCellClassName} isLoading={isLoading} />
               </div>
             )}
           </div>
