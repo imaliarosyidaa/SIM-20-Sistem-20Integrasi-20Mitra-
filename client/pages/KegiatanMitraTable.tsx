@@ -1,7 +1,10 @@
 import { ArrowLeft } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import axios from '../lib/api'
+import kegiatanMitraApi from '../lib/kegaiatanMitraApi'
 import Skeleton from 'react-loading-skeleton';
+import kegiatanApi from '@/lib/kegiatanApi';
+import useAuth from '@/hooks/use-auth';
 
 export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +18,7 @@ export default function KegiatanMitraTable() {
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
+    const { auth } = useAuth();
 
     const filteredItems = mitraxkegaiatan.filter(item =>
         item.namaLengkap.toLowerCase().includes(searchQuery.toLowerCase())
@@ -37,16 +41,18 @@ export default function KegiatanMitraTable() {
 
     const getKegiatanById = async (id) => {
         setIsLoadingExpandedRow(true);
-        try {
-            const response = await axios.get(`/kegiatanmitra/${id}`);
-            setExpandedRowData(response.data.KegiatanMitra);
-            console.log(response.data.KegiatanMitra);
-        } catch (error) {
-            console.error("Failed to fetch kegiatan data:", error);
-            setExpandedRowData([]);
-        } finally {
-            setIsLoadingExpandedRow(false);
-        }
+
+        kegiatanMitraApi.GetKegiatanById(auth.accessToken, id).then((res) => {
+            setExpandedRowData(res.KegiatanMitra);
+        })
+            .catch((err) => {
+                console.error("Failed to fetch kegiatan data:", err);
+                setExpandedRowData([]);
+            })
+            .finally(() => {
+                setIsLoading(false)
+                setIsLoadingExpandedRow(false);
+            })
     };
 
     const handleRowClick = (id) => {
@@ -59,21 +65,23 @@ export default function KegiatanMitraTable() {
         }
     };
 
-    const gettJumlahKegiatanMitra = async function getData(year) {
-        setIsLoading(true); // ⬅️ mulai loading
-        try {
-            const res = await axios.get(`/kegiatanmitra/count/${year}`);
-            setMitraXKegiatan(res.data.data);
-        } catch (err) {
-            console.error("Fetch error:", err);
-            setMitraXKegiatan([]);
-        } finally {
-            setIsLoading(false); // ⬅️ selesai loading
-        }
+    const getJumlahKegiatanMitra = async function getData(year) {
+        setIsLoading(true);
+
+        kegiatanMitraApi.GetJumlahKegiatanMitra(auth.accessToken, year).then((res) => {
+            setMitraXKegiatan(res);
+        })
+            .catch((err) => {
+                console.error("Fetch error:", err);
+                setMitraXKegiatan([]);
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
     };
 
     useEffect(() => {
-        gettJumlahKegiatanMitra(currentYear)
+        getJumlahKegiatanMitra(currentYear)
     }, []);
 
     return (
@@ -88,7 +96,7 @@ export default function KegiatanMitraTable() {
                         onChange={(e) => {
                             const year = Number(e.target.value);
                             setSelectedYear(year);
-                            gettJumlahKegiatanMitra(year);
+                            getJumlahKegiatanMitra(year);
                         }}
                         className="border rounded px-3 py-2"
                     >

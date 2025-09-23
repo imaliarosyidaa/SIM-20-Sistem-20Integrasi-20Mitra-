@@ -5,7 +5,6 @@ import {
   ChevronRight,
   ChevronUp,
 } from "lucide-react";
-import axios from '../lib/api'
 import { Button } from "@/components/ui/button";
 import { ReactTabulator } from 'react-tabulator'
 import { Input } from '@components/ui/input'
@@ -13,10 +12,13 @@ import { Link } from "react-router-dom";
 import ComboBox from "@/components/combobox";
 import userApi from "@/lib/userApi";
 import Skeleton from 'react-loading-skeleton'
+import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
+import { KegiatanMitraResponse } from "@/interfaces/types";
+import useAuth from "@/hooks/use-auth";
 
 
 export default function HonorBulanan() {
-  const [kegiatanMitra, setKegiatanMitra] = useState([]);
+  const [kegiatanMitra, setKegiatanMitra] = useState<KegiatanMitraResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -37,6 +39,7 @@ export default function HonorBulanan() {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = kegiatanMitra.slice(indexOfFirstRow, indexOfLastRow);
+  const { auth } = useAuth();
 
   const goToPage = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -63,24 +66,31 @@ export default function HonorBulanan() {
     );
   };
 
+
+  function fetchData() {
+    setIsLoading(true);
+    Promise.all([
+      kegaiatanMitraApi.getKegiatanMitra(auth.accessToken),
+      userApi.getAllUsers(auth.accessToken)
+    ])
+      .then(([kegMitra, users]) => {
+        setKegiatanMitra(kegMitra);
+        setMitraData(users.map(user => ({
+          id: user.id,
+          namaLengkap: user.namaLengkap,
+          sobatId: user.sobatId,
+        })));
+      })
+      .catch(() => setError(true))
+      .finally(() => setIsLoading(false));
+  }
+
   useEffect(() => {
-    async function getData() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get('/kegiatanmitra');
-        setKegiatanMitra(res.data.data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    getData();
+    fetchData();
   }, []);
 
+
   const handleInputChange = (e: React.ChangeEvent<any>) => {
-    console.log("name:", e.target.name, "value:", e.target.value);
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -96,54 +106,35 @@ export default function HonorBulanan() {
       kegiatanId: kegiatan.kodeKegiatan,
       jumlah: Number(formData.harga_per_satuan) * Number(formData.volum)
     };
-    try {
-      await axios.post('/kegiatanmitra',
-        payload, {
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "*/*",
-        },
-      }
-      );
-      setFormData({
-        volum: "",
-        harga_per_satuan: "",
-        id_sobat: '',
-        pcl_pml_olah: '',
-        satuan: ''
+    kegaiatanMitraApi.createKegiatanMitra(auth.accessToken, payload)
+      .then(() => {
+        fetchData();
+        setFormData({
+          volum: "",
+          harga_per_satuan: "",
+          id_sobat: '',
+          pcl_pml_olah: '',
+          satuan: ''
+        })
       })
-    } catch (error) {
-      console.error("Error response:", error.response?.data || error.message);
-    }
+      .catch((err) => { setError(true) })
+      .finally(() => { setIsLoading(false) })
   }
 
   async function deleteData(id) {
-    try {
-      await axios.delete("/kegiatanmitra/delete", {
-        data: { id: id },
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*",
-        },
-      });
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      alert("Delete failed");
-    }
+    setError(null);
+    kegaiatanMitraApi.deleteKegiatanMitra(auth.accessToken, id)
+      .then(() => {
+        setKegiatanMitra(prev =>
+          prev.map(group => ({
+            ...group,
+            mitra: group.mitra.filter(m => m.id !== id)
+          }))
+        );
+      })
+      .catch()
+      .finally()
   }
-
-  useEffect(() => {
-    userApi.getAllUsers().then((users) => {
-      const filtered = users.map(user => ({
-        id: user.id,
-        namaLengkap: user.namaLengkap,
-        sobatId: user.sobatId
-      }));
-      setMitraData(filtered)
-    })
-      .catch((err) => { setError(true) })
-      .finally(() => { setIsLoading(false) })
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -185,9 +176,10 @@ export default function HonorBulanan() {
           {isLoading ? (
             Array.from({ length: 10 }).map((_, i) => (
               <tr key={i} className="animate-pulse">
-                <td colSpan={7} className="p-2">
-                  <Skeleton height={20} />
-                </td>
+                {Array.from({ length: 7 }).map((_, j) => (
+                  <td key={j}><Skeleton height={20} width="80%" /></td>
+                )
+                )}
               </tr>
             ))
           ) : (
@@ -280,6 +272,11 @@ export default function HonorBulanan() {
                           onSubmit={(e) => handleFormSubmit(e, kegiatan, mitraData)}
                           method="POST"
                           className="bg-white my-4 py-4 px-6 border rounded-lg shadow-sm"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                            }
+                          }}
                         >
                           <div className="grid grid-cols-3 gap-6 mb-4">
                             <div>

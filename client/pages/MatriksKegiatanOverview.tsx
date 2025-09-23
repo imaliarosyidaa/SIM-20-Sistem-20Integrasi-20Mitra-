@@ -4,6 +4,9 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import axios from '../lib/api'
+import kegiatanApi from '@/lib/kegiatanApi';
+import { MatriksKegiatan } from '@/interfaces/types';
+import useAuth from '@/hooks/use-auth';
 
 const months = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -11,20 +14,31 @@ const months = [
 ];
 
 export default function MatriksKegiatanOverview() {
-  const [rekapKegiatanData, setRekapKegiatanData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [rekapKegiatanData, setRekapKegiatanData] = useState<MatriksKegiatan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const { auth } = useAuth();
 
   const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
-    try {
-      const response = await axios.get(`/kegiatan/${selectedYear}`);
-      setRekapKegiatanData(response.data);
-    } catch (err) {
-      console.error("gagal mengambil data", err)
-    }
+    kegiatanApi.getMatriksKegiatan(auth.accessToken, selectedYear)
+        .then(
+          (matriks) => {
+            setRekapKegiatanData(matriks)
+          }
+        )
+        .catch(
+          (err) => {
+            setError(true)
+          }
+        )
+        .finally(
+          () => {
+            setIsLoading(false)
+          }
+        )
   }, [])
 
     useEffect(() => {

@@ -9,7 +9,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import MatriksKegiatanOverview from "./pages/MatriksKegiatanOverview";
-import MatriksKegiatanCalendar from "./pages/MatriksKegiatanCalendar";
 import RekapHonor from "./pages/RekapHonor";
 import HonorBulanan from "./pages/HonorBulanan";
 import DatabaseMitra from "./pages/DatabaseMitra";
@@ -17,6 +16,9 @@ import EvaluasiMitra from "./pages/EvaluasiMitra";
 import NotFound from "./pages/NotFound";
 import UploadTemplate from "./pages/UploadTemplate";
 import AddKegiatan from "./pages/AddKegiatan";
+import { AuthProvider } from "./context/AuthProvider";
+import PersistLogin from "./components/PersistLogin";
+import Dashboard from "./pages/Dashboard";
 
 
 const queryClient = new QueryClient();
@@ -27,37 +29,40 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/rekap-honor" element={<RekapHonor />} />
-          <Route
-            path="/*"
-            element={
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route
-                    path="/matriks"
-                    element={<MatriksKegiatanOverview />}
-                  />
-                  <Route
-                    path="/matriks/calendar"
-                    element={<MatriksKegiatanCalendar />}
-                  />
-                  <Route
-                    path="/matriks/calendar/:month"
-                    element={<MatriksKegiatanCalendar />}
-                  />
-                  <Route path="/honor-bulanan" element={<HonorBulanan />} />
-                  <Route path="/database" element={<DatabaseMitra />} />
-                  <Route path="/evaluasi" element={<EvaluasiMitra />} />
-                  <Route path="/add-kegiatan" element={<AddKegiatan />} />
-                  <Route path="/upload-template" element={<UploadTemplate />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            }
-          />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+
+            <Route element={<PersistLogin />}>
+              <Route element={<Layout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/rekap-honor" element={<RekapHonor />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/matriks" element={<MatriksKegiatanOverview />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/honor-bulanan" element={<HonorBulanan />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/database" element={<DatabaseMitra />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/evaluasi" element={<EvaluasiMitra />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/add-kegiatan" element={<AddKegiatan />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/upload-template" element={<UploadTemplate />} />
+              </Route>
+            </Route>
+            {/* Catch-all route for 404 Not Found */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

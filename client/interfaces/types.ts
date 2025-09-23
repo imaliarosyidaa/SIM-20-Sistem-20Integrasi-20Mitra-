@@ -55,6 +55,55 @@ export interface Kegiatan{
   tahun : number,
 }
 
+export interface KegiatanMitra {
+  id: number;
+  bulan: string;
+  tanggal: string;
+  tim: string;
+  nama_survei: string;
+  nama_survei_sobat: string;
+  kegiatan: string;
+  tahun: number;
+  pcl_pml_olah: string;
+  nama_petugas: string;
+  id_sobat: string;
+  satuan: string;
+  volum: number;
+  harga_per_satuan: number;
+  jumlah: number; 
+  konfirmasi: string;
+  flag_sobat: string;
+  kegiatanId: string;
+}
+
+export interface KegiatanMitraResponse{
+  id: number;
+  bulan: string;
+  tanggal: string;
+  tim: string;
+  nama_survei: string;
+  nama_survei_sobat: string;
+  kegiatan: string;
+  tahun: number;
+  mitra : KegiatanMitra[]
+}
+
+export interface KegiatanMitraRequest{
+  
+  volum: number,
+  harga_per_satuan: number,
+  id_sobat: string,
+  pcl_pml_olah: string,
+  satuan: string,
+  kegiatanId: string,
+  jumlah: number,
+}
+
+export interface MatriksKegiatan{
+  bulan: string,
+  kegiatan: string[]
+}
+
 export interface File{
   file : FormData
 }

@@ -1,9 +1,19 @@
-import { PenilaianMitra, UserResponse, User } from "@/interfaces/types";
-import axios from "./api";
+// useUserApi.ts
+import { useCallback } from "react";
+import { User } from "@/interfaces/types";
+import useAxiosPrivate from "../hooks/use-axios-private";
 
-async function getAllUsers() {
-  const response = await axios.get<{ data: User[] }>("/mitra");
-  return response.data.data; // hasilnya { status_code, message, data: [] }
+export default function useUserApi() {
+  const axiosPrivate = useAxiosPrivate();
+
+  const getAllUsers = useCallback(async (): Promise<User[]> => {
+    const controller =  new AbortController();
+    
+    const response = await axiosPrivate.get<{ data: User[] }>("/mitra", {
+      signal: controller.signal
+    });
+    return response.data.data;
+  }, [axiosPrivate]);
+
+  return { getAllUsers };
 }
-
-export default { getAllUsers };

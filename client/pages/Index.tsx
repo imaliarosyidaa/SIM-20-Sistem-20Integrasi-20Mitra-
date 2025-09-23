@@ -1,91 +1,144 @@
-import React, { useEffect, useState } from "react";
-import axios from '../lib/api'
-import { axiosPrivate } from '../lib/api';
+import logo from '../assets/logo-malowopati.png'
+import { useRef, useState, useEffect } from 'react';
+import useAuth from '../hooks/use-auth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+import axios from '../lib/api';
+const LOGIN_URL = '/auth/login';
 
 export default function Index() {
-  const [batasHonor, setBatasHonor] = useState([]);
-  const [files, setFiles] = useState([]);
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  const userRef = useRef();
+  const errRef = useRef();
+
+  const [username, setUsername] = useState('');
+  const [password, setpassword] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
-    async function getData() {
-      try {
-        const res = await axios.get('/batashonor');
-        if (Array.isArray(res.data.data)) {
-          setBatasHonor(res.data.data);
-        } else {
-          setBatasHonor([]);
-        }
-      } catch (err) {
-        console.error("Gagal mengambil data:", err);
-      }
-    }
+    userRef?.current?.focus();
+  }, [])
 
-    async function getFiles() {
-      try {
-        const res = await axios.get('/files/list');
-        if (Array.isArray(res.data)) {
-          setFiles(res.data);
-        } else {
-          setFiles([]);
-        }
-      } catch (err) {
-        console.error("Gagal mengambil data:", err);
-      }
-    }
+  useEffect(() => {
+    setErrMsg('');
+  }, [username, password])
 
-    getData();
-    getFiles();
-  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  async function streamDoc(filename: string) {
     try {
-      const url = `${axiosPrivate.defaults.baseURL}/files/stream/${filename}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      const response = await axios.post(LOGIN_URL,
+        JSON.stringify({ username, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      const accessToken = response?.data?.access_token;
+      console.log('access token pertama kali masuk:',response?.data?.access_token )
+      setAuth({ username, password, accessToken });
+      setUsername('');
+      setpassword('');
+      navigate(from, { replace: true });
     } catch (err) {
-      console.error("Gagal mengambil data:", err);
+      if (!err?.response) {
+        setErrMsg('No Server Response');
+      } else if (err.response?.status === 400) {
+        setErrMsg('Missing Username or Password');
+      } else if (err.response?.status === 401) {
+        setErrMsg('Unauthorized');
+      } else {
+        setErrMsg('Login Failed');
+      }
+      errRef.current.focus();
     }
   }
 
-
   return (
-    <div className="space-y-4 lg:space-y-6">
-      <div className="flex items-center">
-        <p className="font-semibold whitespace-nowrap mr-4">
-          Batas Honor Mitra
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {Array.from({length: batasHonor.length}).map((_,i) =>(
-        <div key={i} className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg p-6 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-          <div className="text-white">
-              <>
-                <h3 className="text-xl font-semibold mb-2"> Rp {(batasHonor[i]?.biaya || 0).toLocaleString("id-ID")}</h3>
-                <p className="text-white/90">{batasHonor[i]?.keterangan || "Loading..."}</p>
-              </>
+    <>
+      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gray-50">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <img
+            alt="Logo SIM"
+            src={logo}
+            className="mx-auto h-24 w-auto"
+          />
+        </div>
+
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <form action="#" method="POST" onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Username
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    required
+                    autoComplete="username"
+                    placeholder="Username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm placeholder-gray-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <div className="text-sm">
+                    <a
+                      href="#"
+                      className="font-semibold text-indigo-600 hover:text-indigo-500"
+                    >
+                      Forgot password?
+                    </a>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    onChange={(e) => setpassword(e.target.value)}
+                    value={password}
+                    className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm placeholder-gray-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  className="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all hover:from-indigo-500 hover:to-indigo-400"
+                >
+                  Sign in
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-        ))}
+
       </div>
-      <div className="flex items-center">
-        <p className="font-semibold whitespace-nowrap mr-4">
-          Sumber
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {Array.from({length: files.length}).map((_,i)=>(
-          <a className="relative bg-gray-900 block p-6 border border-gray-100 rounded-lg mx-auto hover:shadow-3xl transition-all duration-300 hover:scale-105">
-            <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
-            <div className="my-4">
-              <h2 className="text-white text-2xl font-bold pb-2">{files[i].description}</h2>
-              <p className="text-gray-300 py-1">{files[i].originalName}</p>
-            </div>
-            <div className="flex justify-end">
-              <button className=" px-2 py-1 text-white border border-gray-200 font-semibold rounded hover:bg-gray-800" onClick={() => streamDoc(file.filename)}
-              >Lihat Dokumen</button>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
+    </>
+  )
 }

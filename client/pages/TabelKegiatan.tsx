@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TabelKegiatan({ kegiatanMitra }) {
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 5; // jumlah data per halaman
+    const rowsPerPage = 5;
 
     const totalPages = Math.ceil(kegiatanMitra.length / rowsPerPage);
 

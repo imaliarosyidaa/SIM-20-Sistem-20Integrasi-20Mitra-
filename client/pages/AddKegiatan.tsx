@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Kegiatan } from "@/interfaces/types";
 import kegiatanApi from "@/lib/kegiatanApi";
+import useAuth from "@/hooks/use-auth";
 
 export default function AddKegiatan() {
   const [formData, setFormData] = useState<Kegiatan>({
@@ -16,8 +17,8 @@ export default function AddKegiatan() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const { auth } = useAuth();
 
-  // Handle perubahan input form
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -26,33 +27,31 @@ export default function AddKegiatan() {
     }));
   };
 
-// Handle submit form
-const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError(null);
-  setSuccess(null);
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
 
-  try {
-    const response = await kegiatanApi.createKegiatan(formData);
-    setSuccess("Kegiatan berhasil ditambahkan!");
-    console.log("Sukses:", response);
-    setFormData({
-      nama_survei_sobat: "",
-      bulan: "Januari",
-      nama_survei: "",
-      tahun: 2025,
-      tanggal: "",
-      tim: "",
-      kegiatan: "",
-    });
-  } catch (err) {
-    console.error("Gagal menambahkan kegiatan:", err);
-    setError("Gagal menambahkan kegiatan. Silakan coba lagi.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      const response = await kegiatanApi.createKegiatan(auth.accessToken, formData);
+      setSuccess("Kegiatan berhasil ditambahkan!");
+      setFormData({
+        nama_survei_sobat: "",
+        bulan: "Januari",
+        nama_survei: "",
+        tahun: 2025,
+        tanggal: "",
+        tim: "",
+        kegiatan: "",
+      });
+    } catch (err) {
+      console.error("Gagal menambahkan kegiatan:", err);
+      setError("Gagal menambahkan kegiatan. Silakan coba lagi.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -113,7 +112,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 required
               />
             </div>
-            
+
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Tahun<span className="text-red-500">*</span></label>
               <select

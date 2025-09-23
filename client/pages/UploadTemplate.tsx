@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import axios from '../lib/api';
+import React, { useEffect, useState } from "react";
+import axios, { axiosPrivate } from '../lib/api';
+import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
+import useAuth from "@/hooks/use-auth";
+import filesApi from "@/lib/filesApi";
 
 export default function UploadTemplate() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -7,6 +10,9 @@ export default function UploadTemplate() {
     const [isLoading, setIsLoading] = useState(false);
     const [isDataValidated, setIsDataValidated] = useState(false);
     const [error, setError] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [file, setFile] = useState();
+    const { auth } = useAuth();
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -17,6 +23,7 @@ export default function UploadTemplate() {
 
     const handleUploadClick = async (e) => {
         e.preventDefault();
+
         if (!selectedFile) {
             setError("Silakan pilih file terlebih dahulu.");
             return;
@@ -28,46 +35,84 @@ export default function UploadTemplate() {
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        try {
-            const response = await axios.post('/kegiatanmitra/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-
-            setPreviewData(response.data.data);
+        kegaiatanMitraApi.unggahFileTemplate(auth.accessToken, formData).then((response) => {
+            setPreviewData(response);
             setIsDataValidated(true);
             setError(null);
-            alert(response.data.message);
-
-        } catch (error) {
-            console.error('Validasi gagal:', error);
-            const errorMessage = error.response?.data?.message || 'Gagal memproses file. Silakan periksa formatnya.';
-            setError(errorMessage);
-            setPreviewData(null);
-            setIsDataValidated(false);
-
-        } finally {
-            setIsLoading(false);
-        }
+        })
+            .catch((err) => {
+                console.error('Validasi gagal:', err);
+                const errorMessage = error.response?.data?.message || 'Gagal memproses file. Silakan periksa formatnya.';
+                setError(errorMessage);
+                setPreviewData(null);
+                setIsDataValidated(false);
+            })
+            .finally(() => { setIsLoading(false) })
     };
 
     const handleSaveClick = async () => {
         setIsLoading(true);
         setError(null);
 
-        try {
-            await axios.post('/kegiatanmitra/save', previewData);
+        kegaiatanMitraApi.kirimFileTemplate(auth.accessToken, previewData).then(() => {
             alert('Data berhasil disimpan ke database!');
             setSelectedFile(null);
             setPreviewData(null);
             setIsDataValidated(false);
-        } catch (error) {
-            console.error('Penyimpanan gagal:', error);
-            const errorMessage = error.response?.data?.message || 'Gagal menyimpan data. Silakan coba lagi.';
-            setError(errorMessage);
-        } finally {
-            setIsLoading(false);
-        }
+        })
+            .catch((err) => {
+                console.error('Penyimpanan gagal:', err);
+                const errorMessage = error.response?.data?.message || 'Gagal menyimpan data. Silakan coba lagi.';
+                setError(errorMessage);
+            })
+            .finally(() => { setIsLoading(false) })
     };
+
+    useEffect(() => {
+        getFiles();
+    }, []);
+
+    async function getFiles() {
+
+        filesApi.GetFiles(auth.accessToken).then((res) => {
+            if (Array.isArray(res)) {
+                setFiles(res);
+                const templateFile = res.find(
+                    (item) =>
+                        item.originalName.toLowerCase().includes("template kegiatan mitra")
+                );
+
+                if (templateFile) {
+                    console.log("Template ditemukan:", templateFile);
+                    setFile(templateFile);
+                } else {
+                    console.log("Template tidak ditemukan");
+                    setFile(null);
+                }
+            } else {
+                setFiles([]);
+                setFile(null);
+            }
+        })
+            .catch((err) => {
+                console.error("Gagal mengambil data:", err);
+                setFiles([]);
+                setFile(null);
+            })
+            .finally(() => { setIsLoading(false) })
+    }
+
+    function handleDownload(filename: string) {
+        streamDoc(filename);
+    }
+
+    async function streamDoc(filename: string) {
+        filesApi.streamDoc(auth.accessToken, filename).then((url) => {
+            window.open(url, "_blank", "noopener,noreferrer");
+        })
+            .catch((err) => { console.error("Gagal mengambil data:", err); })
+            .finally(() => { setIsLoading(false) })
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -78,7 +123,7 @@ export default function UploadTemplate() {
                             <div className="text-gray-600">
                                 <p className="font-medium text-lg">Upload Template</p>
                                 <button
-                                    onClick={() => { window.location.href = "/template.xlsx"; }}
+                                    onClick={() => handleDownload(file.filename)}
                                     className="flex mt-4 items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-cloud-arrow-down-fill" viewBox="0 0 16 16">
