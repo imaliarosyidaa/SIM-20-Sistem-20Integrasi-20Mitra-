@@ -1,20 +1,18 @@
-// use-refresh-token.tsx
-
 import axios from "../lib/api"
-import useAuth from "./use-auth"
+import useAuth from "./use-auth";
 
 export default function useRefreshToken() {
-
+    const { auth, setAuth } = useAuth();
+    
     const refresh = async () => {
         try {
             const response = await axios.post('/auth/refresh', {}, {
                 withCredentials: true,
             });
 
-            // Log untuk debug. Pastikan ini adalah token baru yang benar.
-            console.log('Token baru dari server:', response.data.access_token);
-            
-            // Kembalikan token baru agar bisa digunakan di interceptor
+            setAuth(prev => {
+                return { ...prev, accessToken: response.data.access_token };
+            });
             return response.data.access_token;
 
         } catch (error) {

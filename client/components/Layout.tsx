@@ -35,6 +35,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
+import useLogout from "@/hooks/use-logout";
 
 interface LayoutProps {
   submenu?: React.ReactNode;
@@ -104,9 +105,11 @@ export default function Layout({ submenu }: LayoutProps) {
   const mainMargin = sidebarCollapsed ? "lg:pl-16" : "lg:pl-52";
   const currentPath = findPath(menuItems, location.pathname);
   const navigate = useNavigate();
+  const logout = useLogout();
 
-  const handleLogout = () => {
-    navigate("/", { replace: true });
+  async function handleLogout() {
+    await logout();
+    navigate("/");
   };
 
   return (
@@ -257,7 +260,6 @@ export default function Layout({ submenu }: LayoutProps) {
                     <p className="text-sm font-medium text-gray-900">
                       Administrator
                     </p>
-                    <p className="text-xs text-gray-500">BPS Kab. Bojonegoro</p>
                   </div>
                   <div className="h-8 w-8 rounded-full bg-brand-600 flex items-center justify-center">
                     <span className="text-sm font-medium text-white">A</span>
@@ -267,9 +269,8 @@ export default function Layout({ submenu }: LayoutProps) {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="w-48">
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={handleLogout}
+                  onClick={()=> handleLogout()}
                   className="cursor-pointer text-red-600 focus:text-red-700"
                 >
                   <LogOut className="mr-2 h-4 w-4" />

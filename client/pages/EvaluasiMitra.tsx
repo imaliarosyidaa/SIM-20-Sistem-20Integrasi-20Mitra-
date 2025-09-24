@@ -3,6 +3,7 @@ import userApi from "@/lib/userApi";
 import Table from "@/components/table";
 import { PenilaianMitra, User } from "@/interfaces/types";
 import useAuth from "@/hooks/use-auth";
+import useUserApi from "@/lib/userApi";
 
 export const columns = [
   {
@@ -23,9 +24,10 @@ export default function EvaluasiMitra() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { auth } = useAuth();
+  const {getAllUsers} = useUserApi();
 
   useEffect(() => {
-    userApi.getAllUsers(auth.accessToken).then((users) => {
+    getAllUsers().then((users) => {
       const filtered = users.map(user => ({
         id: user.id,
         nama: user.namaLengkap,

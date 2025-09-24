@@ -15,6 +15,8 @@ import Skeleton from 'react-loading-skeleton'
 import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import { KegiatanMitraResponse } from "@/interfaces/types";
 import useAuth from "@/hooks/use-auth";
+import useUserApi from "@/lib/userApi";
+import useKegiatanMitraApi from "@/lib/kegaiatanMitraApi";
 
 
 export default function HonorBulanan() {
@@ -40,6 +42,8 @@ export default function HonorBulanan() {
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = kegiatanMitra.slice(indexOfFirstRow, indexOfLastRow);
   const { auth } = useAuth();
+  const {getAllUsers} = useUserApi();
+  const {getKegiatanMitra, createKegiatanMitra, deleteKegiatanMitra} = useKegiatanMitraApi();
 
   const goToPage = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -67,11 +71,11 @@ export default function HonorBulanan() {
   };
 
 
-  function fetchData() {
+  async function fetchData() {
     setIsLoading(true);
     Promise.all([
-      kegaiatanMitraApi.getKegiatanMitra(auth.accessToken),
-      userApi.getAllUsers(auth.accessToken)
+      getKegiatanMitra(),
+      await getAllUsers()
     ])
       .then(([kegMitra, users]) => {
         setKegiatanMitra(kegMitra);
@@ -106,7 +110,7 @@ export default function HonorBulanan() {
       kegiatanId: kegiatan.kodeKegiatan,
       jumlah: Number(formData.harga_per_satuan) * Number(formData.volum)
     };
-    kegaiatanMitraApi.createKegiatanMitra(auth.accessToken, payload)
+    createKegiatanMitra(payload)
       .then(() => {
         fetchData();
         setFormData({
@@ -123,7 +127,7 @@ export default function HonorBulanan() {
 
   async function deleteData(id) {
     setError(null);
-    kegaiatanMitraApi.deleteKegiatanMitra(auth.accessToken, id)
+    deleteKegiatanMitra(id)
       .then(() => {
         setKegiatanMitra(prev =>
           prev.map(group => ({

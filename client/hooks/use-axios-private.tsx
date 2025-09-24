@@ -1,5 +1,3 @@
-// use-axios-private.tsx
-
 import { axiosPrivate } from "../lib/api";
 import { useEffect } from "react";
 import useAuth from "./use-auth";
@@ -7,7 +5,7 @@ import useRefreshToken from "./use-refresh-token";
 
 const useAxiosPrivate = () => {
     const refresh = useRefreshToken();
-    const { auth, setAuth } = useAuth(); // Ambil setAuth
+    const { auth } = useAuth();
 
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -27,12 +25,6 @@ const useAxiosPrivate = () => {
                     prevRequest.sent = true;
                     try {
                         const newAccessToken = await refresh();
-
-                        // Perbarui state auth di sini juga
-                        setAuth(prev => {
-                            return { ...prev, accessToken: newAccessToken };
-                        });
-                        // Gunakan newAccessToken untuk permintaan yang diulang
                         prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
                         return axiosPrivate(prevRequest);
@@ -50,7 +42,7 @@ const useAxiosPrivate = () => {
             axiosPrivate.interceptors.request.eject(requestIntercept);
             axiosPrivate.interceptors.response.eject(responseIntercept);
         };
-    }, [auth, refresh, setAuth]);
+    }, [auth, refresh]);
 
     return axiosPrivate;
 }

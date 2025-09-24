@@ -101,7 +101,6 @@ export default function DatabaseMitra() {
         setIsLoading(false)
       }
     };
-    console.log('setelah get all users',auth)
     fetchUsers();
   }, [getAllUsers]);
 

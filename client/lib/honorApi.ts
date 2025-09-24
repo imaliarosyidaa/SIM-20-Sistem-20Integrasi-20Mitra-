@@ -1,46 +1,46 @@
 import { File } from "@/interfaces/types";
-import axios from "./api";
+import useAxiosPrivate from "@/hooks/use-axios-private";
+import { useCallback } from "react";
 
-async function BatasHonorBulanan(access_token: string): Promise<any> {
-  const response = await axios.get<{ data: File }>("/batashonor",
+
+export default function useHonorApi(){
+  const axiosPrivate = useAxiosPrivate()
+  
+  const batasHonorBulanan = useCallback( async (): Promise<any> => {
+    const controller = new AbortController();
+    
+  const response = await axiosPrivate.get<{ data: File }>("/batashonor",
     {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${access_token}`,
-        },
-        withCredentials: true,
+      signal: controller.signal
     }
   );
   return response.data.data;
-}
+  },[axiosPrivate])
 
-async function GetRincianHonor(access_token: string): Promise<any> {
-  const response = await axios.get<{ data: File }>("/honormitra",
+  const getRincianHonor = useCallback( async(): Promise<File> =>{
+    const controller = new AbortController();
+      const response = await axiosPrivate.get<{ data: File }>("/honormitra",
     {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${access_token}`,
-        },
-        withCredentials: true,
+        signal: controller.signal
     }
   );
   return response.data.data;
-}
+  },[])
 
-async function GetRekapHonorPerBulan(access_token: string, selectedYear:number): Promise<any> {
-  const response = await axios.get<{ data: File }>(`/honormitra/rekap/${selectedYear}`,
+  const getRekapHonorPerBulan = useCallback( async(selectedYear:number): Promise<any> => {
+  const controller = new AbortController();
+
+    const response = await axiosPrivate.get<{ data: File }>(`/honormitra/rekap/${selectedYear}`,
     {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${access_token}`,
-        },
-        withCredentials: true,
+      signal: controller.signal
     }
   );
   return response.data.data;
-}
+  },[axiosPrivate])
 
-export default { BatasHonorBulanan, GetRincianHonor, GetRekapHonorPerBulan };
+  return {
+    batasHonorBulanan, 
+    getRincianHonor, 
+    getRekapHonorPerBulan
+  }
+}

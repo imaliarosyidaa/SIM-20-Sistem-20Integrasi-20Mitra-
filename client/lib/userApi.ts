@@ -1,4 +1,3 @@
-// useUserApi.ts
 import { useCallback } from "react";
 import { User } from "@/interfaces/types";
 import useAxiosPrivate from "../hooks/use-axios-private";

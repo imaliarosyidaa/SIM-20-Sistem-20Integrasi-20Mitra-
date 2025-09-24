@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import batasHonorApi from "@/lib/honorApi";
 import filesApi from "@/lib/filesApi";
 import useAuth from "@/hooks/use-auth";
+import useHonorApi from "@/lib/honorApi";
+import useFilesApi from "@/lib/filesApi";
 
 export default function Index() {
   const [batasHonor, setBatasHonor] = useState([]);
@@ -9,67 +11,30 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const { auth } = useAuth();
+  const {batasHonorBulanan } = useHonorApi();
+  const {getFiles, streamDoc} = useFilesApi();
 
   useEffect(() => {
     async function getData() {
-      batasHonorApi.BatasHonorBulanan(auth.accessToken)
-        .then(
-          (batasHonor) => {
-            setBatasHonor(batasHonor)
-          }
-        )
-        .catch(
-          (err) => {
-            setError(true)
-          }
-        )
-        .finally(
-          () => {
-            setIsLoading(false)
-          }
-        )
+      batasHonorBulanan().then( (batasHonor) => { setBatasHonor(batasHonor) } )
+        .catch( () => { setError(true) } )
+        .finally( () => { setIsLoading(false) } )
     }
 
-    async function getFiles() {
-      filesApi.GetFiles(auth.accessToken)
-        .then(
-          (file) => {
-            setFiles(file)
-          }
-        )
-        .catch(
-          (err) => {
-            setError(true)
-          }
-        )
-        .finally(
-          () => {
-            setIsLoading(false)
-          }
-        )
+    async function getFilesData() {
+      getFiles().then( (file) => { setFiles(file) } )
+        .catch( () => { setError(true) } )
+        .finally( () => { setIsLoading(false) } )
     }
 
     getData();
-    getFiles();
+    getFilesData();
   }, []);
 
-  async function streamDoc(filename: string) {
-    filesApi.streamDoc(auth.accessToken,filename)
-        .then(
-          (url) => {
-             window.open(url, "_blank", "noopener,noreferrer");
-          }
-        )
-        .catch(
-          (err) => {
-            setError(true)
-          }
-        )
-        .finally(
-          () => {
-            setIsLoading(false)
-          }
-        )
+  async function streamDocData(filename: string) {
+    streamDoc(filename).then( (url) => { window.open(url, "_blank", "noopener,noreferrer"); })
+        .catch( (err) => { setError(true) } )
+        .finally( () => { setIsLoading(false) } )
   }
 
   return (
@@ -105,7 +70,7 @@ export default function Index() {
               <p className="text-gray-300 py-1">{files[i].originalName}</p>
             </div>
             <div className="flex justify-end">
-              <button className=" px-2 py-1 text-white border border-gray-200 font-semibold rounded hover:bg-gray-800" onClick={() => streamDoc(files[i].filename)}
+              <button className=" px-2 py-1 text-white border border-gray-200 font-semibold rounded hover:bg-gray-800" onClick={() => streamDocData(files[i].filename)}
               >Lihat Dokumen</button>
             </div>
           </a>

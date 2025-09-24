@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Kegiatan } from "@/interfaces/types";
 import kegiatanApi from "@/lib/kegiatanApi";
 import useAuth from "@/hooks/use-auth";
+import useKegiatanApi from "@/lib/kegiatanApi";
 
 export default function AddKegiatan() {
   const [formData, setFormData] = useState<Kegiatan>({
@@ -17,7 +18,7 @@ export default function AddKegiatan() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { auth } = useAuth();
+  const {createKegiatan} = useKegiatanApi();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -34,7 +35,7 @@ export default function AddKegiatan() {
     setSuccess(null);
 
     try {
-      const response = await kegiatanApi.createKegiatan(auth.accessToken, formData);
+      const response = await createKegiatan(formData);
       setSuccess("Kegiatan berhasil ditambahkan!");
       setFormData({
         nama_survei_sobat: "",
@@ -55,7 +56,7 @@ export default function AddKegiatan() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white shadow-lg rounded-2xl p-8">
+      <div className="bg-white shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Tambah Kegiatan</h2>
 
         {error && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{error}</div>}
@@ -65,7 +66,9 @@ export default function AddKegiatan() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Nama Survei Sobat<span className="text-red-500">*</span></label>
+              <p className="text-xs text-gray-500 mb-2">Contoh: (SHK25-OUTLET) SURVEI HARGA KONSUMEN (SHK) OUTLET TAHUN 2025</p>
               <input
+                autoComplete="off"
                 type="text"
                 name="nama_survei_sobat"
                 value={formData.nama_survei_sobat}
@@ -78,6 +81,7 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Bulan<span className="text-red-500">*</span></label>
+
               <select
                 name="bulan"
                 value={formData.bulan}
@@ -102,8 +106,10 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Nama Survei<span className="text-red-500">*</span></label>
+              <p className="text-xs text-gray-500 mb-2">Contoh: Hk 2.1 Outlet</p>
               <input
                 type="text"
+                autoComplete="off"
                 name="nama_survei"
                 value={formData.nama_survei}
                 onChange={handleInputChange}
@@ -132,9 +138,11 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Tanggal Lapangan<span className="text-red-500">*</span></label>
+              <p className="text-xs text-gray-500 mb-2">Contoh: 14-16</p>
               <input
                 type="text"
                 name="tanggal"
+                autoComplete="off"
                 value={formData.tanggal}
                 onChange={handleInputChange}
                 className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -145,9 +153,11 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Tim<span className="text-red-500">*</span></label>
+              <p className="text-xs text-gray-500 mb-2">Contoh: Harga</p>
               <input
                 type="text"
                 name="tim"
+                autoComplete="off"
                 value={formData.tim}
                 onChange={handleInputChange}
                 className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -158,9 +168,11 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-semibold mb-2">Kegiatan<span className="text-red-500">*</span></label>
+              <p className="text-xs text-gray-500 mb-2">Contoh: PENDATAAN - BULAN I</p>
               <input
                 type="text"
                 name="kegiatan"
+                autoComplete="off"
                 value={formData.kegiatan}
                 onChange={handleInputChange}
                 className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"

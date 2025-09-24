@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState, useMemo, useRef } from "react";
-import Layout from "@components/Layout";
-import axios from '../lib/api'
 import Table from "@components/table"
 import honorApi from "@/lib/honorApi";
 import './carausel.css'
@@ -8,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import KegiatanMitraTable from "./KegiatanMitraTable";
 import { months } from '../constants'
 import useAuth from "@/hooks/use-auth";
+import useHonorApi from "@/lib/honorApi";
 
 export default function RekapHonor() {
   const [activeTab, setActiveTab] = useState<"rekap" | "rincian">("rekap");
@@ -20,6 +19,7 @@ export default function RekapHonor() {
   const [isLoading, setIsLoading] = useState(true);
   const { auth } = useAuth();
   const [error, setError] = useState(false);
+  const { getRekapHonorPerBulan, getRincianHonor } = useHonorApi()
 
   const getCellClassName = (cell) => {
     if ((cell.column.id == 'januari' || cell.column.id == 'februari' || cell.column.id == 'maret' ||
@@ -62,22 +62,21 @@ export default function RekapHonor() {
     { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, },
   ];
 
-  const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
+  const getRekapHonorPerBulanData = useCallback(async (selectedYear) => {
     setIsLoading(true);
 
-    honorApi.GetRekapHonorPerBulan(auth.accessToken, selectedYear).then((res) => {
+    getRekapHonorPerBulan(selectedYear).then((res) => {
       setRekapHonorPerBulan(res);
+    }).catch((err) => {
+      console.error("gagal mengambil data", err);
     })
-      .catch((err) => {
-        console.error("gagal mengambil data", err);
-      })
       .finally(() => { setIsLoading(false) })
   }, []);
 
-  const getRincianHonor = useCallback(async () => {
+  const getRincianHonorData = useCallback(async () => {
     setIsLoading(true);
 
-    honorApi.GetRincianHonor(auth.accessToken).then((res) => {
+    getRincianHonor().then((res) => {
       setDetailHonorData(res);
     })
       .catch((err) => {
@@ -89,11 +88,11 @@ export default function RekapHonor() {
 
   useEffect(() => {
     if (activeTab === "rekap") {
-      getRekapHonorPerBulan(selectedYear);
+      getRekapHonorPerBulanData(selectedYear);
     } else {
-      getRincianHonor();
+      getRincianHonorData();
     }
-  }, [activeTab, selectedYear, getRincianHonor]);
+  }, [activeTab, selectedYear, getRincianHonorData]);
 
   const submenuTabs = (
     <nav className="flex space-x-8 px-4 lg:px-6">

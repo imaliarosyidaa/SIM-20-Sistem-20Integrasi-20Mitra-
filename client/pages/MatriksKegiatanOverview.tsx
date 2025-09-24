@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   RotateCcw,
 } from 'lucide-react';
-import axios from '../lib/api'
-import kegiatanApi from '@/lib/kegiatanApi';
 import { MatriksKegiatan } from '@/interfaces/types';
-import useAuth from '@/hooks/use-auth';
+import useKegiatanApi from '@/lib/kegiatanApi';
 
 const months = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -20,30 +17,17 @@ export default function MatriksKegiatanOverview() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const { auth } = useAuth();
+  const { getMatriksKegiatan } = useKegiatanApi();
 
   const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
-    kegiatanApi.getMatriksKegiatan(auth.accessToken, selectedYear)
-        .then(
-          (matriks) => {
-            setRekapKegiatanData(matriks)
-          }
-        )
-        .catch(
-          (err) => {
-            setError(true)
-          }
-        )
-        .finally(
-          () => {
-            setIsLoading(false)
-          }
-        )
+    getMatriksKegiatan(selectedYear).then((matriks) => { setRekapKegiatanData(matriks) })
+      .catch((err) => { setError(true) })
+      .finally(() => { setIsLoading(false) })
   }, [])
 
-    useEffect(() => {
-      getRekapHonorPerBulan(selectedYear)
-    }, [selectedYear]);
+  useEffect(() => {
+    getRekapHonorPerBulan(selectedYear)
+  }, [selectedYear]);
 
   const resetFilters = () => {
     setSelectedYear(currentYear);

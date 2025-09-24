@@ -3,6 +3,8 @@ import axios, { axiosPrivate } from '../lib/api';
 import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import useAuth from "@/hooks/use-auth";
 import filesApi from "@/lib/filesApi";
+import useFilesApi from "@/lib/filesApi";
+import useKegiatanMitraApi from "@/lib/kegaiatanMitraApi";
 
 export default function UploadTemplate() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -12,7 +14,8 @@ export default function UploadTemplate() {
     const [error, setError] = useState(null);
     const [files, setFiles] = useState([]);
     const [file, setFile] = useState();
-    const { auth } = useAuth();
+    const { getFiles, streamDoc } = useFilesApi()
+    const { unggahFileTemplate, kirimFileTemplate } = useKegiatanMitraApi()
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -35,7 +38,7 @@ export default function UploadTemplate() {
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        kegaiatanMitraApi.unggahFileTemplate(auth.accessToken, formData).then((response) => {
+        unggahFileTemplate(formData).then((response) => {
             setPreviewData(response);
             setIsDataValidated(true);
             setError(null);
@@ -54,7 +57,7 @@ export default function UploadTemplate() {
         setIsLoading(true);
         setError(null);
 
-        kegaiatanMitraApi.kirimFileTemplate(auth.accessToken, previewData).then(() => {
+        kirimFileTemplate(previewData).then(() => {
             alert('Data berhasil disimpan ke database!');
             setSelectedFile(null);
             setPreviewData(null);
@@ -69,12 +72,12 @@ export default function UploadTemplate() {
     };
 
     useEffect(() => {
-        getFiles();
+        getFilesData();
     }, []);
 
-    async function getFiles() {
+    async function getFilesData() {
 
-        filesApi.GetFiles(auth.accessToken).then((res) => {
+        getFiles().then((res) => {
             if (Array.isArray(res)) {
                 setFiles(res);
                 const templateFile = res.find(
@@ -103,11 +106,11 @@ export default function UploadTemplate() {
     }
 
     function handleDownload(filename: string) {
-        streamDoc(filename);
+        streamDocData(filename);
     }
 
-    async function streamDoc(filename: string) {
-        filesApi.streamDoc(auth.accessToken, filename).then((url) => {
+    async function streamDocData(filename: string) {
+        streamDoc(filename).then((url) => {
             window.open(url, "_blank", "noopener,noreferrer");
         })
             .catch((err) => { console.error("Gagal mengambil data:", err); })

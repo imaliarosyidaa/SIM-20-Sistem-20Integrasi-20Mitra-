@@ -1,30 +1,30 @@
 import { Kegiatan, MatriksKegiatan } from "@/interfaces/types";
-import axios from "./api";
+import useAxiosPrivate from "@/hooks/use-axios-private";
+import { useCallback } from "react";
 
-async function createKegiatan(access_token: string, newKegiatan: Kegiatan): Promise<Kegiatan> {
-  const response = await axios.post<{ data: Kegiatan}>("/kegiatan", newKegiatan,
-    {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${access_token}`,
-        },
-        withCredentials: true,
-    });
-  return response.data.data;
-}
+export default function useKegiatanApi(){
+  const axiosPrivate = useAxiosPrivate();
 
-async function getMatriksKegiatan(access_token: string, selectedYear: number): Promise<MatriksKegiatan[]> {
-  const response = await axios.get<MatriksKegiatan[]>(`/kegiatan/${selectedYear}`,
-    {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-            Authorization: `Bearer ${access_token}`,
-        },
-        withCredentials: true,
-    }
-  );
-  return response.data;
+
+  const createKegiatan = useCallback(async (newKegiatan: Kegiatan): Promise<any> =>{
+    const controller = new AbortController();
+
+    const response = await axiosPrivate.post<{data: Kegiatan}>("/kegiatan", newKegiatan,{
+      signal: controller.signal
+    })
+
+    return response.data.data;
+  },[axiosPrivate])
+  
+  const getMatriksKegiatan = useCallback(async (selectedYear: number): Promise<any> =>{
+    const controller = new AbortController();
+
+    const response = await axiosPrivate.get<MatriksKegiatan[]>(`/kegiatan/${selectedYear}`,{
+      signal: controller.signal
+    })
+
+    return response.data;
+  },[axiosPrivate])
+
+  return {createKegiatan, getMatriksKegiatan}
 }
-export default { createKegiatan, getMatriksKegiatan };

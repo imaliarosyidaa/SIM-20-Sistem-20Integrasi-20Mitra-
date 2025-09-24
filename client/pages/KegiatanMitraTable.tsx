@@ -1,10 +1,5 @@
-import { ArrowLeft } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import axios from '../lib/api'
-import kegiatanMitraApi from '../lib/kegaiatanMitraApi'
-import Skeleton from 'react-loading-skeleton';
-import kegiatanApi from '@/lib/kegiatanApi';
-import useAuth from '@/hooks/use-auth';
+import useKegiatanMitraApi from '../lib/kegaiatanMitraApi';
 
 export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +13,7 @@ export default function KegiatanMitraTable() {
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
-    const { auth } = useAuth();
+    const { getKegiatanById, getJumlahKegiatanMitra } = useKegiatanMitraApi()
 
     const filteredItems = mitraxkegaiatan.filter(item =>
         item.namaLengkap.toLowerCase().includes(searchQuery.toLowerCase())
@@ -39,10 +34,10 @@ export default function KegiatanMitraTable() {
         setCurrentPage(1);
     };
 
-    const getKegiatanById = async (id) => {
+    const getKegiatanByIdData = async (id) => {
         setIsLoadingExpandedRow(true);
 
-        kegiatanMitraApi.GetKegiatanById(auth.accessToken, id).then((res) => {
+        getKegiatanById(id).then((res) => {
             setExpandedRowData(res.KegiatanMitra);
         })
             .catch((err) => {
@@ -61,27 +56,24 @@ export default function KegiatanMitraTable() {
             setExpandedRowData([]);
         } else {
             setExpandedRow(id);
-            getKegiatanById(id);
+            getKegiatanByIdData(id);
         }
     };
 
-    const getJumlahKegiatanMitra = async function getData(year) {
+    const getJumlahKegiatanMitraData = async function getData(year) {
         setIsLoading(true);
 
-        kegiatanMitraApi.GetJumlahKegiatanMitra(auth.accessToken, year).then((res) => {
+        getJumlahKegiatanMitra(year).then((res) => {
             setMitraXKegiatan(res);
+        }).catch((err) => {
+            console.error("Fetch error:", err);
+            setMitraXKegiatan([]);
         })
-            .catch((err) => {
-                console.error("Fetch error:", err);
-                setMitraXKegiatan([]);
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+            .finally(() => { setIsLoading(false) })
     };
 
     useEffect(() => {
-        getJumlahKegiatanMitra(currentYear)
+        getJumlahKegiatanMitraData(currentYear)
     }, []);
 
     return (
