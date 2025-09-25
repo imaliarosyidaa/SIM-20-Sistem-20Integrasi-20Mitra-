@@ -36,14 +36,14 @@ export default function HonorBulanan() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const totalPages = Math.ceil(kegiatanMitra.length / rowsPerPage);
+  const totalPages = Math.ceil(kegiatanMitra?.length / rowsPerPage);
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = kegiatanMitra.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = kegiatanMitra?.slice(indexOfFirstRow, indexOfLastRow);
   const { auth } = useAuth();
-  const {getAllUsers} = useUserApi();
-  const {getKegiatanMitra, createKegiatanMitra, deleteKegiatanMitra} = useKegiatanMitraApi();
+  const { getAllUsers } = useUserApi();
+  const { getKegiatanMitra, createKegiatanMitra, deleteKegiatanMitra } = useKegiatanMitraApi();
 
   const goToPage = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -54,19 +54,19 @@ export default function HonorBulanan() {
 
   const toggleRow = (id: number) => {
     setExpandedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+      prev.includes(id) ? prev?.filter((rowId) => rowId !== id) : [...prev, id]
     );
   };
 
   const toggleRowInput = (id: number) => {
     setExpandedInputRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+      prev.includes(id) ? prev?.filter((rowId) => rowId !== id) : [...prev, id]
     );
   }
 
   const toggleSelect = (id: number) => {
     setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((row) => row !== id) : [...prev, id]
+      prev.includes(id) ? prev?.filter((row) => row !== id) : [...prev, id]
     );
   };
 
@@ -132,7 +132,7 @@ export default function HonorBulanan() {
         setKegiatanMitra(prev =>
           prev.map(group => ({
             ...group,
-            mitra: group.mitra.filter(m => m.id !== id)
+            mitra: group.mitra?.filter(m => m.id !== id)
           }))
         );
       })
@@ -207,7 +207,7 @@ export default function HonorBulanan() {
                 {expandedRows.includes(kegiatan.id) && (
                   <tr className="border-t">
                     <td colSpan={7} className="p-4 text-sm text-gray-600">
-                      {Array.isArray(kegiatan.mitra) && kegiatan.mitra.length > 0 ? (
+                      {Array.isArray(kegiatan.mitra) && kegiatan.mitra?.length > 0 ? (
                         <div className="overflow-x-auto rounded-lg shadow-sm border">
                           <table className="min-w-full divide-y divide-gray-200 text-sm">
                             <thead className="bg-gray-100">
@@ -366,9 +366,9 @@ export default function HonorBulanan() {
         <p className="text-sm text-gray-600">
           Menampilkan{" "}
           <span className="font-semibold">
-            {indexOfFirstRow + 1}-{Math.min(indexOfLastRow, kegiatanMitra.length)}
+            {indexOfFirstRow + 1}-{Math.min(indexOfLastRow, kegiatanMitra?.length)}
           </span>{" "}
-          dari <span className="font-semibold">{kegiatanMitra.length}</span> data
+          dari <span className="font-semibold">{kegiatanMitra?.length}</span> data
         </p>
 
         <div className="flex items-center gap-2">

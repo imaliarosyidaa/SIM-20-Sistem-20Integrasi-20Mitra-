@@ -80,7 +80,7 @@ export default function UploadTemplate() {
         getFiles().then((res) => {
             if (Array.isArray(res)) {
                 setFiles(res);
-                const templateFile = res.find(
+                const templateFile = res?.find(
                     (item) =>
                         item.originalName.toLowerCase().includes("template kegiatan mitra")
                 );

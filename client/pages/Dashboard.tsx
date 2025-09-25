@@ -11,20 +11,20 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const { auth } = useAuth();
-  const {batasHonorBulanan } = useHonorApi();
-  const {getFiles, streamDoc} = useFilesApi();
+  const { batasHonorBulanan } = useHonorApi();
+  const { getFiles, streamDoc } = useFilesApi();
 
   useEffect(() => {
     async function getData() {
-      batasHonorBulanan().then( (batasHonor) => { setBatasHonor(batasHonor) } )
-        .catch( () => { setError(true) } )
-        .finally( () => { setIsLoading(false) } )
+      batasHonorBulanan().then((batasHonor) => { setBatasHonor(batasHonor) })
+        .catch(() => { setError(true) })
+        .finally(() => { setIsLoading(false) })
     }
 
     async function getFilesData() {
-      getFiles().then( (file) => { setFiles(file) } )
-        .catch( () => { setError(true) } )
-        .finally( () => { setIsLoading(false) } )
+      getFiles().then((file) => { setFiles(file) })
+        .catch(() => { setError(true) })
+        .finally(() => { setIsLoading(false) })
     }
 
     getData();
@@ -32,9 +32,9 @@ export default function Index() {
   }, []);
 
   async function streamDocData(filename: string) {
-    streamDoc(filename).then( (url) => { window.open(url, "_blank", "noopener,noreferrer"); })
-        .catch( (err) => { setError(true) } )
-        .finally( () => { setIsLoading(false) } )
+    streamDoc(filename).then((url) => { window.open(url, "_blank", "noopener,noreferrer"); })
+      .catch((err) => { setError(true) })
+      .finally(() => { setIsLoading(false) })
   }
 
   return (
@@ -45,7 +45,7 @@ export default function Index() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {Array.from({ length: batasHonor.length }).map((_, i) => (
+        {Array.from({ length: batasHonor?.length }).map((_, i) => (
           <div key={i} className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg p-6 hover:shadow-3xl transition-all duration-300 hover:scale-105">
             <div className="text-white">
               <>
@@ -62,7 +62,7 @@ export default function Index() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {Array.from({ length: files.length }).map((_, i) => (
+        {Array.from({ length: files?.length }).map((_, i) => (
           <a className="relative bg-gray-900 block p-6 border border-gray-100 rounded-lg mx-auto hover:shadow-3xl transition-all duration-300 hover:scale-105">
             <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
             <div className="my-4">

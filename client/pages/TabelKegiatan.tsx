@@ -5,11 +5,11 @@ export default function TabelKegiatan({ kegiatanMitra }) {
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 5;
 
-    const totalPages = Math.ceil(kegiatanMitra.length / rowsPerPage);
+    const totalPages = Math.ceil(kegiatanMitra?.length / rowsPerPage);
 
     const indexOfLastRow = currentPage * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const currentRows = kegiatanMitra.slice(indexOfFirstRow, indexOfLastRow);
+    const currentRows = kegiatanMitra?.slice(indexOfFirstRow, indexOfLastRow);
 
     const goToPage = (page: number) => {
         if (page > 0 && page <= totalPages) {
@@ -60,9 +60,9 @@ export default function TabelKegiatan({ kegiatanMitra }) {
                 <p className="text-sm text-gray-600">
                     Menampilkan{" "}
                     <span className="font-semibold">
-                        {indexOfFirstRow + 1}-{Math.min(indexOfLastRow, kegiatanMitra.length)}
+                        {indexOfFirstRow + 1}-{Math.min(indexOfLastRow, kegiatanMitra?.length)}
                     </span>{" "}
-                    dari <span className="font-semibold">{kegiatanMitra.length}</span> data
+                    dari <span className="font-semibold">{kegiatanMitra?.length}</span> data
                 </p>
 
                 <div className="flex items-center gap-2">
@@ -80,8 +80,8 @@ export default function TabelKegiatan({ kegiatanMitra }) {
                             key={i}
                             onClick={() => goToPage(i + 1)}
                             className={`px-3 py-1.5 rounded-md text-sm ${currentPage === i + 1
-                                    ? "bg-indigo-600 text-white"
-                                    : "border hover:bg-gray-100"
+                                ? "bg-indigo-600 text-white"
+                                : "border hover:bg-gray-100"
                                 }`}
                         >
                             {i + 1}

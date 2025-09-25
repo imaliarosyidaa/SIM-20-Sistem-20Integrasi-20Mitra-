@@ -74,7 +74,7 @@ export default function MatriksKegiatanOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {months.map((month, index) => {
           const isCurrentMonth = index === getCurrentMonth();
-          const monthData = rekapKegiatanData.find(item => item.bulan === month);
+          const monthData = rekapKegiatanData?.find(item => item.bulan === month);
           const activitiesList = monthData ? monthData.kegiatan : [];
 
           return (
@@ -102,7 +102,7 @@ export default function MatriksKegiatanOverview() {
                       <li key={kIndex}>{kegiatan}</li>
                     ))}
                   </ul>
-                  {activitiesList.length === 0 && (
+                  {activitiesList?.length === 0 && (
                     <p className="text-gray-500 text-sm">Tidak ada kegiatan.</p>
                   )}
                 </div>

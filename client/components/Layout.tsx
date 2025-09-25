@@ -90,7 +90,7 @@ const findPath = (items, pathname, parents = []) => {
     }
     if (item.children) {
       const childPath = findPath(item.children, pathname, [...parents, item]);
-      if (childPath.length) return childPath;
+      if (childPath?.length) return childPath;
     }
   }
   return [];
@@ -233,7 +233,7 @@ export default function Layout({ submenu }: LayoutProps) {
                     {currentPath.map((item, index) => (
                       <React.Fragment key={item.href}>
                         <BreadcrumbItem>
-                          {index === currentPath.length - 1 ? (
+                          {index === currentPath?.length - 1 ? (
                             <BreadcrumbPage className="text-sm font-medium">
                               {item.label}
                             </BreadcrumbPage>
@@ -245,7 +245,7 @@ export default function Layout({ submenu }: LayoutProps) {
                         </BreadcrumbItem>
 
                         {/* Tambah separator jika bukan item terakhir */}
-                        {index < currentPath.length - 1 && <BreadcrumbSeparator />}
+                        {index < currentPath?.length - 1 && <BreadcrumbSeparator />}
                       </React.Fragment>
                     ))}
                   </BreadcrumbList>
@@ -270,7 +270,7 @@ export default function Layout({ submenu }: LayoutProps) {
 
               <DropdownMenuContent className="w-48">
                 <DropdownMenuItem
-                  onClick={()=> handleLogout()}
+                  onClick={() => handleLogout()}
                   className="cursor-pointer text-red-600 focus:text-red-700"
                 >
                   <LogOut className="mr-2 h-4 w-4" />

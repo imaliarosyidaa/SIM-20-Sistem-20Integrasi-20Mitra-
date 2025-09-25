@@ -20,7 +20,7 @@ export default function ComboBox<T extends object>({
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<T | null>(null);
 
-  const filtered = data.filter((item) =>
+  const filtered = data?.filter((item) =>
     String(item[labelKey]).toLowerCase().includes(query.toLowerCase())
   );
 
@@ -84,7 +84,7 @@ export default function ComboBox<T extends object>({
           className="absolute z-50 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md dark:bg-neutral-900 dark:border-neutral-700"
           role="listbox"
         >
-          {filtered.length > 0 ? (
+          {filtered?.length > 0 ? (
             filtered.map((item, idx) => (
               <div
                 key={idx}

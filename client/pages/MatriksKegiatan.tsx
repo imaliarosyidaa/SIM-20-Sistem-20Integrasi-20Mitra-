@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {months} from '../constants'
+import { months } from '../constants'
 
 import {
   ChevronLeft,
@@ -98,8 +98,8 @@ export default function MatriksKegiatan() {
   }
 
   // Next month's leading days
-  const totalCells = Math.ceil(calendarDays.length / 7) * 7;
-  const remainingCells = totalCells - calendarDays.length;
+  const totalCells = Math.ceil(calendarDays?.length / 7) * 7;
+  const remainingCells = totalCells - calendarDays?.length;
   for (let day = 1; day <= remainingCells; day++) {
     calendarDays.push({
       day,
@@ -122,7 +122,7 @@ export default function MatriksKegiatan() {
   };
 
   const getActivitiesForDate = (date: Date) => {
-    return activities.filter((activity) => {
+    return activities?.filter((activity) => {
       const activityDate = new Date(activity.date);
       return activityDate.toDateString() === date.toDateString();
     });
@@ -175,7 +175,7 @@ export default function MatriksKegiatan() {
               </div>
 
               <div className="grid grid-cols-7 gap-1">
-                {calendarDays.slice(0, 42).map((dayData, index) => (
+                {calendarDays?.slice(0, 42).map((dayData, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedDate(dayData.date)}
@@ -222,7 +222,7 @@ export default function MatriksKegiatan() {
                 Kegiatan Mendatang
               </h3>
               <div className="space-y-3">
-                {activities.slice(0, 3).map((activity) => (
+                {activities?.slice(0, 3).map((activity) => (
                   <div key={activity.id} className="p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-start justify-between mb-1">
                       <h4 className="text-sm font-medium text-gray-900">
@@ -367,9 +367,9 @@ export default function MatriksKegiatan() {
                         {activity.title}
                       </div>
                     ))}
-                    {dayActivities.length > 2 && (
+                    {dayActivities?.length > 2 && (
                       <div className="text-xs text-gray-500 pl-1">
-                        +{dayActivities.length - 2} lainnya
+                        +{dayActivities?.length - 2} lainnya
                       </div>
                     )}
                   </div>

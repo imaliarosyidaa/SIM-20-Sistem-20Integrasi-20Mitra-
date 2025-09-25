@@ -200,7 +200,7 @@ export default function RekapHonor() {
                       className="flex space-x-6 overflow-x-auto p-4 scroll-smooth hide-scrollbar"
                     >
                       {months.map((month, i) => {
-                        const monthData = rekapHonorPerBulan.find(item => item.bulan === month);
+                        const monthData = rekapHonorPerBulan?.find(item => item.bulan === month);
 
                         return (
                           <div

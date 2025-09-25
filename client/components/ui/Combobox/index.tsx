@@ -22,7 +22,7 @@ export default function ComboBox(data) {
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    const filtered = options.filter(opt =>
+    const filtered = options?.filter(opt =>
       opt.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredOptions(filtered);
@@ -47,8 +47,8 @@ export default function ComboBox(data) {
           onChange={handleChange}
           onFocus={() => setIsOpen(true)}
           className={`w-full border rounded-lg px-3 py-2 focus:outline-none ${error
-              ? "border-red-500 focus:ring-2 focus:ring-red-400"
-              : "focus:ring-2 focus:ring-purple-500"
+            ? "border-red-500 focus:ring-2 focus:ring-red-400"
+            : "focus:ring-2 focus:ring-purple-500"
             }`}
         />
         <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" className="syw szy">
@@ -62,7 +62,7 @@ export default function ComboBox(data) {
 
       {isOpen && (
         <ul className="border rounded-lg mt-2 max-h-40 overflow-y-auto bg-white shadow">
-          {filteredOptions.length > 0 ? (
+          {filteredOptions?.length > 0 ? (
             filteredOptions.map((option, index) => (
               <li
                 key={index}

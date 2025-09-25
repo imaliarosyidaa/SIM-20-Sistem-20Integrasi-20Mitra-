@@ -10,7 +10,7 @@ function GlobalFilter({
     globalFilter,
     setGlobalFilter,
 }) {
-    const count = preGlobalFilteredRows.length;
+    const count = preGlobalFilteredRows?.length;
     const [value, setValue] = useState(globalFilter);
 
     const onChange = useAsyncDebounce(value => {
@@ -104,14 +104,14 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
                                     {isLoading ? (
                                         [...Array(10)].map((_, i) => (
                                             <tr key={i}>
-                                                {Array.from({ length: columns.length }).map((_, j) => (
+                                                {Array.from({ length: columns?.length }).map((_, j) => (
                                                     <td key={j} className="px-6 py-4 whitespace-nowrap">
                                                         <Skeleton height={20} width="80%" />
                                                     </td>
                                                 ))}
                                             </tr>
                                         ))
-                                    ) : page.length > 0 ? (
+                                    ) : page?.length > 0 ? (
                                         page.map((row) => {
                                             prepareRow(row);
                                             return (
@@ -139,7 +139,7 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
                                     ) : (
                                         <tr>
                                             <td
-                                                colSpan={columns.length}
+                                                colSpan={columns?.length}
                                                 className="text-center py-6 text-gray-500"
                                             >
                                                 Tidak ada data
@@ -164,7 +164,7 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
                         <span>
                             Halaman{' '}
                             <strong>
-                                {state.pageIndex + 1} dari {pageOptions.length}
+                                {state.pageIndex + 1} dari {pageOptions?.length}
                             </strong>{' '}
                         </span>
                         <span>|</span>

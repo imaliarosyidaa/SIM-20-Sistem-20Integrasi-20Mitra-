@@ -15,16 +15,10 @@ export default function Index() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/dashboard";
 
-  const userRef = useRef();
-  const errRef = useRef();
-
   const [username, setUsername] = useState('');
   const [password, setpassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
 
-  useEffect(() => {
-    userRef?.current?.focus();
-  }, [])
 
   useEffect(() => {
     setErrMsg('');
@@ -55,7 +49,6 @@ export default function Index() {
       } else {
         setErrMsg('Login Failed');
       }
-      errRef.current.focus();
     }
   }
 

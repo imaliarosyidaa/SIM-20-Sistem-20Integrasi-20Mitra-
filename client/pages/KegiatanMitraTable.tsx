@@ -15,15 +15,15 @@ export default function KegiatanMitraTable() {
     const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
     const { getKegiatanById, getJumlahKegiatanMitra } = useKegiatanMitraApi()
 
-    const filteredItems = mitraxkegaiatan.filter(item =>
+    const filteredItems = mitraxkegaiatan?.filter(item =>
         item.namaLengkap.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredItems?.slice(indexOfFirstItem, indexOfLastItem);
 
-    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredItems?.length / itemsPerPage);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -135,7 +135,7 @@ export default function KegiatanMitraTable() {
                                     </tr>
                                 ))}
                             </>
-                        ) : currentItems.length > 0 ? (
+                        ) : currentItems?.length > 0 ? (
                             currentItems.map((kegmitra, index) => (
                                 <React.Fragment key={index}>
                                     <tr
@@ -163,7 +163,7 @@ export default function KegiatanMitraTable() {
                                                     </div>
                                                 ) : (
                                                     <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                                                        {expandedRowData.length > 0 ? (
+                                                        {expandedRowData?.length > 0 ? (
                                                             expandedRowData.map((kegiatan, kIndex) => (
                                                                 <li key={kIndex}>
                                                                     Kegiatan: {kegiatan.nama_survei} ({kegiatan.bulan})

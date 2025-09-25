@@ -42,7 +42,7 @@ export default function DataTable({
   const filteredData = useMemo(() => {
     if (!searchQuery) return data;
 
-    return data.filter((row) =>
+    return data?.filter((row) =>
       columns.some((column) =>
         String(row[column.key] || "")
           .toLowerCase()
@@ -139,7 +139,7 @@ export default function DataTable({
       {/* Footer with row count */}
       <div className="px-4 py-3 border-t border-gray-200">
         <div className="text-sm text-gray-700">
-          Menampilkan {filteredData.length} dari {data.length} data
+          Menampilkan {filteredData?.length} dari {data?.length} data
         </div>
       </div>
     </div>
