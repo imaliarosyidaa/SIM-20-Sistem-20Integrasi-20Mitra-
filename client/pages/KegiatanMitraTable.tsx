@@ -3,7 +3,7 @@ import useKegiatanMitraApi from '../lib/kegaiatanMitraApi';
 
 export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
     const [searchQuery, setSearchQuery] = useState('');
     const [expandedRow, setExpandedRow] = useState(null);
     const [expandedRowData, setExpandedRowData] = useState([]);
@@ -107,14 +107,13 @@ export default function KegiatanMitraTable() {
                     />
                 </div>
             </div>
-
-            <div className="overflow-x-auto bg-white rounded-lg shadow-md p-4">
+            <div className='relative overflow-x-auto shadow-md sm:rounded-lg bg-white rounded-md'>
                 <table className="min-w-full divide-y divide-gray-200">
-                    <thead>
+                    <thead className='text-normal uppercase bg-[#FFB422] dark:text-white'>
                         <tr>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">No.</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Nama Mitra</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Jumlah Kegiatan</th>
+                            <th className="px-4 py-2">No.</th>
+                            <th className="px-4 py-2">Nama Mitra</th>
+                            <th className="px-4 py-2">Jumlah Kegiatan</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -140,15 +139,15 @@ export default function KegiatanMitraTable() {
                                 <React.Fragment key={index}>
                                     <tr
                                         onClick={() => handleRowClick(kegmitra.id)}
-                                        className="cursor-default hover:bg-gray-50 transition-colors"
+                                        className="cursor-default hover:bg-gray-50 transition-colors cursor-pointer"
                                     >
-                                        <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <td className="px-4 py-2 whitespace-nowrap text-normal font-semibold">
                                             {indexOfFirstItem + index + 1}.
                                         </td>
-                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-4 py-2 whitespace-nowrap text-normal text-black font-semibold">
                                             {kegmitra.namaLengkap}
                                         </td>
-                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-4 py-2 whitespace-nowrap text-normal text-black font-semibold">
                                             {kegmitra.jumlahKegiatan}
                                         </td>
                                     </tr>
@@ -156,7 +155,7 @@ export default function KegiatanMitraTable() {
                                     {/* Expanded content row */}
                                     {expandedRow === kegmitra.id && (
                                         <tr>
-                                            <td colSpan="4" className="p-4 bg-gray-100">
+                                            <td colSpan="4" className="p-4 bg-white">
                                                 {isLoadingExpandedRow ? (
                                                     <div className="text-center text-gray-500">
                                                         Memuat list kegiatan...
@@ -189,7 +188,6 @@ export default function KegiatanMitraTable() {
                             </tr>
                         )}
                     </tbody>
-
                 </table>
             </div>
 

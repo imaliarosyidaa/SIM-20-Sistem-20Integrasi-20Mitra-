@@ -190,7 +190,7 @@ export default function HonorBulanan() {
             currentRows.map((kegiatan, index) => (
               <React.Fragment key={kegiatan.id}>
                 <tr className="border-t hover:bg-gray-50" key={index}>
-                  <td className="p-2 text-center">{kegiatan.id}.</td>
+                  <td className="p-2 text-center">{index+1}.</td>
                   <td className="p-2 text-center text-xs">{kegiatan.bulan}</td>
                   <td className="p-2 text-center text-xs">{kegiatan.tanggal}</td>
                   <td className="p-2 text-center text-xs">{kegiatan.tim}</td>
@@ -372,6 +372,7 @@ export default function HonorBulanan() {
         </p>
 
         <div className="flex items-center gap-2">
+          {/* Prev button */}
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
@@ -380,18 +381,38 @@ export default function HonorBulanan() {
             <ChevronLeft size={16} />
             Prev
           </button>
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goToPage(i + 1)}
-              className={`px-3 py-1.5 rounded-md text-sm ${currentPage === i + 1
-                ? "bg-indigo-600 text-white"
-                : "border hover:bg-gray-100"
-                }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+
+          {/* Page numbers with ellipsis */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((page) => {
+              if (totalPages <= 5) return true; // kalau total page <= 5, tampilkan semua
+              if (page === 1 || page === totalPages) return true; // halaman pertama & terakhir selalu tampil
+              if (page >= currentPage - 1 && page <= currentPage + 1) return true; // tampilkan sekitar currentPage
+              return false;
+            })
+            .map((page, idx, arr) => {
+              const prevPage = arr[idx - 1];
+              const showEllipsis = prevPage && page - prevPage > 1;
+
+              return (
+                <React.Fragment key={page}>
+                  {showEllipsis && (
+                    <span className="px-2 text-gray-500">...</span>
+                  )}
+                  <button
+                    onClick={() => goToPage(page)}
+                    className={`px-3 py-1.5 rounded-md text-sm ${currentPage === page
+                        ? "bg-indigo-600 text-white"
+                        : "border hover:bg-gray-100"
+                      }`}
+                  >
+                    {page}
+                  </button>
+                </React.Fragment>
+              );
+            })}
+
+          {/* Next button */}
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
@@ -402,6 +423,7 @@ export default function HonorBulanan() {
           </button>
         </div>
       </div>
+
       <Link to="/add-kegiatan">
         <button
           className="fixed bottom-4 right-4 p-4 rounded-full bg-blue-600 text-white shadow-lg 

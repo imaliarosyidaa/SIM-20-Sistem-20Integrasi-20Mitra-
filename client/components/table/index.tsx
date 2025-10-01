@@ -4,6 +4,7 @@ import { Button, PageButton } from '../shared';
 import React, { useState, useEffect } from 'react';
 import { useAsyncDebounce } from 'react-table';
 import Skeleton from 'react-loading-skeleton';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
 function GlobalFilter({
     preGlobalFilteredRows,
@@ -59,11 +60,11 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
         {
             columns,
             data,
-            initialState: { pageIndex: 0 },
+            initialState: { pageIndex: 0, pageSize: 20 }
         },
         useGlobalFilter,
         useSortBy,
-        usePagination
+        usePagination,
     );
 
     return (
@@ -77,25 +78,38 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
             </div>
 
             <div className="mt-2 flex flex-col">
-                <div className="-my-2 overflow-x-auto">
-                    <div className="py-2 align-middle inline-block min-w-full">
-                        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                <div className="-my-2">
+                    <div className="py-2 align-middle inline-block w-full">
+                        <div className="overflow-x-auto shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <table {...getTableProps()} className="min-w-full text-normal truncate divide-y divide-gray-200 table-sm">
+                                <thead className="bg-[#FFB422] text-black">
                                     {headerGroups.map(headerGroup => (
                                         <tr {...headerGroup.getHeaderGroupProps()}>
                                             {headerGroup.headers.map(column => (
                                                 <th
                                                     scope="col"
-                                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                    className="px-2 py-3 text-left text-sm lg:text-normal font-bold uppercase tracking-wider cursor-pointer select-none"
                                                     {...column.getHeaderProps(column.getSortByToggleProps())}
                                                 >
-                                                    {column.render('Header')}
+                                                    <div className="flex items-center">
+                                                        {column.render('Header')}
+                                                        {/* Icon Sort */}
+                                                        {column.isSorted ? (
+                                                            column.isSortedDesc ? (
+                                                                <ChevronDownIcon className="w-2 h-2 ml-1" />
+                                                            ) : (
+                                                                <ChevronUpIcon className="w-2 h-2 ml-1" />
+                                                            )
+                                                        ) : (
+                                                            <ChevronDownIcon className="w-2 h-2 ml-1 opacity-50" />
+                                                        )}
+                                                    </div>
                                                 </th>
                                             ))}
                                         </tr>
                                     ))}
                                 </thead>
+
 
                                 <tbody
                                     {...getTableBodyProps()}
@@ -127,7 +141,7 @@ export default function Table({ columns, data, isLoading, getCellProps = (cell) 
                                                                 key={cell.id}
                                                                 {...cellProps}
                                                                 {...customProps}
-                                                                className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${finalClassName}`}
+                                                                className={`px-3 py-2 truncate text-sm font-semibold lg:text-normal text-black ${finalClassName}`}
                                                             >
                                                                 {cell.render("Cell")}
                                                             </td>

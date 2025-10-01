@@ -4,11 +4,7 @@ import {
 } from 'lucide-react';
 import { MatriksKegiatan } from '@/interfaces/types';
 import useKegiatanApi from '@/lib/kegiatanApi';
-
-const months = [
-  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-];
+import { months } from '../constants'
 
 export default function MatriksKegiatanOverview() {
   const [rekapKegiatanData, setRekapKegiatanData] = useState<MatriksKegiatan[]>([]);
@@ -40,34 +36,32 @@ export default function MatriksKegiatanOverview() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <select
-              id="tahun"
-              value={selectedYear}
-              onChange={(e) => {
-                const year = Number(e.target.value);
-                setSelectedYear(year);
-                getRekapHonorPerBulan(year);
-              }}
-              className="border rounded px-3 py-2"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            onClick={resetFilters}
-            className="flex items-center px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <select
+            id="tahun"
+            value={selectedYear}
+            onChange={(e) => {
+              const year = Number(e.target.value);
+              setSelectedYear(year);
+              getRekapHonorPerBulan(year);
+            }}
+            className="border rounded px-3 py-2"
           >
-            <RotateCcw className="h-4 w-4 mr-1" />
-            Reset Filter
-          </button>
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </div>
+        <button
+          onClick={resetFilters}
+          className="flex items-center px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+        >
+          <RotateCcw className="h-4 w-4 mr-1" />
+          Reset Filter
+        </button>
       </div>
 
       {/* Month Grid */}

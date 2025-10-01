@@ -26,5 +26,17 @@ export default function useKegiatanApi(){
     return response.data;
   },[axiosPrivate])
 
-  return {createKegiatan, getMatriksKegiatan}
+  
+  const getKegiatanByTim = useCallback( async(year:number, month:string, idSobat:string): Promise<any> => {
+  const controller = new AbortController();
+
+    const response = await axiosPrivate.get(`/kegiatan?year=${year}&month=${month}&idSobat=${idSobat}`,
+    {
+      signal: controller.signal
+    }
+  );
+  return response.data;
+  },[axiosPrivate])
+
+  return {createKegiatan, getMatriksKegiatan, getKegiatanByTim}
 }

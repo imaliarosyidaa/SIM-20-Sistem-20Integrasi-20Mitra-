@@ -214,7 +214,7 @@ export default function Layout({ submenu }: LayoutProps) {
       {/* Main content */}
       <div className={cn("transition-all duration-300", mainMargin)}>
         {/* Top header */}
-        <header className="sticky top-0 z-10 bg-white shadow-sm border-b">
+        <header className="sticky top-0 z-10 bg-white">
           <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center space-x-4">
               <button
@@ -283,7 +283,7 @@ export default function Layout({ submenu }: LayoutProps) {
 
         {/* Page content */}
         <main className="p-4 lg:p-6">
-          <div className="max-w-7xl mx-auto"><Outlet /></div>
+          <div className="mx-auto"><Outlet /></div>
         </main>
       </div>
     </div>

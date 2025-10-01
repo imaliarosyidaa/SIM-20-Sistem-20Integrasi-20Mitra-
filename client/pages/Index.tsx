@@ -2,6 +2,7 @@ import logo from '../assets/logo-malowopati.png'
 import { useRef, useState, useEffect } from 'react';
 import useAuth from '../hooks/use-auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 import axios from '../lib/api';
 import { Eye, EyeClosed, EyeOff } from 'lucide-react';
@@ -18,7 +19,6 @@ export default function Index() {
   const [username, setUsername] = useState('');
   const [password, setpassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
-
 
   useEffect(() => {
     setErrMsg('');
@@ -45,7 +45,9 @@ export default function Index() {
       } else if (err.response?.status === 400) {
         setErrMsg('Missing Username or Password');
       } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized');
+        setErrMsg('Username atau Password Salah');
+      } else if (err.response?.status === 404) {
+        setErrMsg('Username atau Password Salah');
       } else {
         setErrMsg('Login Failed');
       }
@@ -54,93 +56,73 @@ export default function Index() {
 
   return (
     <>
-      <div className="flex min-h-screen flex-col justify-center px-6 lg:px-8 bg-gray-50">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-              <img
-                alt="Logo SIM"
-                src={logo}
-                className="mx-auto h-24 w-auto"
-              />
+      {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>
+        {errMsg}
+      </Alert>}
+      <div className="container-scroller">
+        <div className="container-fluid page-body-wrapper full-page-wrapper">
+          <div className="content-wrapper d-flex align-items-center auth">
+            <div className="row flex-grow">
+              <div className="col-lg-4 mx-auto">
+                <div className="auth-form-light text-left p-5">
+                  <div className="brand-logo">
+                    <img
+                      alt="Logo SIM"
+                      src={logo}
+                      className="mx-auto h-24 w-auto"
+                    />
+                  </div>
+                  <h4>Halo! Mari kita mulai.</h4>
+                  <h6 className="font-weight-light">Masuk untuk melanjutkan.</h6>
+                  <form className="pt-3" method="POST" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                      <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        required
+                        autoComplete="username"
+                        placeholder="Username"
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
+                        className="form-control form-control-lg"
+                      />
+                    </div>
+                    <div className="form-group relative">
+                      <input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        autoComplete="current-password"
+                        placeholder="Paswword"
+                        onChange={(e) => setpassword(e.target.value)}
+                        value={password}
+                        className="form-control form-control-lg w-4/5 lg:w-5/6"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-gray-700 bg-white hover:bg-blue-200 pl-4 w-1/5 lg:w-1/6 border border-gray-300"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
+                    <button className="mt-3 d-grid gap-2 w-full" type="submit">
+                      <a className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN IN</a>
+                    </button>
+                    <div className="my-2 d-flex justify-content-between align-items-center">
+                      <div className="form-check">
+                        <label className="form-check-label text-muted">
+                          <input type="checkbox" className="form-check-input"></input> Biarkan saya tetap masuk </label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-            <form action="#" method="POST" onSubmit={handleSubmit} className="space-y-3 pt-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Username
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    required
-                    autoComplete="username"
-                    placeholder="Username"
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                    className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm placeholder-gray-400"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password
-                  </label>
-                </div>
-                <div className="mt-2 relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    onChange={(e) => setpassword(e.target.value)}
-                    value={password}
-                    className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm text-gray-900 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-700 bg-white hover:bg-blue-200 pl-4 rounded-r-md border border-gray-300"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="rememberMe"
-                  name="rememberMe"
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                />
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-500">
-                  Remember Me
-                </label>
-              </div>
-
-              <div className='pt-4'>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all hover:from-indigo-500 hover:to-indigo-400"
-                >
-                  Sign in
-                </button>
-              </div>
-            </form>
           </div>
         </div>
-
       </div>
     </>
   )

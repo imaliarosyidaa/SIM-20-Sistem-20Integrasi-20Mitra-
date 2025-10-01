@@ -9,7 +9,7 @@ import useAuth from "@/hooks/use-auth";
 import useHonorApi from "@/lib/honorApi";
 
 export default function RekapHonor() {
-  const [activeTab, setActiveTab] = useState<"rekap" | "rincian">("rekap");
+  const [activeTab, setActiveTab] = useState<"rekap" | "rincian">("rincian");
   const [detailHonorData, setDetailHonorData] = useState<any[]>([]);
   const [rekapHonorPerBulan, setRekapHonorPerBulan] = useState([]);
   const currentYear = new Date().getFullYear();
@@ -28,11 +28,11 @@ export default function RekapHonor() {
       || cell.column.id == 'november' || cell.column.id == 'desember'
     ) && cell.value > batasHonor) {
       return {
-        className: 'px-3 bg-red-200',
+        className: 'px-3 bg-red-500',
       };
     }
     return {
-      className: 'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
+      className: 'truncate text-black font-normal',
     };
   };
 
@@ -47,19 +47,19 @@ export default function RekapHonor() {
       },
     },
     { Header: "Nama Mitra", accessor: "namaLengkap" },
-    { Header: "Januari", accessor: "januari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'januari' },
-    { Header: "Februari", accessor: "februari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'februari' },
-    { Header: "Maret", accessor: "maret", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'maret' },
-    { Header: "April", accessor: "april", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'april' },
+    { Header: "Jan", accessor: "januari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'januari' },
+    { Header: "Feb", accessor: "februari", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'februari' },
+    { Header: "Mar", accessor: "maret", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'maret' },
+    { Header: "Apr", accessor: "april", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'april' },
     { Header: "Mei", accessor: "mei", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'mei' },
-    { Header: "Juni", accessor: "juni", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juni' },
-    { Header: "Juli", accessor: "juli", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juli' },
-    { Header: "Agustus", accessor: "agustus", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'agustus' },
-    { Header: "September", accessor: "september", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'september' },
-    { Header: "Oktober", accessor: "oktober", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'oktober' },
-    { Header: "November", accessor: "november", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'november' },
-    { Header: "Desember", accessor: "desember", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'desember' },
-    { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, },
+    { Header: "Jun", accessor: "juni", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juni' },
+    { Header: "Jul", accessor: "juli", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'juli' },
+    { Header: "Agus", accessor: "agustus", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'agustus' },
+    { Header: "Sept", accessor: "september", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'september' },
+    { Header: "Okt", accessor: "oktober", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'oktober' },
+    { Header: "Nov", accessor: "november", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'november' },
+    { Header: "Des", accessor: "desember", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'desember' },
+    { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'total'},
   ];
 
   const getRekapHonorPerBulanData = useCallback(async (selectedYear) => {
@@ -78,6 +78,7 @@ export default function RekapHonor() {
 
     getRincianHonor().then((res) => {
       setDetailHonorData(res);
+      console.log(res)
     })
       .catch((err) => {
         setError(true)
@@ -87,27 +88,15 @@ export default function RekapHonor() {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "rekap") {
-      getRekapHonorPerBulanData(selectedYear);
-    } else {
+    if (activeTab === "rincian") {
       getRincianHonorData();
+    } else {
+      getRekapHonorPerBulanData(selectedYear);
     }
   }, [activeTab, selectedYear, getRincianHonorData]);
 
   const submenuTabs = (
     <nav className="flex space-x-8 px-4 lg:px-6">
-      <button
-        onClick={() => setActiveTab("rekap")}
-        className={`py-4 flex gap-2 items-center px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rekap"
-          ? "border-brand-500 text-brand-600"
-          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-          }`}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-check-fill" viewBox="0 0 16 16">
-          <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708" />
-        </svg>
-        Rekap Honor
-      </button>
       <button
         onClick={() => setActiveTab("rincian")}
         className={`py-4 flex items-center gap-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rincian"
@@ -120,6 +109,18 @@ export default function RekapHonor() {
           <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M3 9h10v1h-3v2h3v1h-3v2H9v-2H6v2H5v-2H3v-1h2v-2H3z" />
         </svg>
         Rincian Honor Mitra
+      </button>
+      <button
+        onClick={() => setActiveTab("rekap")}
+        className={`py-4 flex gap-2 items-center px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rekap"
+          ? "border-brand-500 text-brand-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          }`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-check-fill" viewBox="0 0 16 16">
+          <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708" />
+        </svg>
+        Rekap Honor
       </button>
     </nav>
   );
@@ -205,7 +206,7 @@ export default function RekapHonor() {
                         return (
                           <div
                             key={i}
-                            className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-5 rounded-lg border-2 border-purple-400"
+                            className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-4 rounded-lg border-2 border-purple-400"
                           >
                             <h4 className="font-bold text-purple-700 mb-2">{month}</h4>
                             <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">

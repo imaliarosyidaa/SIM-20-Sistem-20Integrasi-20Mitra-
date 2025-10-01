@@ -38,9 +38,21 @@ export default function useHonorApi(){
   return response.data.data;
   },[axiosPrivate])
 
+  const getHonorTop10 = useCallback( async(year:number, month:string): Promise<any> => {
+  const controller = new AbortController();
+
+    const response = await axiosPrivate.get(`/honormitra/kegiatan?year=${year}&month=${month}`,
+    {
+      signal: controller.signal
+    }
+  );
+  return response.data.data;
+  },[axiosPrivate])
+
   return {
     batasHonorBulanan, 
     getRincianHonor, 
-    getRekapHonorPerBulan
+    getRekapHonorPerBulan,
+    getHonorTop10
   }
 }

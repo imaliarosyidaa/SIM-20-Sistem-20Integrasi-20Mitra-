@@ -40,11 +40,11 @@ export default function TabelKegiatan({ kegiatanMitra }) {
                             <td className="p-2 text-center">
                                 {indexOfFirstRow + index + 1}.
                             </td>
-                            <td className="p-2 text-center text-xs">{kegiatan.bulan}</td>
-                            <td className="p-2 text-center text-xs">{kegiatan.tanggal}</td>
-                            <td className="p-2 text-center text-xs">{kegiatan.tim}</td>
-                            <td className="p-2 text-center text-xs">{kegiatan.nama_survei}</td>
-                            <td className="p-2 text-start text-xs text-blue-600 hover:underline cursor-pointer">
+                            <td className="p-2 text-center text-normal">{kegiatan.bulan}</td>
+                            <td className="p-2 text-center text-normal">{kegiatan.tanggal}</td>
+                            <td className="p-2 text-center text-normal">{kegiatan.tim}</td>
+                            <td className="p-2 text-center text-normal">{kegiatan.nama_survei}</td>
+                            <td className="p-2 text-start text-normal text-blue-600 hover:underline cursor-pointer">
                                 {kegiatan.nama_survei_sobat}
                             </td>
                             <td className="p-2 text-center">

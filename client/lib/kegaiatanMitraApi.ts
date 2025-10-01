@@ -76,6 +76,18 @@ export default function useKegiatanMitraApi(){
 
   },[axiosPrivate])
 
+  
+  const getRincianKegiatanMitra = useCallback( async(year:number, month:string, idSobat:string): Promise<any> => {
+  const controller = new AbortController();
+
+    const response = await axiosPrivate.get(`/kegiatanmitra/count?year=${year}&month=${month}&idSobat=${idSobat}`,
+    {
+      signal: controller.signal
+    }
+  );
+  return response.data.data;
+  },[axiosPrivate])
+
   return {
     unggahFileTemplate,
     kirimFileTemplate,
@@ -83,6 +95,7 @@ export default function useKegiatanMitraApi(){
     deleteKegiatanMitra,
     createKegiatanMitra,
     getKegiatanById,
-    getJumlahKegiatanMitra
+    getJumlahKegiatanMitra,
+    getRincianKegiatanMitra
   }
 }
