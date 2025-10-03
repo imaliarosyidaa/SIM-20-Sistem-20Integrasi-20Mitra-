@@ -26,10 +26,10 @@ export default function useKegiatanMitraApi(){
   return response.data.data;
   },[axiosPrivate])
 
-  const getKegiatanMitra = useCallback( async(): Promise<KegiatanMitraResponse[]> => {
+  const getKegiatanMitra = useCallback( async(year:number, month:string, tim:string): Promise<KegiatanMitraResponse[]> => {
   const controller = new AbortController();
 
-    const response = await axiosPrivate.get<{data: KegiatanMitraResponse[]}>("/kegiatanmitra",
+    const response = await axiosPrivate.get<{data: KegiatanMitraResponse[]}>(`/kegiatanmitra?year=${year}&month=${month}&tim=${tim}`,
     {
       signal: controller.signal
     });

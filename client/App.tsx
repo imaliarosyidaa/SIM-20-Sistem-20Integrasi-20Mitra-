@@ -19,6 +19,7 @@ import AddKegiatan from "./pages/AddKegiatan";
 import { AuthProvider } from "./context/AuthProvider";
 import PersistLogin from "./components/PersistLogin";
 import Dashboard from "./pages/Dashboard";
+import Keuangan from "./pages/Keuangan";
 
 
 const queryClient = new QueryClient();
@@ -57,6 +58,9 @@ const App = () => (
               </Route>
               <Route element={<Layout />}>
                 <Route path="/upload-template" element={<UploadTemplate />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/keuangan" element={<Keuangan />} />
               </Route>
             </Route>
             {/* Catch-all route for 404 Not Found */}

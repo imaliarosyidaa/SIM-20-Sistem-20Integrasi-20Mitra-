@@ -15,6 +15,7 @@ import {
   ChevronRight,
   LogOut,
   ChevronDown,
+  HandCoinsIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +37,7 @@ import {
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
 import useLogout from "@/hooks/use-logout";
+import { Box, LinearProgress } from "@mui/material";
 
 interface LayoutProps {
   submenu?: React.ReactNode;
@@ -72,6 +74,11 @@ const menuItems = [
       },
     ],
   },
+  // {
+  //   icon: HandCoinsIcon,
+  //   label: "Keuangan",
+  //   href: "/keuangan",
+  // },
   {
     icon: Database,
     label: "Database Mitra",
@@ -106,14 +113,32 @@ export default function Layout({ submenu }: LayoutProps) {
   const currentPath = findPath(menuItems, location.pathname);
   const navigate = useNavigate();
   const logout = useLogout();
+  const [isLoading, setIsLoading] = useState(false)
 
   async function handleLogout() {
     await logout();
     navigate("/");
   };
 
+  async function handleMovePage(href: string) {
+    setSidebarOpen(false);
+    setIsLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      navigate(href);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
+      {isLoading && (
+        <Box sx={{ width: '100%', position: 'absolute', zIndex: '30' }}>
+          {/* Menggunakan variant="indeterminate" */}
+          <LinearProgress variant="indeterminate" />
+        </Box>
+      )}
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -175,17 +200,16 @@ export default function Layout({ submenu }: LayoutProps) {
               const isActive = location.pathname === item.href;
 
               return (
-                <Link
+                <button
                   key={item.href}
-                  to={item.href}
                   className={cn(
-                    "group flex items-center rounded-lg px-2 py-2.5 text-sm font-medium transition-colors relative",
+                    "group flex items-center rounded-lg px-2 py-2.5 text-sm font-medium transition-colors relative w-full",
                     isActive
                       ? "bg-white/20 text-white shadow-sm"
                       : "text-blue-100 hover:bg-white/10 hover:text-white",
                     sidebarCollapsed ? "justify-center" : "",
                   )}
-                  onClick={() => setSidebarOpen(false)}
+                  onClick={() => handleMovePage(item.href)}
                   title={sidebarCollapsed ? item.label : undefined}
                 >
                   <Icon
@@ -204,7 +228,7 @@ export default function Layout({ submenu }: LayoutProps) {
                       {item.label}
                     </div>
                   )}
-                </Link>
+                </button>
               );
             })}
           </nav>
@@ -282,7 +306,7 @@ export default function Layout({ submenu }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">
+        <main className="">
           <div className="mx-auto"><Outlet /></div>
         </main>
       </div>

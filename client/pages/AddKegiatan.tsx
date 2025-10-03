@@ -55,8 +55,8 @@ export default function AddKegiatan() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white shadow-lg p-8">
+    <div className="space-y-6 p-6">
+      <div className="bg-white shadow-md p-8 rounded-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Tambah Kegiatan</h2>
 
         {error && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{error}</div>}

@@ -6,6 +6,9 @@ import Alert from '@mui/material/Alert';
 
 import axios from '../lib/api';
 import { Eye, EyeClosed, EyeOff } from 'lucide-react';
+import CircularProgress from '@mui/material/CircularProgress';
+import React from 'react';
+import { Box, LinearProgress } from '@mui/material';
 const LOGIN_URL = '/auth/login';
 
 export default function Index() {
@@ -19,6 +22,9 @@ export default function Index() {
   const [username, setUsername] = useState('');
   const [password, setpassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   useEffect(() => {
     setErrMsg('');
@@ -26,6 +32,7 @@ export default function Index() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await axios.post(LOGIN_URL,
@@ -51,6 +58,8 @@ export default function Index() {
       } else {
         setErrMsg('Login Failed');
       }
+    } finally {
+       setIsLoading(false);
     }
   }
 
@@ -59,6 +68,12 @@ export default function Index() {
       {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>
         {errMsg}
       </Alert>}
+      {isLoading && (
+        <Box sx={{ width: '100%', position:'absolute' }}>
+          {/* Menggunakan variant="indeterminate" */}
+          <LinearProgress variant="indeterminate" />
+        </Box>
+      )}
       <div className="container-scroller">
         <div className="container-fluid page-body-wrapper full-page-wrapper">
           <div className="content-wrapper d-flex align-items-center auth">
@@ -109,7 +124,8 @@ export default function Index() {
                       </button>
                     </div>
                     <button className="mt-3 d-grid gap-2 w-full" type="submit">
-                      <a className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN IN</a>
+                      <a className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn grid">
+                        SIGN IN</a>
                     </button>
                     <div className="my-2 d-flex justify-content-between align-items-center">
                       <div className="form-check">

@@ -53,6 +53,7 @@ export default function Index() {
 
   const resetFilters = () => {
     setSelectedYear(currentYear);
+    setSelectedMonth('')
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -96,6 +97,7 @@ export default function Index() {
     getKegiatanByTim(selectedYear, month, sobatId).then((res) => {
       setKegiatanByTim(res.grouped)
       setTotalKegiatan(res.total)
+      console.log(res.total)
     }).catch((err) => {
       console.error("gagal mengambil data", err);
     })
@@ -133,7 +135,7 @@ export default function Index() {
   }
 
   return (
-    <div className="space-y-4 lg:space-y-6">
+    <div className="space-y-4 lg:space-y-6 p-6">
       {/* Card Bootsrap */}
       <div className="row">
         <div className="col-md-4 stretch-card grid-margin">
@@ -347,9 +349,7 @@ export default function Index() {
               <PieChart
                 series={[
                   {
-                    arcLabel: (item) => totalKegiatan
-                      ? `${((item.value / totalKegiatan) * 100).toFixed(1)}%`
-                      : '0%',
+                    arcLabel: (item) => `${item.value}`,
                     arcLabelMinAngle: 35,
                     arcLabelRadius: '60%',
                     data: kegiatanByTim,

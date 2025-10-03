@@ -16,6 +16,16 @@ export default function useKegiatanApi(){
     return response.data.data;
   },[axiosPrivate])
   
+  const deleteKegiatan = useCallback(async (id: number): Promise<any> =>{
+    const controller = new AbortController();
+
+    const response = await axiosPrivate.delete<{data: Kegiatan}>(`/kegiatan/${id}`,{
+      signal: controller.signal
+    })
+
+    return response.data;
+  },[axiosPrivate])
+
   const getMatriksKegiatan = useCallback(async (selectedYear: number): Promise<any> =>{
     const controller = new AbortController();
 
@@ -38,5 +48,5 @@ export default function useKegiatanApi(){
   return response.data;
   },[axiosPrivate])
 
-  return {createKegiatan, getMatriksKegiatan, getKegiatanByTim}
+  return {createKegiatan, getMatriksKegiatan, getKegiatanByTim, deleteKegiatan}
 }

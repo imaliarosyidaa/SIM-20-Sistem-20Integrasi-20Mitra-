@@ -59,7 +59,7 @@ export default function RekapHonor() {
     { Header: "Okt", accessor: "oktober", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'oktober' },
     { Header: "Nov", accessor: "november", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'november' },
     { Header: "Des", accessor: "desember", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'desember' },
-    { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'total'},
+    { Header: "Total", accessor: "total", Cell: ({ value }) => { return new Intl.NumberFormat("id-ID").format(value) }, id: 'total' },
   ];
 
   const getRekapHonorPerBulanData = useCallback(async (selectedYear) => {
@@ -160,98 +160,100 @@ export default function RekapHonor() {
   }, []);
   return (
     <>
-      <div className="border-b bg-gray-100 border-gray-200 sticky top-14 z-10 mb-6">
-        {submenuTabs}
-      </div>
-      <div>
-        {activeTab === "rekap" && (
-          <div className="flex min-h-screen">
-            <main className="flex-1 overflow-y-auto">
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold text-gray-800">Bulan</h3>
-                  <select
-                    id="tahun"
-                    value={selectedYear}
-                    onChange={(e) => {
-                      const year = Number(e.target.value);
-                      setSelectedYear(year);
-                      getRekapHonorPerBulan(year);
-                    }}
-                    className="border rounded px-3 py-2"
-                  >
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="relative">
-                  <div className="relative overflow-hidden">
-                    {/* Tombol navigasi kiri */}
-                    <button
-                      onClick={() => handleArrowClick("left")}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
+      <div className="space-y-6 p-6">
+        <div className="border-b bg-gray-100 border-gray-200 sticky top-14 z-10 mb-6">
+          {submenuTabs}
+        </div>
+        <div>
+          {activeTab === "rekap" && (
+            <div className="flex min-h-screen">
+              <main className="flex-1 overflow-y-auto">
+                <div className="mb-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-800">Bulan</h3>
+                    <select
+                      id="tahun"
+                      value={selectedYear}
+                      onChange={(e) => {
+                        const year = Number(e.target.value);
+                        setSelectedYear(year);
+                        getRekapHonorPerBulan(year);
+                      }}
+                      className="border rounded px-3 py-2"
                     >
-                      <ChevronLeft size={24} />
-                    </button>
-                    <div
-                      ref={carouselRef}
-                      className="flex space-x-6 overflow-x-auto p-4 scroll-smooth hide-scrollbar"
-                    >
-                      {months.map((month, i) => {
-                        const monthData = rekapHonorPerBulan?.find(item => item.bulan === month);
-
-                        return (
-                          <div
-                            key={i}
-                            className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-4 rounded-lg border-2 border-purple-400"
-                          >
-                            <h4 className="font-bold text-purple-700 mb-2">{month}</h4>
-                            <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
-                              Rp {(monthData?.total || 0).toLocaleString("id-ID")}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {/* Tombol navigasi kanan */}
-                    <button
-                      onClick={() => handleArrowClick("right")}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
-                    >
-                      <ChevronRight size={24} />
-                    </button>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <div className="flex justify-center mt-4">
-                    {Array.from({ length: 5 }).map((_, i) => (
+                  <div className="relative">
+                    <div className="relative overflow-hidden">
+                      {/* Tombol navigasi kiri */}
                       <button
-                        key={i}
-                        onClick={() => {
-                          if (carouselRef.current) {
-                            const cardWidth = carouselRef.current.offsetWidth;
-                            carouselRef.current.scrollTo({ left: cardWidth * i, behavior: "smooth" });
-                            setActiveIndex(i);
-                          }
-                        }}
-                        className={`w-3 h-3 mx-1 rounded-full transition-colors duration-300 ${i === activeIndex % 5 ? "bg-purple-700" : "bg-gray-400"
-                          }`}
-                      ></button>
-                    ))}
+                        onClick={() => handleArrowClick("left")}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      <div
+                        ref={carouselRef}
+                        className="flex space-x-6 overflow-x-auto p-4 scroll-smooth hide-scrollbar"
+                      >
+                        {months.map((month, i) => {
+                          const monthData = rekapHonorPerBulan?.find(item => item.bulan === month);
+
+                          return (
+                            <div
+                              key={i}
+                              className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-4 rounded-lg border-2 border-purple-400"
+                            >
+                              <h4 className="font-bold text-purple-700 mb-2">{month}</h4>
+                              <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
+                                Rp {(monthData?.total || 0).toLocaleString("id-ID")}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {/* Tombol navigasi kanan */}
+                      <button
+                        onClick={() => handleArrowClick("right")}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg z-10 opacity-70 hover:opacity-100 transition-opacity"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+                    </div>
+                    <div className="flex justify-center mt-4">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            if (carouselRef.current) {
+                              const cardWidth = carouselRef.current.offsetWidth;
+                              carouselRef.current.scrollTo({ left: cardWidth * i, behavior: "smooth" });
+                              setActiveIndex(i);
+                            }
+                          }}
+                          className={`w-3 h-3 mx-1 rounded-full transition-colors duration-300 ${i === activeIndex % 5 ? "bg-purple-700" : "bg-gray-400"
+                            }`}
+                        ></button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <KegiatanMitraTable />
-            </main>
-          </div>
-        )}
+                <KegiatanMitraTable />
+              </main>
+            </div>
+          )}
 
-        {activeTab === "rincian" && (
-          <div className="flex-1">
-            <Table columns={columns} data={detailHonorData} getCellProps={getCellClassName} isLoading={isLoading} />
-          </div>
-        )}
+          {activeTab === "rincian" && (
+            <div className="flex-1">
+              <Table columns={columns} data={detailHonorData} getCellProps={getCellClassName} isLoading={isLoading} />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
