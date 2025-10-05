@@ -7,20 +7,17 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ReactTabulator } from 'react-tabulator'
 import { Input } from '@components/ui/input'
 import { Link } from "react-router-dom";
 import ComboBox from "@/components/combobox";
-import userApi from "@/lib/userApi";
 import Skeleton from 'react-loading-skeleton'
-import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import { KegiatanMitraResponse } from "@/interfaces/types";
 import useAuth from "@/hooks/use-auth";
 import useUserApi from "@/lib/userApi";
 import useKegiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import { months } from '../constants'
-import { setMonth } from "date-fns";
 import useKegiatanApi from "@/lib/kegiatanApi";
+import { AlertDialog } from "@/components/alertdialog";
 
 
 export default function HonorBulanan() {
@@ -154,6 +151,32 @@ export default function HonorBulanan() {
       .finally(() => setIsLoading(false))
   }
 
+  const [open, setOpen] = useState(false);
+  const [target, setTarget] = useState({ type: "", id: null });
+
+  const handleOpenDialog = (type: string, id: number) => {
+    setTarget({ type, id });
+    setOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!target.id) return;
+
+    switch (target.type) {
+      case "mitra":
+        deleteData(target.id);
+        break;
+      case "kegiatan":
+        handleDeleteKegiatan(target.id);
+        break;
+    }
+
+    setOpen(false);
+    setTarget({ type: "", id: null });
+  };
+
+  
+
   async function handleDeleteKegiatan(id: number) {
     setIsLoading(true)
     deleteKegiatan(id)
@@ -173,72 +196,68 @@ export default function HonorBulanan() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="min-h-screen bg-white p-4 rounded-md">
+      <div className="w-full bg-white p-4 rounded rounded-md">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl">Tim Kegiatan</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link to="/upload-template" className="flex gap-2 bg-white">
+              <Button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
+                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
+                </svg>
+                <p>
+                  Upload Template
+                </p>
+              </Button>
+            </Link>
+            <select
+              id="tahun"
+              value={selectedYear}
+              onChange={(e) => {
+                const year = Number(e.target.value);
+                setSelectedYear(year);
+                getKegiatanMitra(year, selectedMonth, tim);
+              }}
+              className="border rounded px-3 py-2"
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <select
+              id="month"
+              value={selectedMonth}
+              onChange={(e) => {
+                const month = e.target.value;
+                setSelectedMonth(month);
+                getKegiatanMitra(selectedYear, month, tim);
+              }}
+              className="border rounded px-3 py-2"
+            >
+              <option>
+                Pilih Bulan
+              </option>
+              {months.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={resetFilters}
+              className="flex items-center px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+            >
+              <RotateCcw className="h-4 w-4 mr-1" />
+              Reset Filter
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white rounded-md">
         <table className="w-full overflow-hidden">
-          <thead className="w-full">
-            <tr>
-              <th colSpan={7} className="p-4">
-                <div className="flex justify-between">
-                  <h1>Tim Kegiatan</h1>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Link to="/upload-template" className="flex gap-2 bg-white">
-                      <Button>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
-                          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
-                        </svg>
-                        <p>
-                          Upload Template
-                        </p>
-                      </Button>
-                    </Link>
-                    <select
-                      id="tahun"
-                      value={selectedYear}
-                      onChange={(e) => {
-                        const year = Number(e.target.value);
-                        setSelectedYear(year);
-                        getKegiatanMitra(year, selectedMonth, tim);
-                      }}
-                      className="border rounded px-3 py-2"
-                    >
-                      {years.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      id="month"
-                      value={selectedMonth}
-                      onChange={(e) => {
-                        const month = e.target.value;
-                        setSelectedMonth(month);
-                        getKegiatanMitra(selectedYear, month, tim);
-                      }}
-                      className="border rounded px-3 py-2"
-                    >
-                      <option>
-                        Pilih Bulan
-                      </option>
-                      {months.map((month) => (
-                        <option key={month} value={month}>
-                          {month}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={resetFilters}
-                      className="flex items-center px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-                    >
-                      <RotateCcw className="h-4 w-4 mr-1" />
-                      Reset Filter
-                    </button>
-                  </div>
-                </div>
-              </th>
-            </tr>
-          </thead>
           <thead className="bg-[#0DBEFF]">
             <tr>
               <th className="p-2">No.</th>
@@ -280,45 +299,33 @@ export default function HonorBulanan() {
                   </tr>
                   {expandedRows.includes(kegiatan.id) && (
                     <tr className="border-t">
-                      <td colSpan={7} className="p-4 text-sm text-gray-600">
+                      <td colSpan={7} className="p-4">
                         {Array.isArray(kegiatan.mitra) && kegiatan.mitra?.length > 0 ? (
                           <div className="overflow-x-auto rounded-lg shadow-sm border">
-                            <table className="min-w-full divide-y divide-gray-200 text-sm">
-                              <thead className="bg-gray-100">
+                            <table className="min-w-full divide-y divide-gray-200 font-semibold">
+                              <thead className="bg-warning">
                                 <tr>
-                                  <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
-                                    No.
-                                  </th>
-                                  <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
-                                    Nama Petugas
-                                  </th>
-                                  <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
-                                    Volume
-                                  </th>
-                                  <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
-                                    Harga per Satuan
-                                  </th>
-                                  <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">
-                                    Jumlah
-                                  </th>
-                                  <th className="px-6 py-3 text-right font-semibold text-gray-600 uppercase tracking-wide">
-                                    Aksi
-                                  </th>
+                                  <th className="p-2 text-center">No.</th>
+                                  <th className="p-2">Nama Petugas</th>
+                                  <th className="p-2 text-center">Volume</th>
+                                  <th className="p-2 text-center">Harga per Satuan</th>
+                                  <th className="p-2 text-center">Jumlah</th>
+                                  <th className="p-2 text-center">Aksi</th>
                                 </tr>
                               </thead>
                               <tbody className="bg-white divide-y divide-gray-200">
                                 {kegiatan.mitra.map((pcl, index) => (
                                   <tr key={index} className="hover:bg-gray-50 transition">
-                                    <td className="px-6 py-3 whitespace-nowrap">{index + 1}.</td>
-                                    <td className="px-6 py-3 whitespace-nowrap">{pcl.nama_petugas}</td>
-                                    <td className="px-6 py-3 whitespace-nowrap">{pcl.volum}</td>
-                                    <td className="px-6 py-3 whitespace-nowrap">{new Intl.NumberFormat("id-ID").format(pcl.harga_per_satuan)}</td>
-                                    <td className="px-6 py-3 whitespace-nowrap font-medium text-gray-700">
+                                    <td className="whitespace-nowrap text-center">{index + 1}.</td>
+                                    <td className="whitespace-nowrap">{pcl.nama_petugas}</td>
+                                    <td className="whitespace-nowrap text-center">{pcl.volum}</td>
+                                    <td className="whitespace-nowrap text-center">{new Intl.NumberFormat("id-ID").format(pcl.harga_per_satuan)}</td>
+                                    <td className="whitespace-nowrap text-center font-medium text-gray-700">
                                       {new Intl.NumberFormat("id-ID").format(pcl.jumlah)}
                                     </td>
-                                    <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                    <td className="text-center whitespace-nowrap text-right text-sm font-medium space-x-2">
                                       <Button
-                                        onClick={() => deleteData(pcl.id)}
+                                        onClick={() => handleOpenDialog("mitra",pcl.id)}
                                         className=""
                                         variant="destructive"
                                         size="sxl"
@@ -335,9 +342,17 @@ export default function HonorBulanan() {
                           <div className="text-gray-400 italic">Tidak ada data petugas</div>
                         )}
 
+                        <AlertDialog
+                          open={open}
+                          title="Konfirmasi Hapus"
+                          content="Apakah Anda yakin ingin menghapus data ini?"
+                          handleClose={() => setOpen(false)}
+                          handleConfirm={handleConfirmDelete}
+                        />
+
                         <div className="flex items-center gap-4">
                           <div
-                            onClick={() => handleDeleteKegiatan(kegiatan.id)}
+                            onClick={() => handleOpenDialog("kegiatan",kegiatan.id)}
                             className="w-fit flex items-center gap-2 pt-4 cursor-pointer hover:underline text-red-600"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

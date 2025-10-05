@@ -65,8 +65,7 @@ export default function Index() {
 
   return (
     <>
-      {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>
-        {errMsg}
+      {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>{errMsg}
       </Alert>}
       {isLoading && (
         <Box sx={{ width: '100%', position:'absolute' }}>

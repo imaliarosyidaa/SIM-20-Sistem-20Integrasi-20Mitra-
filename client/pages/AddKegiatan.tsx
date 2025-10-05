@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Kegiatan } from "@/interfaces/types";
-import kegiatanApi from "@/lib/kegiatanApi";
-import useAuth from "@/hooks/use-auth";
 import useKegiatanApi from "@/lib/kegiatanApi";
+import { Alert } from "@mui/material";
 
 export default function AddKegiatan() {
   const [formData, setFormData] = useState<Kegiatan>({
@@ -18,7 +17,7 @@ export default function AddKegiatan() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const {createKegiatan} = useKegiatanApi();
+  const { createKegiatan } = useKegiatanApi();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -35,7 +34,7 @@ export default function AddKegiatan() {
     setSuccess(null);
 
     try {
-      const response = await createKegiatan(formData);
+      await createKegiatan(formData);
       setSuccess("Kegiatan berhasil ditambahkan!");
       setFormData({
         nama_survei_sobat: "",
@@ -46,9 +45,10 @@ export default function AddKegiatan() {
         tim: "",
         kegiatan: "",
       });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      console.error("Gagal menambahkan kegiatan:", err);
-      setError("Gagal menambahkan kegiatan. Silakan coba lagi.");
+      setError(err.response?.data.message);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsLoading(false);
     }
@@ -59,13 +59,13 @@ export default function AddKegiatan() {
       <div className="bg-white shadow-md p-8 rounded-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Tambah Kegiatan</h2>
 
-        {error && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">{error}</div>}
-        {success && <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{success}</div>}
+        {error && <Alert variant="filled" severity="error" className='w-fit top-16 right-4 absolute z-10'>{error}</Alert>}
+        {success && <Alert variant="filled" severity="success" className='w-fit top-16 right-4 absolute z-10'>{success}</Alert>}
 
         <form onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Nama Survei Sobat<span className="text-red-500">*</span></label>
+              <label>Nama Survei Sobat<span className="text-red-500">*</span></label>
               <p className="text-xs text-gray-500 mb-2">Contoh: (SHK25-OUTLET) SURVEI HARGA KONSUMEN (SHK) OUTLET TAHUN 2025</p>
               <input
                 autoComplete="off"
@@ -73,20 +73,20 @@ export default function AddKegiatan() {
                 name="nama_survei_sobat"
                 value={formData.nama_survei_sobat}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-control"
                 placeholder="Masukan nama survei sobat"
                 required
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Bulan<span className="text-red-500">*</span></label>
+              <label>Bulan<span className="text-red-500">*</span></label>
 
               <select
                 name="bulan"
                 value={formData.bulan}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-select"
                 required
               >
                 <option value="Januari">Januari</option>
@@ -105,7 +105,7 @@ export default function AddKegiatan() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Nama Survei<span className="text-red-500">*</span></label>
+              <label>Nama Survei<span className="text-red-500">*</span></label>
               <p className="text-xs text-gray-500 mb-2">Contoh: Hk 2.1 Outlet</p>
               <input
                 type="text"
@@ -113,19 +113,19 @@ export default function AddKegiatan() {
                 name="nama_survei"
                 value={formData.nama_survei}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-control"
                 placeholder="Masukan nama survei"
                 required
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Tahun<span className="text-red-500">*</span></label>
+              <label>Tahun<span className="text-red-500">*</span></label>
               <select
                 name="tahun"
                 value={formData.tahun}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-select"
                 required
               >
                 <option value="2025">2025</option>
@@ -137,7 +137,7 @@ export default function AddKegiatan() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Tanggal Lapangan<span className="text-red-500">*</span></label>
+              <label>Tanggal Lapangan<span className="text-red-500">*</span></label>
               <p className="text-xs text-gray-500 mb-2">Contoh: 14-16</p>
               <input
                 type="text"
@@ -145,14 +145,14 @@ export default function AddKegiatan() {
                 autoComplete="off"
                 value={formData.tanggal}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-control"
                 placeholder="Masukan tanggal lapangan"
                 required
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Tim<span className="text-red-500">*</span></label>
+              <label>Tim<span className="text-red-500">*</span></label>
               <p className="text-xs text-gray-500 mb-2">Contoh: Harga</p>
               <input
                 type="text"
@@ -160,14 +160,14 @@ export default function AddKegiatan() {
                 autoComplete="off"
                 value={formData.tim}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-control"
                 placeholder="Masukan tim"
                 required
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-semibold mb-2">Kegiatan<span className="text-red-500">*</span></label>
+              <label>Kegiatan<span className="text-red-500">*</span></label>
               <p className="text-xs text-gray-500 mb-2">Contoh: PENDATAAN - BULAN I</p>
               <input
                 type="text"
@@ -175,7 +175,7 @@ export default function AddKegiatan() {
                 autoComplete="off"
                 value={formData.kegiatan}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="form-control"
                 placeholder="Masukan kegiatan"
                 required
               />
