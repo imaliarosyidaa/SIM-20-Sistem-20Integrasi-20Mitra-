@@ -107,3 +107,41 @@ export interface MatriksKegiatan{
 export interface File{
   file : FormData
 }
+
+export interface KeuanganForm {
+  id: number,
+  tim: string;
+  bulan_kegiatan: string;
+  group_pok: string;
+  detail: string;
+  nomor_permintaan: number;
+  deskripsi: string;
+  nomor_surat: string;
+  tipe_form: string;
+  dibuat_oleh: string;
+  jumlah_usulan: number;
+  link_scan: string;
+  bulan_pembayaran: string;
+   teknis_kirim_ke_umum: string | null; 
+}
+
+export interface KeuanganUpdateBendahara {
+    bendahara_bayar    :   string;
+    no_spp  :   string;
+    tanggal_spp :        string | null;
+}
+
+export interface KeuanganUpdatePPK {
+    ppk_cek_dokumen    :   string;
+    ppk_kirim_ke_ppspm  :   string;
+}
+
+export interface KeuanganUpdatePPSPM {
+  ppspm_cek_dokumen    :   string;
+  ppspm_kirim_ke_bendahara  :  string | null;
+}
+
+export interface KeuanganUpdateUmum{
+  rekap_bos  :   string;
+  realisasi_bos :        string;
+}

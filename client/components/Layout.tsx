@@ -74,11 +74,11 @@ const menuItems = [
       },
     ],
   },
-  // {
-  //   icon: HandCoinsIcon,
-  //   label: "Keuangan",
-  //   href: "/keuangan",
-  // },
+  {
+    icon: HandCoinsIcon,
+    label: "Keuangan",
+    href: "/keuangan",
+  },
   {
     icon: Database,
     label: "Database Mitra",
@@ -277,31 +277,17 @@ export default function Layout({ submenu }: LayoutProps) {
               </div>
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="flex items-center space-x-3 cursor-pointer">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-sm font-medium text-gray-900">
-                      Administrator
-                    </p>
-                  </div>
-                  <div className="h-8 w-8 rounded-full bg-brand-600 flex items-center justify-center">
-                    <span className="text-sm font-medium text-white">A</span>
-                  </div>
-                  <ChevronDown size={18} />
+            <div className="nav-item nav-profile dropdown">
+              <a className="nav-link dropdown-toggle flex items-center gap-2" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                <div className="nav-profile-text">
+                  <p className="mb-1 text-black">Administrator</p>
                 </div>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent className="w-48">
-                <DropdownMenuItem
-                  onClick={() => handleLogout()}
-                  className="cursor-pointer text-red-600 focus:text-red-700"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </a>
+              <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <a className="dropdown-item cursor-pointer" onClick={() => handleLogout()}>
+                  <i className="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+              </div>
+            </div>
           </div>
         </header>
 

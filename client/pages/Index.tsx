@@ -8,7 +8,8 @@ import axios from '../lib/api';
 import { Eye, EyeClosed, EyeOff } from 'lucide-react';
 import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
-import { Box, LinearProgress } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, LinearProgress } from '@mui/material';
+import { pink, purple } from '@mui/material/colors';
 const LOGIN_URL = '/auth/login';
 
 export default function Index() {
@@ -42,7 +43,8 @@ export default function Index() {
         }
       );
       const accessToken = response?.data?.access_token;
-      setAuth({ username, password, accessToken });
+      const roles = response?.data?.user?.roles
+      setAuth({ username, password, accessToken,roles });
       setUsername('');
       setpassword('');
       navigate(from, { replace: true });
@@ -59,7 +61,7 @@ export default function Index() {
         setErrMsg('Login Failed');
       }
     } finally {
-       setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -68,7 +70,7 @@ export default function Index() {
       {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>{errMsg}
       </Alert>}
       {isLoading && (
-        <Box sx={{ width: '100%', position:'absolute' }}>
+        <Box sx={{ width: '100%', position: 'absolute' }}>
           {/* Menggunakan variant="indeterminate" */}
           <LinearProgress variant="indeterminate" />
         </Box>
@@ -127,10 +129,12 @@ export default function Index() {
                         SIGN IN</a>
                     </button>
                     <div className="my-2 d-flex justify-content-between align-items-center">
-                      <div className="form-check">
-                        <label className="form-check-label text-muted">
-                          <input type="checkbox" className="form-check-input"></input> Biarkan saya tetap masuk </label>
-                      </div>
+                      <FormControlLabel control={<Checkbox sx={{
+                        color: purple[300],
+                        '&.Mui-checked': {
+                          color: purple[300],
+                        },
+                      }} />} label="Biarkan saya tetap masuk" className="form-check-label text-muted" />
                     </div>
                   </form>
                 </div>

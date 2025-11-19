@@ -12,6 +12,8 @@ const buttonVariants = cva(
         default: "btn btn-primary btn-fw",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        success:
+          "bg-emerald-600 text-destructive-foreground hover:bg-emerald-500",
         outline:
           "px-4 py-2 border border-gray-300 rounded-md text-gray-600 font-semibold text-sm uppercase hover:bg-gray-100",
         secondary:

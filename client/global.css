@@ -6,6 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #000 !important;
+}
+
 @layer base {
   /**
    * Tailwind CSS theme
