@@ -4,15 +4,19 @@ import {
 } from 'lucide-react';
 import { MatriksKegiatan } from '@/interfaces/types';
 import useKegiatanApi from '@/lib/kegiatanApi';
-import { months } from '../constants'
+import { months } from '../../constants'
+import filterApi from '@/lib/filterApi';
 
 export default function MatriksKegiatanOverview() {
   const [rekapKegiatanData, setRekapKegiatanData] = useState<MatriksKegiatan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const { getTahun } = filterApi();
+
   const { getMatriksKegiatan } = useKegiatanApi();
 
   const getRekapHonorPerBulan = useCallback(async (selectedYear) => {
@@ -21,8 +25,17 @@ export default function MatriksKegiatanOverview() {
       .finally(() => { setIsLoading(false) })
   }, [])
 
+  async function fetchTahun() {
+    getTahun().then((res) => {
+      setYears(res);
+    })
+      .catch(() => setError(true))
+      .finally(() => setIsLoading(false));
+  }
+
   useEffect(() => {
     getRekapHonorPerBulan(selectedYear)
+    fetchTahun()
   }, [selectedYear]);
 
   const resetFilters = () => {
@@ -49,8 +62,8 @@ export default function MatriksKegiatanOverview() {
             className="border rounded px-3 py-2"
           >
             {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
+              <option key={year.year} value={year.year}>
+                {year.year}
               </option>
             ))}
           </select>

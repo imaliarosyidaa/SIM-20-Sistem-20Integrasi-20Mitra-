@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios, { axiosPrivate } from '../lib/api';
+import axios, { axiosPrivate } from '../../lib/api';
 import kegaiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import useAuth from "@/hooks/use-auth";
 import filesApi from "@/lib/filesApi";
@@ -49,6 +49,7 @@ export default function UploadTemplate() {
                     setError('No Server Response');
                 } else if (err.response?.status === 400) {
                     setError(err.response?.data.message);
+                    setSelectedFile(null)
                 } else {
                     setError('Gagal Mengunggah File');
                 }
@@ -56,7 +57,7 @@ export default function UploadTemplate() {
                 setIsDataValidated(false);
                 setTimeout(() => {
                     window.location.reload();
-                }, 1500);
+                }, 3500);
             })
             .finally(() => { setIsLoading(false) })
     };
@@ -70,6 +71,9 @@ export default function UploadTemplate() {
             setSelectedFile(null);
             setPreviewData(null);
             setIsDataValidated(false);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
         })
             .catch((err) => {
                 console.error('Penyimpanan gagal:', err);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { months } from '../constants'
+import { months } from '../../constants'
 
 import {
   ChevronLeft,
@@ -14,7 +14,6 @@ import {
   MapPin,
 } from "lucide-react";
 
-// Mock data for activities
 const activities = [
   {
     id: 1,

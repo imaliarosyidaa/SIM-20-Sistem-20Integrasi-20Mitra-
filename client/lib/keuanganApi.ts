@@ -25,7 +25,7 @@ export default function useKeuanganApi(){
     }
   );
   return response.data.data;
-  },[])
+  },[axiosPrivate])
 
   const updateByPPK = useCallback( async(id:number, data: KeuanganUpdatePPK): Promise<any> => {
   const controller = new AbortController();

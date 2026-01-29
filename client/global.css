@@ -6,9 +6,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@plugin "daisyui";
+
+
 .dropdown-item:hover,
 .dropdown-item:focus {
   color: #000 !important;
+}
+
+.dropdown-menu.show {
+  display: block !important;
 }
 
 @layer base {

@@ -17,15 +17,15 @@ export default function useHonorApi(){
   return response.data.data;
   },[axiosPrivate])
 
-  const getRincianHonor = useCallback( async(): Promise<File> =>{
+  const getRincianHonor = useCallback( async(year: number): Promise<File> =>{
     const controller = new AbortController();
-      const response = await axiosPrivate.get<{ data: File }>("/honormitra",
+      const response = await axiosPrivate.get<{ data: File }>(`/honormitra?year=${year}`,
     {
         signal: controller.signal
     }
   );
   return response.data.data;
-  },[])
+  },[axiosPrivate])
 
   const getRekapHonorPerBulan = useCallback( async(selectedYear:number): Promise<any> => {
   const controller = new AbortController();

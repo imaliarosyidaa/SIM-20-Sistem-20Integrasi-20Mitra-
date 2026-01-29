@@ -57,9 +57,9 @@ export default function useKegiatanMitraApi(){
   return response.data.data;
   },[axiosPrivate])
 
-  const getKegiatanById = useCallback(async(id: number): Promise<any>=>{
+  const getKegiatanById = useCallback(async(id: number,year:number, month:string): Promise<any>=>{
     const controller = new AbortController()
-    const response = await axiosPrivate.get(`/kegiatanmitra/${id}`,
+    const response = await axiosPrivate.get(`/kegiatanmitra/${id}?year=${year}&month=${month}`,
     {
       signal : controller.signal
     });

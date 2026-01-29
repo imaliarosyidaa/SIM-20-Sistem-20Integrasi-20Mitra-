@@ -8,7 +8,7 @@ export default function AddKegiatan() {
     nama_survei_sobat: "",
     bulan: "Januari",
     nama_survei: "",
-    tahun: 2025,
+    tahun: null,
     tanggal: "",
     tim: "",
     kegiatan: "",
@@ -25,6 +25,7 @@ export default function AddKegiatan() {
       ...prevData,
       [name]: value,
     }));
+    console.log(formData)
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +41,7 @@ export default function AddKegiatan() {
         nama_survei_sobat: "",
         bulan: "Januari",
         nama_survei: "",
-        tahun: 2025,
+        tahun: null,
         tanggal: "",
         tim: "",
         kegiatan: "",
@@ -81,7 +82,7 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label>Bulan<span className="text-red-500">*</span></label>
-
+              <p className="text-xs text-gray-500 mb-2">Pilih salah satu</p>
               <select
                 name="bulan"
                 value={formData.bulan}
@@ -121,19 +122,17 @@ export default function AddKegiatan() {
 
             <div className="flex flex-col">
               <label>Tahun<span className="text-red-500">*</span></label>
-              <select
+              <p className="text-xs text-gray-500 mb-2">Contoh: 2025</p>
+              <input
+                type="number"
                 name="tahun"
+                autoComplete="off"
                 value={formData.tahun}
                 onChange={handleInputChange}
-                className="form-select"
+                className="form-control"
+                placeholder="Masukan tahun"
                 required
-              >
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-              </select>
+              />
             </div>
 
             <div className="flex flex-col">

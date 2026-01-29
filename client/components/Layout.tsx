@@ -278,15 +278,10 @@ export default function Layout({ submenu }: LayoutProps) {
             </div>
 
             <div className="nav-item nav-profile dropdown">
-              <a className="nav-link dropdown-toggle flex items-center gap-2" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <div className="nav-profile-text">
-                  <p className="mb-1 text-black">Administrator</p>
+                  <Link className="dropdown-item cursor-pointer" onClick={() => handleLogout()} to={""}>
+                    <i className="mdi mdi-logout me-2 text-primary"></i> Keluar </Link>
                 </div>
-              </a>
-              <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                <a className="dropdown-item cursor-pointer" onClick={() => handleLogout()}>
-                  <i className="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-              </div>
             </div>
           </div>
         </header>

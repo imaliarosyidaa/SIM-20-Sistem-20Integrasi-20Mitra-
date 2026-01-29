@@ -5,26 +5,30 @@ import useAuth from "@/hooks/use-auth";
 import useHonorApi from "@/lib/honorApi";
 import useFilesApi from "@/lib/filesApi";
 import { RotateCcw } from "lucide-react";
-import { months } from '../constants'
+import { months } from '../../constants'
 import useKegiatanMitraApi from "@/lib/kegaiatanMitraApi";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import useKegiatanApi from "@/lib/kegiatanApi";
-import circle_image from '../assets/circle.svg'
+import circle_image from '../../assets/circle.svg'
 import clsx from "clsx";
+import filterApi from "@/lib/filterApi";
 
-export default function Index() {
+export default function Dashboard() {
 
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const currentYear = new Date().getFullYear();
   const [idSobat, setIdSobat] = useState('');
+
+  const currentYear = new Date().getFullYear();
+  const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const { getTahun } = filterApi();
+
   const [selectedMonth, setSelectedMonth] = useState('');
   const [rekapHonorPerBulan, setRekapHonorPerBulan] = useState([]);
   const [rincianKegiatan, setRincianKegiatan] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [honorPerbulan, setHonorPerBulan] = useState([])
   const [kegiatanMitra, setKegiatanMitra] = useState([])
   const [kegiatanByTim, setKegiatanByTim] = useState([])
@@ -97,17 +101,25 @@ export default function Index() {
     getKegiatanByTim(selectedYear, month, sobatId).then((res) => {
       setKegiatanByTim(res.grouped)
       setTotalKegiatan(res.total)
-      console.log(res.total)
     }).catch((err) => {
       console.error("gagal mengambil data", err);
     })
       .finally(() => { setIsLoading(false) })
   }, [selectedMonth]);
 
+  async function fetchTahun() {
+    getTahun().then((res) => {
+      setYears(res);
+    })
+      .catch()
+      .finally(() => setIsLoading(false));
+  }
+
   useEffect(() => {
     if (selectedMonth && selectedMonth) {
       getRekapHonorPerBulanData(selectedYear, selectedMonth, idSobat)
     }
+    fetchTahun()
     getHonorTop10Data(selectedYear, selectedMonth);
     getRincianHonorMitraData(selectedYear, selectedMonth, idSobat);
     getKegiatanByTimData(selectedYear, selectedMonth, idSobat);
@@ -184,8 +196,8 @@ export default function Index() {
             className="border rounded px-3 py-2"
           >
             {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
+              <option key={year.year} value={year.year}>
+                {year.year}
               </option>
             ))}
           </select>

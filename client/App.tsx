@@ -8,19 +8,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import MatriksKegiatanOverview from "./pages/MatriksKegiatanOverview";
-import RekapHonor from "./pages/RekapHonor";
-import HonorBulanan from "./pages/HonorBulanan";
-import DatabaseMitra from "./pages/DatabaseMitra";
-import EvaluasiMitra from "./pages/EvaluasiMitra";
+import MatriksKegiatanOverview from "./pages/matriks";
+import RekapHonor from "./pages/rekap-honor";
+import HonorBulanan from "./pages/honor-bulanan";
+import DatabaseMitra from "./pages/database";
+import EvaluasiMitra from "./pages/evaluasi";
 import NotFound from "./pages/NotFound";
-import UploadTemplate from "./pages/UploadTemplate";
-import AddKegiatan from "./pages/AddKegiatan";
+import UploadTemplate from "./pages/honor-bulanan/upload-template";
+import AddKegiatan from "./pages/honor-bulanan/add-kegiatan";
 import { AuthProvider } from "./context/AuthProvider";
 import PersistLogin from "./components/PersistLogin";
-import Dashboard from "./pages/Dashboard";
-import Keuangan from "./pages/Keuangan";
-
+import Dashboard from "./pages/dashboard";
+import Keuangan from "./pages/keuangan";
 
 const queryClient = new QueryClient();
 

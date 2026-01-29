@@ -12,12 +12,12 @@ import { Link } from "react-router-dom";
 import ComboBox from "@/components/combobox";
 import Skeleton from 'react-loading-skeleton'
 import { KegiatanMitraResponse } from "@/interfaces/types";
-import useAuth from "@/hooks/use-auth";
 import useUserApi from "@/lib/userApi";
 import useKegiatanMitraApi from "@/lib/kegaiatanMitraApi";
-import { months } from '../constants'
+import { months } from '../../constants'
 import useKegiatanApi from "@/lib/kegiatanApi";
 import { AlertDialog } from "@/components/alertdialog";
+import filterApi from "@/lib/filterApi";
 
 
 export default function HonorBulanan() {
@@ -27,11 +27,16 @@ export default function HonorBulanan() {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [expandedInputRows, setExpandedInputRows] = useState<number[]>([]);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const currentYear = new Date().getFullYear();
+
+  const [years, setYears] = useState<any[]>([]);
+  const [selectedYear, setSelectedYear] = useState('');
+  const { getTahun } = filterApi();
+
   const [tim, setTim] = useState('');
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   const [selectedMonth, setSelectedMonth] = useState('');
+  const { getAllUsers } = useUserApi();
+  const { deleteKegiatan } = useKegiatanApi();
+  const { getKegiatanMitra, createKegiatanMitra, deleteKegiatanMitra } = useKegiatanMitraApi();
   const [formData, setFormData] = useState({
     volum: "",
     harga_per_satuan: "",
@@ -47,10 +52,6 @@ export default function HonorBulanan() {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = kegiatanMitra?.slice(indexOfFirstRow, indexOfLastRow);
-  const { auth } = useAuth();
-  const { getAllUsers } = useUserApi();
-  const { deleteKegiatan } = useKegiatanApi();
-  const { getKegiatanMitra, createKegiatanMitra, deleteKegiatanMitra } = useKegiatanMitraApi();
 
   const goToPage = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -96,8 +97,17 @@ export default function HonorBulanan() {
       .finally(() => setIsLoading(false));
   }
 
+  async function fetchTahun() {
+    getTahun().then((res) => {
+      setYears(res);
+    })
+      .catch(() => setError(true))
+      .finally(() => setIsLoading(false));
+  }
+
   useEffect(() => {
     fetchData(selectedYear, selectedMonth, tim);
+    fetchTahun()
   }, [selectedYear, selectedMonth, tim]);
 
 
@@ -175,8 +185,6 @@ export default function HonorBulanan() {
     setTarget({ type: "", id: null });
   };
 
-  
-
   async function handleDeleteKegiatan(id: number) {
     setIsLoading(true)
     deleteKegiatan(id)
@@ -190,7 +198,7 @@ export default function HonorBulanan() {
   }
 
   const resetFilters = () => {
-    setSelectedYear(currentYear);
+    setSelectedYear('');
     setSelectedMonth('')
   };
 
@@ -215,15 +223,18 @@ export default function HonorBulanan() {
               id="tahun"
               value={selectedYear}
               onChange={(e) => {
-                const year = Number(e.target.value);
+                const year = e.target.value;
                 setSelectedYear(year);
-                getKegiatanMitra(year, selectedMonth, tim);
+                getKegiatanMitra(Number(year), selectedMonth, tim);
               }}
               className="border rounded px-3 py-2"
             >
+              <option value={''}>
+                Pilih Tahun
+              </option>
               {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
+                <option key={year.year} value={year.year}>
+                  {year.year}
                 </option>
               ))}
             </select>
@@ -233,11 +244,11 @@ export default function HonorBulanan() {
               onChange={(e) => {
                 const month = e.target.value;
                 setSelectedMonth(month);
-                getKegiatanMitra(selectedYear, month, tim);
+                getKegiatanMitra(Number(selectedYear), month, tim);
               }}
               className="border rounded px-3 py-2"
             >
-              <option>
+              <option value={''}>
                 Pilih Bulan
               </option>
               {months.map((month) => (
@@ -307,6 +318,7 @@ export default function HonorBulanan() {
                                 <tr>
                                   <th className="p-2 text-center">No.</th>
                                   <th className="p-2">Nama Petugas</th>
+                                  <th className="p-2">Satuan</th>
                                   <th className="p-2 text-center">Volume</th>
                                   <th className="p-2 text-center">Harga per Satuan</th>
                                   <th className="p-2 text-center">Jumlah</th>
@@ -318,6 +330,7 @@ export default function HonorBulanan() {
                                   <tr key={index} className="hover:bg-gray-50 transition">
                                     <td className="whitespace-nowrap text-center">{index + 1}.</td>
                                     <td className="whitespace-nowrap">{pcl.nama_petugas}</td>
+                                    <td className="whitespace-nowrap">{pcl.satuan}</td>
                                     <td className="whitespace-nowrap text-center">{pcl.volum}</td>
                                     <td className="whitespace-nowrap text-center">{new Intl.NumberFormat("id-ID").format(pcl.harga_per_satuan)}</td>
                                     <td className="whitespace-nowrap text-center font-medium text-gray-700">
@@ -325,7 +338,7 @@ export default function HonorBulanan() {
                                     </td>
                                     <td className="text-center whitespace-nowrap text-right text-sm font-medium space-x-2">
                                       <Button
-                                        onClick={() => handleOpenDialog("mitra",pcl.id)}
+                                        onClick={() => handleOpenDialog("mitra", pcl.id)}
                                         className=""
                                         variant="destructive"
                                         size="sxl"
@@ -352,10 +365,10 @@ export default function HonorBulanan() {
 
                         <div className="flex items-center gap-4">
                           <div
-                            onClick={() => handleOpenDialog("kegiatan",kegiatan.id)}
+                            onClick={() => handleOpenDialog("kegiatan", kegiatan.id)}
                             className="w-fit flex items-center gap-2 pt-4 cursor-pointer hover:underline text-red-600"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
                               <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                               <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                             </svg>

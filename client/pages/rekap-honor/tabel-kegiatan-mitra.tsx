@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useKegiatanMitraApi from '../lib/kegaiatanMitraApi';
+import useKegiatanMitraApi from '../../lib/kegaiatanMitraApi';
+import filterApi from '@/lib/filterApi';
 
 export default function KegiatanMitraTable() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -9,9 +10,12 @@ export default function KegiatanMitraTable() {
     const [expandedRowData, setExpandedRowData] = useState([]);
     const [isLoadingExpandedRow, setIsLoadingExpandedRow] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+    const [years, setYears] = useState<any[]>([]);
     const [selectedYear, setSelectedYear] = useState(currentYear);
+    const { getTahun } = filterApi();
+
     const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
     const { getKegiatanById, getJumlahKegiatanMitra } = useKegiatanMitraApi()
 
@@ -34,10 +38,9 @@ export default function KegiatanMitraTable() {
         setCurrentPage(1);
     };
 
-    const getKegiatanByIdData = async (id) => {
+    const getKegiatanByIdData = async (id, selectedYear, month) => {
         setIsLoadingExpandedRow(true);
-
-        getKegiatanById(id).then((res) => {
+        getKegiatanById(id, selectedYear, month).then((res) => {
             setExpandedRowData(res.KegiatanMitra);
         })
             .catch((err) => {
@@ -50,13 +53,21 @@ export default function KegiatanMitraTable() {
             })
     };
 
+    async function fetchTahun() {
+        getTahun().then((res) => {
+            setYears(res);
+        })
+            .catch()
+            .finally(() => setIsLoading(false));
+    }
+
     const handleRowClick = (id) => {
         if (expandedRow === id) {
             setExpandedRow(null);
             setExpandedRowData([]);
         } else {
             setExpandedRow(id);
-            getKegiatanByIdData(id);
+            getKegiatanByIdData(id, selectedYear, "");
         }
     };
 
@@ -74,6 +85,7 @@ export default function KegiatanMitraTable() {
 
     useEffect(() => {
         getJumlahKegiatanMitraData(currentYear)
+        fetchTahun()
     }, []);
 
     return (
@@ -93,8 +105,8 @@ export default function KegiatanMitraTable() {
                         className="border rounded px-3 py-2"
                     >
                         {years.map((year) => (
-                            <option key={year} value={year}>
-                                {year}
+                            <option key={year.year} value={year.year}>
+                                {year.year}
                             </option>
                         ))}
                     </select>
