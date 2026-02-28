@@ -57,6 +57,16 @@ export default function useKegiatanMitraApi(){
   return response.data.data;
   },[axiosPrivate])
 
+  const editKegiatanMitra = useCallback( async(payload: any) =>{
+    const controller = new AbortController()
+
+    const response = await axiosPrivate.patch<{data: KegiatanMitraResponse}>("/kegiatanmitra",payload,
+    {
+      signal: controller.signal
+    });
+  return response.data.data;
+  },[axiosPrivate])
+
   const getKegiatanById = useCallback(async(id: number,year:number, month:string): Promise<any>=>{
     const controller = new AbortController()
     const response = await axiosPrivate.get(`/kegiatanmitra/${id}?year=${year}&month=${month}`,
@@ -88,6 +98,18 @@ export default function useKegiatanMitraApi(){
   return response.data.data;
   },[axiosPrivate])
 
+  const downloadKegiatanExcel = useCallback( async(columns: string[], sortBy: string, sortOrder: string, filterBy: string): Promise<any> => {
+  const controller = new AbortController();
+
+    const response = await axiosPrivate.get<{data: KegiatanMitraResponse[]}>(`/kegiatanmitra/download?columns=${columns.join(',')}&sortBy=${sortBy}&sortOrder=${sortOrder}&filterBy=${filterBy}`,
+    {
+      signal: controller.signal
+    });
+    console.log("Response dari downloadKegiatanExcel:", response);
+  return response.data;
+
+  },[axiosPrivate])
+
   return {
     unggahFileTemplate,
     kirimFileTemplate,
@@ -96,6 +118,8 @@ export default function useKegiatanMitraApi(){
     createKegiatanMitra,
     getKegiatanById,
     getJumlahKegiatanMitra,
-    getRincianKegiatanMitra
+    getRincianKegiatanMitra,
+    downloadKegiatanExcel,
+    editKegiatanMitra
   }
 }

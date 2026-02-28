@@ -13,7 +13,7 @@ export default function KegiatanMitraTable() {
 
     const currentYear = new Date().getFullYear();
     const [years, setYears] = useState<any[]>([]);
-    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [selectedYear, setSelectedYear] = useState(Number(currentYear).toString());
     const { getTahun } = filterApi();
 
     const [mitraxkegaiatan, setMitraXKegiatan] = useState([]);
@@ -95,20 +95,23 @@ export default function KegiatanMitraTable() {
                 {/* Search Input */}
                 <div className='flex gap-4'>
                     <select
-                        id="tahun"
-                        value={selectedYear}
-                        onChange={(e) => {
-                            const year = Number(e.target.value);
-                            setSelectedYear(year);
-                            getJumlahKegiatanMitra(year);
-                        }}
-                        className="border rounded px-3 py-2"
+                      id="tahun"
+                      value={selectedYear}
+                      onChange={(e) => {
+                        const year = e.target.value;
+                        setSelectedYear(year);
+                        getJumlahKegiatanMitra(Number(year));
+                      }}
+                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        {years.map((year) => (
-                            <option key={year.year} value={year.year}>
-                                {year.year}
-                            </option>
-                        ))}
+                      <option value={''}>
+                        Pilih Tahun
+                      </option>
+                      {years.map((year, index) => (
+                        <option key={index} value={year.year}>
+                          {year.year}
+                        </option>
+                      ))}
                     </select>
                     <input
                         type="text"

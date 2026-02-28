@@ -20,6 +20,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import PersistLogin from "./components/PersistLogin";
 import Dashboard from "./pages/dashboard";
 import Keuangan from "./pages/keuangan";
+import DownloadKegiatanMitra from "./pages/honor-bulanan/download-kegiatan-mitra";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,9 @@ const App = () => (
               </Route>
               <Route element={<Layout />}>
                 <Route path="/upload-template" element={<UploadTemplate />} />
+              </Route>
+              <Route element={<Layout />}>
+                <Route path="/download-data" element={<DownloadKegiatanMitra />} />
               </Route>
               <Route element={<Layout />}>
                 <Route path="/keuangan" element={<Keuangan />} />

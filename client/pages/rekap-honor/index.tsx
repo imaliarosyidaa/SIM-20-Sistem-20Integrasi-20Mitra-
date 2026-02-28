@@ -16,7 +16,7 @@ export default function RekapHonor() {
 
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedYear, setSelectedYear] = useState(Number(currentYear).toString());
   const { getTahun } = filterApi();
 
   const batasHonor = 3226000;
@@ -50,7 +50,7 @@ export default function RekapHonor() {
       };
     }
     return {
-      className: 'truncate text-black font-normal hover:bg-gray-100 transition-colors duration-100 cursor-pointer',
+      className: 'truncate text-gray-900 font-normal hover:bg-gray-50 transition-colors duration-100 cursor-pointer',
     };
   };
 
@@ -217,8 +217,8 @@ export default function RekapHonor() {
     <nav className="flex space-x-8 px-4 lg:px-6">
       <button
         onClick={() => setActiveTab("rincian")}
-        className={`py-4 flex items-center gap-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rincian"
-          ? "border-brand-500 text-brand-600"
+        className={`py-2 flex items-center gap-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rincian"
+          ? "border-blue-600 text-blue-700"
           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
           }`}
       >
@@ -230,8 +230,8 @@ export default function RekapHonor() {
       </button>
       <button
         onClick={() => setActiveTab("rekap")}
-        className={`py-4 flex gap-2 items-center px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rekap"
-          ? "border-brand-500 text-brand-600"
+        className={`py-2 flex gap-2 items-center px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "rekap"
+          ? "border-blue-600 text-blue-700"
           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
           }`}
       >
@@ -291,8 +291,8 @@ export default function RekapHonor() {
   }
   return (
     <>
-      <div className="space-y-6 p-6">
-        <div className="border-b bg-gray-100 border-gray-200 sticky top-14 z-10 mb-6">
+      <div className="space-y-4 p-4 bg-gray-50 min-h-screen">
+        <div className="border-b bg-white border-gray-200 sticky top-14 z-10 mb-4">
           {submenuTabs}
         </div>
         <div>
@@ -301,19 +301,22 @@ export default function RekapHonor() {
               <main className="flex-1 overflow-y-auto">
                 <div className="mb-8">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">Bulan</h3>
+                    <h3 className="text-sm font-semibold text-gray-700">Pilih Bulan</h3>
                     <select
                       id="tahun"
                       value={selectedYear}
                       onChange={(e) => {
-                        const year = Number(e.target.value);
+                        const year = e.target.value;
                         setSelectedYear(year);
-                        getRekapHonorPerBulan(year);
+                        getRekapHonorPerBulan(Number(year));
                       }}
-                      className="border rounded px-3 py-2"
+                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      {years.map((year) => (
-                        <option key={year.year} value={year.year}>
+                      <option value={''}>
+                        Pilih Tahun
+                      </option>
+                      {years.map((year, index) => (
+                        <option key={index} value={year.year}>
                           {year.year}
                         </option>
                       ))}
@@ -338,10 +341,11 @@ export default function RekapHonor() {
                           return (
                             <div
                               key={i}
-                              className="flex-none h-28 w-56 min-w-[12rem] bg-purple-100 p-4 rounded-lg border-2 border-purple-400"
+                              className="flex-none h-28 w-56 min-w-[12rem] bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 cursor-pointer transition-all hover:shadow-md"
+                              onClick={() => setSelectedMonth(month)}
                             >
-                              <h4 className="font-bold text-purple-700 mb-2">{month}</h4>
-                              <div className="flex items-center text-xl font-semibold text-purple-500 bg-white px-2 rounded-lg">
+                              <h4 className="font-semibold text-blue-700 mb-1 text-sm">{month}</h4>
+                              <div className="flex items-center text-sm font-mono font-semibold text-blue-700 bg-white px-2 py-1 rounded">
                                 Rp {(monthData?.total || 0).toLocaleString("id-ID")}
                               </div>
                             </div>
@@ -367,7 +371,7 @@ export default function RekapHonor() {
                               setActiveIndex(i);
                             }
                           }}
-                          className={`w-3 h-3 mx-1 rounded-full transition-colors duration-300 ${i === activeIndex % 5 ? "bg-purple-700" : "bg-gray-400"
+                          className={`w-3 h-3 mx-1 rounded-full transition-colors duration-300 ${i === activeIndex % 5 ? "bg-blue-600" : "bg-gray-400"
                             }`}
                         ></button>
                       ))}
@@ -381,19 +385,22 @@ export default function RekapHonor() {
 
           {activeTab === "rincian" && (
             <div className="flex-1">
-              <div className="justify-end flex mb-2">
+              <div className="justify-end flex mb-3">
                 <select
                   id="tahun"
                   value={selectedYear}
                   onChange={(e) => {
-                    const year = Number(e.target.value);
+                    const year = e.target.value;
                     setSelectedYear(year);
-                    getRincianHonorData(year);
+                    getRincianHonorData(Number(year));
                   }}
-                  className="border rounded px-3 py-2"
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  {years.map((year) => (
-                    <option key={year.year} value={year.year}>
+                  <option value={''}>
+                    Pilih Tahun
+                  </option>
+                  {years.map((year, index) => (
+                    <option key={index} value={year.year}>
                       {year.year}
                     </option>
                   ))}
@@ -402,19 +409,19 @@ export default function RekapHonor() {
               <Table columns={columns} data={detailHonorData} getCellProps={getCellClassName} isLoading={isLoading} />
               {expandedSection && (
                 <div className="col">
-                  <h4 className="mb-3">Rincian Kegiatan Mitra <span className="bg-blue py-1 px-2 rounded">{dataMitra?.namaLengkap}</span> bulan <span className="bg-blue py-1 px-2 rounded">{month}</span> </h4>
+                  <h4 className="mb-3 text-sm font-semibold text-gray-700">Rincian Kegiatan Mitra <span className="bg-blue-100 text-blue-700 py-1 px-2 rounded text-xs font-medium">{dataMitra?.namaLengkap}</span> bulan <span className="bg-blue-100 text-blue-700 py-1 px-2 rounded text-xs font-medium">{month}</span> </h4>
                   <div className="mt-2 mb-4">
-                    <div className="shadow-md sm:rounded-lg bg-white rounded-md block">
+                    <div className="bg-white rounded-lg border border-gray-300 block overflow-hidden">
                       <table className="text-sm w-full text-sm text-left dark:text-gray-400">
-                        <thead className="text-normal uppercase bg-[#FA4F58] text-black dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                        <thead className="text-xs uppercase bg-blue-600 text-white dark:bg-blue-600 dark:text-white sticky top-0">
                           <tr>
-                            <th scope="col" className="px-4 py-3">No.</th>
-                            <th scope="col" className="px-4 py-3">Kegiatan</th>
-                            <th scope="col" className="px-2 py-3">Tim</th>
-                            <th scope="col" className="px-2 py-3">Volume</th>
-                            <th scope="col" className="px-2 py-3">Satuan</th>
-                            <th scope="col" className="px-2 py-3">Harga Per Satuan</th>
-                            <th scope="col" className="px-4 py-3">Honor</th>
+                            <th scope="col" className="px-3 py-2 text-xs font-semibold">No.</th>
+                            <th scope="col" className="px-3 py-2 text-xs font-semibold">Kegiatan</th>
+                            <th scope="col" className="px-2 py-2 text-xs font-semibold">Tim</th>
+                            <th scope="col" className="px-2 py-2 text-xs font-semibold">Volume</th>
+                            <th scope="col" className="px-2 py-2 text-xs font-semibold">Satuan</th>
+                            <th scope="col" className="px-2 py-2 text-xs font-semibold">Harga Per Satuan</th>
+                            <th scope="col" className="px-3 py-2 text-xs font-semibold">Honor</th>
                           </tr>
                         </thead>
                         <tbody className="overflow-y-auto">
@@ -440,27 +447,27 @@ export default function RekapHonor() {
                           ) : rincianTable?.length > 0 ? (
                             <>
                               {rincianTable?.map((kegmitra, index) => (
-                                <tr key={index} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                  <td className="px-4 py-2 text-normal font-medium">{index + 1}.</td>
-                                  <td className="px-4 py-2 text-normal font-medium">{kegmitra.nama_survei_sobat}</td>
-                                  <td className="px-2 py-2 text-normal font-medium">{kegmitra.tim}</td>
-                                  <td className="px-2 py-2 text-normal font-medium">{kegmitra.volum}</td>
-                                  <td className="px-2 py-2 text-normal font-medium">{kegmitra.satuan}</td>
-                                  <td className="px-2 py-2 text-normal font-medium">{toRupiah(kegmitra.harga_per_satuan)}</td>
-                                  <td className="px-4 py-2 text-normal font-medium">{toRupiah(kegmitra.jumlah)}</td>
+                                <tr key={index} className="border-b border-gray-300 hover:bg-gray-50">
+                                  <td className="px-3 py-1 text-xs font-medium text-gray-900">{index + 1}.</td>
+                                  <td className="px-3 py-1 text-xs font-medium text-gray-900">{kegmitra.nama_survei_sobat}</td>
+                                  <td className="px-2 py-1 text-xs font-medium text-gray-900">{kegmitra.tim}</td>
+                                  <td className="px-2 py-1 text-xs font-medium text-gray-900">{kegmitra.volum}</td>
+                                  <td className="px-2 py-1 text-xs font-medium text-gray-900">{kegmitra.satuan}</td>
+                                  <td className="px-2 py-1 text-xs font-mono text-gray-900">{toRupiah(kegmitra.harga_per_satuan)}</td>
+                                  <td className="px-3 py-1 text-xs font-mono font-semibold text-gray-900">{toRupiah(kegmitra.jumlah)}</td>
                                 </tr>
                               ))}
 
-                              <tr className="font-bold">
+                              <tr className="font-semibold bg-gray-50 border-t border-gray-300">
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td className="px-2 py-2">
+                                <td className="px-2 py-1 text-xs">
                                   TOTAL
                                 </td>
-                                <td className="px-4 py-2 text-normal">
+                                <td className="px-3 py-1 text-xs font-mono text-gray-900">
                                   {toRupiah(totalHonor)}
                                 </td>
                               </tr>

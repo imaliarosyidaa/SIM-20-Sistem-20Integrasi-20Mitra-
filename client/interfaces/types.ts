@@ -53,6 +53,12 @@ export interface Kegiatan{
   nama_survei_sobat : string,
   kegiatan   : string,
   tahun : number,
+  judul : string,
+  hari : string,
+  tanggal_mulai : Date | null,
+  hari_selesai : string,
+  tanggal_selesai :  | null,
+  jenis_kegiatan : string
 }
 
 export interface KegiatanMitra {
@@ -74,6 +80,11 @@ export interface KegiatanMitra {
   konfirmasi: string;
   flag_sobat: string;
   kegiatanId: string;
+  no_kontrak_spk:  string
+  no_kontrak_bast: string
+  no_urut_mitra: number;
+  kecamatan: string;
+  mitra: User
 }
 
 export interface KegiatanMitraResponse{
@@ -85,6 +96,12 @@ export interface KegiatanMitraResponse{
   nama_survei_sobat: string;
   kegiatan: string;
   tahun: number;
+  judul: string;
+  hari: string;
+  tanggal_mulai: Date | null;
+  hari_selesai: string;
+  tanggal_selesai: Date | null;
+  jenis_kegiatan: string;
   mitra : KegiatanMitra[]
 }
 

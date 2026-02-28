@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
+import { useClickOutside } from "./useClickOutside.hook";
 
 type ComboBoxProps<T> = {
   data: T[];
-  labelKey: keyof T;
+  labelKey: (keyof T)[];
   valueKey: keyof T;
+  value?: any;
   placeholder?: string;
   onChange?: (value: T) => void;
 };
@@ -13,26 +15,55 @@ export default function ComboBox<T extends object>({
   data,
   labelKey,
   valueKey,
+  value,
   placeholder = "Select...",
   onChange,
 }: ComboBoxProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<T | null>(null);
+  const domNode = useClickOutside(() => {
+    setIsOpen(false);
+  });
 
-  const filtered = data?.filter((item) =>
-    String(item[labelKey]).toLowerCase().includes(query.toLowerCase())
+  const filtered = data?.filter((item) => {
+    try {
+      return labelKey.some(key => String(item[key]).toLowerCase().includes(query.toLowerCase()));
+    } catch (error) {
+      console.error("Error filtering combobox items:", error);
+      return false;
+    }
+  }
   );
+
+  React.useEffect(() => {
+    if (value && data?.length > 0) {
+      const item = data.find((d) => String(d[valueKey]) === String(value));
+      if (item) {
+        setSelected(item);
+        const label = labelKey.map((k) => String(item[k])).join(" - ");
+        setQuery(label);
+      }
+    } else if (!value) {
+      setSelected(null);
+      setQuery("");
+    }
+  }, [value, data]);
 
   const handleSelect = (item: T) => {
     setSelected(item);
-    setQuery(String(item[labelKey]));
+
+    const displayLabel = labelKey
+      .map((key) => String(item[key]))
+      .join(" - ");
+
+    setQuery(displayLabel);
     setIsOpen(false);
     if (onChange) onChange(item);
   };
 
   return (
-    <div className="relative">
+    <div ref={domNode} className="relative">
       <Input
         type="text"
         className="py-2.5 sm:py-3 ps-4 pe-9 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
@@ -93,7 +124,9 @@ export default function ComboBox<T extends object>({
                 className="cursor-pointer py-2 px-4 text-sm text-gray-800 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
                 onClick={() => handleSelect(item)}
               >
-                {String(item[labelKey])}
+                {labelKey
+                  .map((key) => String(item[key]))
+                  .join(" - ")}
               </div>
             ))
           ) : (

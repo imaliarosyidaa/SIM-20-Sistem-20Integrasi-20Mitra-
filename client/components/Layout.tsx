@@ -28,14 +28,6 @@ import {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from "@/components/ui/breadcrumb";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
 import useLogout from "@/hooks/use-logout";
 import { Box, LinearProgress } from "@mui/material";
 
@@ -64,6 +56,14 @@ const menuItems = [
     label: "Tim Kegiatan",
     href: "/honor-bulanan",
     children: [
+      {
+        label: "Kegiatan Mitra",
+        href: "/honor-bulanan",
+      },
+      {
+        label: "Download Data",
+        href: "/download-data",
+      },
       {
         label: "Upload Template Kegiatan",
         href: "/upload-template",
@@ -105,15 +105,21 @@ const findPath = (items, pathname, parents = []) => {
 
 export default function Layout({ submenu }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const location = useLocation();
 
-  const sidebarWidth = sidebarCollapsed ? "w-16" : "w-52";
-  const mainMargin = sidebarCollapsed ? "lg:pl-16" : "lg:pl-52";
+  const mainMargin = "lg:pl-64";
   const currentPath = findPath(menuItems, location.pathname);
   const navigate = useNavigate();
   const logout = useLogout();
   const [isLoading, setIsLoading] = useState(false)
+
+  const toggleExpanded = (href: string) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [href]: !prev[href]
+    }));
+  };
 
   async function handleLogout() {
     await logout();
@@ -149,89 +155,123 @@ export default function Layout({ submenu }: LayoutProps) {
         </div>
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Kafka UI Style Exact */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 transform bg-gradient-to-b from-brand-600 to-brand-800 transition-all duration-300 lg:translate-x-0",
-          sidebarWidth,
+          "fixed inset-y-0 left-0 z-50 transform bg-white border-r border-gray-200 transition-all duration-300 lg:translate-x-0 w-64",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-24 items-center justify-between my-4 mx-4">
-            <div className="flex items-center space-x-2">
-              {!sidebarCollapsed && (
-                <div className="overflow-hidden">
-                  <img
-                    alt="Your Company"
-                    src={logo}
-                    className="mx-auto h-full w-auto"
-                  />
-                </div>
-              )}
-            </div>
-
+          {/* Logo Section */}
+          <div className="flex h-14 items-center px-6 border-b border-gray-200">
+            <img
+              alt="Malowopati"
+              src={logo}
+              className="h-10 w-auto"
+            />
             {/* Mobile close button */}
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-white p-1"
+              className="lg:hidden ml-auto text-gray-600 hover:text-gray-900"
             >
-              <X className="h-5 w-5" />
-            </button>
-
-            {/* Desktop collapse toggle */}
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:block text-white hover:bg-white/10 rounded p-1 transition-colors"
-            >
-              {sidebarCollapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
+              <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-2 py-3">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.href;
+          <nav className="flex-1 overflow-y-auto px-0 py-3">
+            {/* Dashboard Section Header */}
+            <div className="px-4 mb-3">
+              <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Dashboard
+              </h3>
+            </div>
 
-              return (
-                <button
-                  key={item.href}
-                  className={cn(
-                    "group flex items-center rounded-lg px-2 py-2.5 text-sm font-medium transition-colors relative w-full",
-                    isActive
-                      ? "bg-white/20 text-white shadow-sm"
-                      : "text-blue-100 hover:bg-white/10 hover:text-white",
-                    sidebarCollapsed ? "justify-center" : "",
-                  )}
-                  onClick={() => handleMovePage(item.href)}
-                  title={sidebarCollapsed ? item.label : undefined}
-                >
-                  <Icon
-                    className={cn(
-                      "h-4 w-4 flex-shrink-0",
-                      !sidebarCollapsed && "mr-3",
+            {/* Menu Items */}
+            <div className="space-y-0">
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.href;
+                const hasChildren = item.children && item.children.length > 0;
+                const isExpanded = expandedItems[item.href];
+                const hasActiveChild = item.children?.some(child => location.pathname === child.href);
+
+                return (
+                  <div key={item.href}>
+                    {/* Divider */}
+                    <div className="border-t border-gray-200"></div>
+
+                    {/* Main Menu Item */}
+                    <button
+                      onClick={() => {
+                        if (hasChildren) {
+                          toggleExpanded(item.href);
+                        } else {
+                          handleMovePage(item.href);
+                        }
+                      }}
+                      className={cn(
+                        "w-full flex items-center justify-between px-4 py-3 text-sm transition-colors",
+                        isActive || hasActiveChild
+                          ? "bg-gray-100 text-gray-900"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      )}
+                    >
+                      <div className="flex items-center gap-3 flex-1">
+                        <Icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+
+                      {hasChildren && (
+                        <ChevronDown
+                          className={cn(
+                            "h-3.5 w-3.5 flex-shrink-0 transition-transform text-gray-400",
+                            isExpanded ? "rotate-180" : ""
+                          )}
+                        />
+                      )}
+
+                      {!hasChildren && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                      )}
+                    </button>
+
+                    {/* Submenu */}
+                    {hasChildren && isExpanded && (
+                      <div className="bg-gray-50 border-t border-b border-gray-200">
+                        {item.children?.map((child) => (
+                          <button
+                            key={child.href}
+                            onClick={() => handleMovePage(child.href)}
+                            className={cn(
+                              "w-full flex items-center pl-14 py-2.5 text-sm transition-colors",
+                              location.pathname === child.href
+                                ? "bg-gray-100 text-blue-700 font-medium"
+                                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                            )}
+                          >
+                            {child.label}
+                          </button>
+                        ))}
+                      </div>
                     )}
-                  />
-                  {!sidebarCollapsed && (
-                    <span className="truncate">{item.label}</span>
-                  )}
-
-                  {/* Tooltip for collapsed state */}
-                  {sidebarCollapsed && (
-                    <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                      {item.label}
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+                  </div>
+                );
+              })}
+            </div>
           </nav>
+
+          {/* Logout Footer */}
+          <div className="border-t border-gray-200 px-4 py-3">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 px-2 py-1.5 rounded transition-colors"
+            >
+              <LogOut className="h-3.5 w-3.5 mr-2" />
+              <span>Keluar</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -278,10 +318,10 @@ export default function Layout({ submenu }: LayoutProps) {
             </div>
 
             <div className="nav-item nav-profile dropdown">
-                <div className="nav-profile-text">
-                  <Link className="dropdown-item cursor-pointer" onClick={() => handleLogout()} to={""}>
-                    <i className="mdi mdi-logout me-2 text-primary"></i> Keluar </Link>
-                </div>
+              <div className="nav-profile-text">
+                <Link className="dropdown-item cursor-pointer" onClick={() => handleLogout()} to={""}>
+                  <i className="mdi mdi-logout me-2 text-primary"></i> Keluar </Link>
+              </div>
             </div>
           </div>
         </header>

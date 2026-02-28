@@ -1,11 +1,12 @@
 import logo from '../assets/logo-malowopati.png'
+import BackgroundParticles from '../components/BackgroundParticles';
 import { useRef, useState, useEffect } from 'react';
 import useAuth from '../hooks/use-auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 
 import axios from '../lib/api';
-import { Eye, EyeClosed, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
 import { Box, Checkbox, FormControlLabel, LinearProgress } from '@mui/material';
@@ -44,7 +45,7 @@ export default function Index() {
       );
       const accessToken = response?.data?.access_token;
       const roles = response?.data?.user?.roles
-      setAuth({ username, password, accessToken,roles });
+      setAuth({ username, password, accessToken, roles });
       setUsername('');
       setpassword('');
       navigate(from, { replace: true });
@@ -67,80 +68,156 @@ export default function Index() {
 
   return (
     <>
-      {errMsg && <Alert variant="filled" severity="error" className='w-fit top-4 right-4 absolute'>{errMsg}
-      </Alert>}
       {isLoading && (
-        <Box sx={{ width: '100%', position: 'absolute' }}>
-          {/* Menggunakan variant="indeterminate" */}
+        <Box sx={{ width: '100%', position: 'fixed', top: 0, zIndex: 9999 }}>
           <LinearProgress variant="indeterminate" />
         </Box>
       )}
-      <div className="container-scroller">
-        <div className="container-fluid page-body-wrapper full-page-wrapper">
-          <div className="content-wrapper d-flex align-items-center auth">
-            <div className="row flex-grow">
-              <div className="col-lg-4 mx-auto">
-                <div className="auth-form-light text-left p-5">
-                  <div className="brand-logo">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <BackgroundParticles />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute -top-40 right-10 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-2000"></div>
+          <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-4000"></div>
+        </div>
+
+        {/* Error Alert */}
+        {errMsg && (
+          <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top">
+            <Alert variant="filled" severity="error" className='shadow-lg'>
+              {errMsg}
+            </Alert>
+          </div>
+        )}
+
+        {/* Main Container - 3 Column Layout */}
+        <div className="grid lg:col-4 relative z-10">
+
+            {/* Center - Login Form */}
+            <div className="col-span-4 animate-in zoom-in duration-700">
+              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl bg-opacity-95">
+                {/* Top Accent Line */}
+                <div className="h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600"></div>
+
+                {/* Content */}
+                <div className="p-8 sm:p-10">
+                  {/* Logo */}
+                  <div className="mb-8 flex justify-center">
                     <img
                       alt="Logo SIM"
                       src={logo}
-                      className="mx-auto h-24 w-auto"
+                      className="lg:h-20 h-6 w-auto drop-shadow-lg hover:scale-110 transition-transform duration-300"
                     />
                   </div>
-                  <h4>Halo! Mari kita mulai.</h4>
-                  <h6 className="font-weight-light">Masuk untuk melanjutkan.</h6>
-                  <form className="pt-3" method="POST" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                      <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        required
-                        autoComplete="username"
-                        placeholder="Username"
-                        onChange={(e) => setUsername(e.target.value)}
-                        value={username}
-                        className="form-control form-control-lg"
+
+                  {/* Header Text */}
+                  <div className="text-center mb-8">
+                    <h1 className="xl:text-3xl text-md font-bold text-gray-900 mb-2">
+                      Selamat Datang
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Manajemen Pengelolaan dan Pengawasan Output Petugas Terintegrasi
+                    </p>
+                  </div>
+
+                  {/* Form */}
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Username Field */}
+                    <div className="relative">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Username
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" size={20} />
+                        <input
+                          id="username"
+                          name="username"
+                          type="text"
+                          required
+                          autoComplete="username"
+                          placeholder="Masukkan username Anda"
+                          onChange={(e) => setUsername(e.target.value)}
+                          value={username}
+                          className="w-full pl-10 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white transition-all duration-200"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Password Field */}
+                    <div className="relative">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" size={20} />
+                        <input
+                          id="password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          required
+                          autoComplete="current-password"
+                          placeholder="Masukkan password Anda"
+                          onChange={(e) => setpassword(e.target.value)}
+                          value={password}
+                          className="w-full pl-10 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white transition-all duration-200"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600 transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Remember Me */}
+                    <div className="flex items-center">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            sx={{
+                              color: '#3b82f6',
+                              '&.Mui-checked': {
+                                color: '#2563eb',
+                              },
+                            }}
+                          />
+                        }
+                        label={<span className="text-sm text-gray-700">Tetap masuk di perangkat ini</span>}
                       />
                     </div>
-                    <div className="form-group relative">
-                      <input
-                        id="password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        required
-                        autoComplete="current-password"
-                        placeholder="Paswword"
-                        onChange={(e) => setpassword(e.target.value)}
-                        value={password}
-                        className="form-control form-control-lg w-4/5 lg:w-5/6"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-gray-700 bg-white hover:bg-blue-200 pl-4 w-1/5 lg:w-1/6 border border-gray-300"
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                    <button className="mt-3 d-grid gap-2 w-full" type="submit">
-                      <a className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn grid">
-                        SIGN IN</a>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full mt-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                      {isLoading ? (
+                        <>
+                          <CircularProgress size={20} color="inherit" />
+                          <span>Sedang memproses...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={18} />
+                          <span>MASUK</span>
+                        </>
+                      )}
                     </button>
-                    <div className="my-2 d-flex justify-content-between align-items-center">
-                      <FormControlLabel control={<Checkbox sx={{
-                        color: purple[300],
-                        '&.Mui-checked': {
-                          color: purple[300],
-                        },
-                      }} />} label="Biarkan saya tetap masuk" className="form-check-label text-muted" />
-                    </div>
                   </form>
+
+                  {/* Footer Info */}
+                  <div className="mt-8 pt-6 border-t border-gray-200">
+                    <p className="text-xs text-gray-500 text-center">
+                      © 2026 Malowopati. Semua hak dilindungi.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </>

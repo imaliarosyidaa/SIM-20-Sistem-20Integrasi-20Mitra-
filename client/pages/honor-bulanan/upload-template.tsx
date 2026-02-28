@@ -129,10 +129,10 @@ export default function UploadTemplate() {
     }
 
     return (
-        <div className="space-y-6 p-6">
-            <div className="max-w-screen-lg mx-auto">
+        <div className="space-y-6 p-6 w-full">
+            <div className="max-w-none mx-auto w-full">
                 {error && <Alert variant="filled" severity="error" className='w-fit bottom-4 right-4 absolute z-10'>{error}</Alert>}
-                <div className="bg-white border rounded-md p-4 px-4 md:p-8 mb-6">
+                <div className="bg-white border rounded-md p-4 px-4 md:p-8 mb-6 w-full">
                     <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                         <div className="text-gray-600">
                             <p className="font-medium text-lg">Upload Template</p>
@@ -200,32 +200,70 @@ export default function UploadTemplate() {
                         </div>
                     </div>
                 </div>
-                {previewData && Array.isArray(previewData) && (
-                    <div className="mt-8">
-                        <h3 className="font-medium text-lg mb-4">Pratinjau Data</h3>
-                        <div className="overflow-x-auto relative shadow-lg sm:rounded-lg">
-                            <table className="w-full text-sm text-left text-gray-500">
-                                <thead className="text-normal uppercase bg-gray-50">
-                                    <tr>
-                                        {Object.keys(previewData[0]).map((key) => (
-                                            <th key={key} scope="col" className="px-6 py-3 font-bold">
-                                                {key}
+                {previewData && Array.isArray(previewData) && previewData.length > 0 && (
+                    <div className="mt-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-800 tracking-tight">
+                                    Pratinjau Data
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    Menampilkan {previewData.length} baris pertama dari file Anda.
+                                </p>
+                            </div>
+                            <div className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full border border-blue-100">
+                                Excel Verified
+                            </div>
+                        </div>
+
+                        <div className="relative overflow-hidden border border-gray-200 shadow-xl rounded-xl bg-white">
+                            <div className="overflow-x-auto max-h-96">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="sticky top-0 z-10">
+                                        <tr className="bg-gray-50/90 backdrop-blur-md border-b border-gray-200">
+                                            <th scope="col" className="px-6 py-4 font-semibold text-gray-700 uppercase tracking-wider text-[11px] w-16">
+                                                No
                                             </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {previewData.map((row, i) => (
-                                        <tr key={i} className="bg-white border-b hover:bg-gray-50">
-                                            {Object.values(row).map((val, j) => (
-                                                <td key={j} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                    {val}
-                                                </td>
+                                            {Object.keys(previewData[0]).map((key) => (
+                                                <th
+                                                    key={key}
+                                                    scope="col"
+                                                    className="px-6 py-4 font-semibold text-gray-700 uppercase tracking-wider text-[11px]"
+                                                >
+                                                    {key.replace(/_/g, ' ')}
+                                                </th>
                                             ))}
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {previewData.map((row, i) => (
+                                            <tr key={i} className="group transition-colors hover:bg-blue-50/30">
+                                                <td className="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">
+                                                    {i + 1}
+                                                </td>
+
+                                                {Object.values(row).map((val, j) => (
+                                                    <td key={j} className="px-6 py-4 whitespace-nowrap">
+                                                        {val === null || val === undefined || val === '' ? (
+                                                            <span className="text-gray-300 italic text-xs">Kosong</span>
+                                                        ) : (
+                                                            <span className="text-gray-600 group-hover:text-blue-700 transition-colors font-medium">
+                                                                {String(val)}
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-end">
+                                <span className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">
+                                    Sipadu Data Preview Engine v1.0
+                                </span>
+                            </div>
                         </div>
                     </div>
                 )}
