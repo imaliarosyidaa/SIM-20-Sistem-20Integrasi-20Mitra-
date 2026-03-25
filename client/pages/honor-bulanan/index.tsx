@@ -608,7 +608,6 @@ export default function HonorBulanan() {
     <div className="space-y-4 p-4 bg-gray-50 min-h-screen">
       <div className="w-full bg-white p-4 rounded-lg border border-gray-300 shadow-sm">
         <div className="flex justify-between items-center gap-3">
-          <h1 className="text-lg font-bold text-gray-900">Tim Kegiatan</h1>
           <div className="flex flex-wrap items-center gap-3">
             <Link to="/upload-template" className="flex gap-2 bg-white">
               <Button>
